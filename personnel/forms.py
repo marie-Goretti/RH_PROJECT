@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Conge, Employe
+from .models import Conge, Employe, Departement
 
 
 class RegisterForm(UserCreationForm):
@@ -59,12 +59,11 @@ class RegisterForm(UserCreationForm):
             'placeholder': 'Poste'
         })
     )
-    departement = forms.CharField(
-        max_length=50,
-        required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Département'
+    departement = forms.ModelChoiceField(
+        queryset=Departement.objects.all(),
+        empty_label="Sélectionnez un département",
+        widget=forms.Select(attrs={
+            'class': 'form-control'
         })
     )
     date_embauche = forms.DateField(
