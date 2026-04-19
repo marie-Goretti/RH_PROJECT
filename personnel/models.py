@@ -1,7 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Departement(models.Model):
+    nom = models.CharField(max_length=100, unique=True)
+    description = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return self.nom
+    
 class Employe(models.Model):
     matricule = models.CharField(max_length=50, unique=True)
     nom = models.CharField(max_length=50)
@@ -9,7 +15,12 @@ class Employe(models.Model):
     email = models.EmailField(max_length=100)  
     telephone = models.CharField(max_length=20, null=True, blank=True)  
     poste = models.CharField(max_length=50)
-    departement = models.CharField(max_length=50)
+    departement = models.ForeignKey(
+        Departement,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="employes"
+    )
     date_embauche = models.DateField()
     statut = models.CharField(max_length=20)
     
