@@ -1,0 +1,162 @@
+{% extends 'personnel/base.html' %}
+
+{% block title %}Tableau de bord - Gestion RH{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-container {
+        min-height: 100vh;
+        background-color: var(--primary-color);
+        padding: 40px 20px;
+    }
+    
+    .dashboard-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(31, 30, 48, 0.08);
+        padding: 40px;
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    
+    .dashboard-card h1 {
+        color: var(--secondary-color);
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+    
+    .welcome-text {
+        color: #6c757d;
+        font-size: 16px;
+        margin-bottom: 30px;
+    }
+    
+    .user-info {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+        text-align: left;
+    }
+    
+    .user-info h3 {
+        color: var(--secondary-color);
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: var(--secondary-color);
+    }
+    
+    .info-value {
+        color: #6c757d;
+    }
+    
+    .btn-logout {
+        background-color: var(--button-color);
+        color: var(--secondary-color);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 30px;
+        font-weight: 600;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-logout:hover {
+        background-color: #c9e56a;
+        color: var(--secondary-color);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(216, 241, 121, 0.3);
+    }
+    
+    .badge-role {
+        background-color: var(--accent-color);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-card">
+        <h1>Bienvenue sur votre espace RH</h1>
+        <p class="welcome-text">Votre compte a été créé avec succès ! Cette page est temporaire.</p>
+        
+        {% if user.is_authenticated %}
+        <div class="user-info">
+            <h3>Vos informations</h3>
+            
+            <div class="info-item">
+                <span class="info-label">Nom d'utilisateur :</span>
+                <span class="info-value">{{ user.username }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Email :</span>
+                <span class="info-value">{{ user.email }}</span>
+            </div>
+            
+            {% if user.employe %}
+            <div class="info-item">
+                <span class="info-label">Matricule :</span>
+                <span class="info-value">{{ user.employe.matricule }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Nom complet :</span>
+                <span class="info-value">{{ user.employe.prenom }} {{ user.employe.nom }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Poste :</span>
+                <span class="info-value">{{ user.employe.poste }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Département :</span>
+                <span class="info-value">{{ user.employe.departement }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Rôle :</span>
+                <span class="info-value">
+                    <span class="badge-role">
+                        {% if user.employe.role == 'admin_rh' %}
+                            Administrateur RH
+                        {% else %}
+                            Employé
+                        {% endif %}
+                    </span>
+                </span>
+            </div>
+            {% endif %}
+        </div>
+        
+        <a href="{% url 'logout' %}" class="btn-logout">Se déconnecter</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

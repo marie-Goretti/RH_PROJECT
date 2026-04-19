@@ -1,0 +1,329 @@
+{% extends 'personnel/base.html' %}
+
+{% block title %}Inscription - Gestion RH{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--primary-color);
+        padding: 40px 20px;
+    }
+    
+    .auth-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(31, 30, 48, 0.08);
+        padding: 40px;
+        width: 100%;
+        max-width: 600px;
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+    
+    .auth-header h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 8px;
+    }
+    
+    .auth-header p {
+        color: #6c757d;
+        font-size: 14px;
+    }
+    
+    .form-section {
+        margin-bottom: 30px;
+    }
+    
+    .form-section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--button-color);
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+    
+    .form-control {
+        border: 1.5px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 3px rgba(194, 165, 249, 0.1);
+    }
+    
+    .btn-register {
+        background-color: var(--button-color);
+        color: var(--secondary-color);
+        border: none;
+        border-radius: 8px;
+        padding: 12px;
+        font-weight: 600;
+        font-size: 15px;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+    
+    .btn-register:hover {
+        background-color: #c9e56a;
+        color: var(--secondary-color);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(216, 241, 121, 0.3);
+    }
+    
+    .auth-footer {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    .auth-footer p {
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+    
+    .auth-footer a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+    
+    .auth-footer a:hover {
+        color: #b393e8;
+    }
+    
+    .error-list {
+        list-style: none;
+        padding: 0;
+        margin: 8px 0 0 0;
+    }
+    
+    .error-list li {
+        color: #dc3545;
+        font-size: 13px;
+        margin-top: 4px;
+    }
+    
+    .form-text {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 4px;
+    }
+    
+    .required-star {
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Créer un compte</h1>
+            <p>Rejoignez notre système de gestion RH</p>
+        </div>
+        
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            <!-- Section Compte -->
+            <div class="form-section">
+                <h2 class="form-section-title">Informations de connexion</h2>
+                
+                <div class="mb-3">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                        Email <span class="required-star">*</span>
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <ul class="error-list">
+                        {% for error in form.email.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <small class="form-text">Cet email servira pour la connexion</small>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label">
+                            Mot de passe <span class="required-star">*</span>
+                        </label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                        <ul class="error-list">
+                            {% for error in form.password1.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <small class="form-text">Au moins 8 caractères</small>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label">
+                            Confirmer le mot de passe <span class="required-star">*</span>
+                        </label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                        <ul class="error-list">
+                            {% for error in form.password2.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section Informations personnelles -->
+            <div class="form-section">
+                <h2 class="form-section-title">Informations personnelles</h2>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="{{ form.matricule.id_for_label }}" class="form-label">
+                            Matricule <span class="required-star">*</span>
+                        </label>
+                        {{ form.matricule }}
+                        {% if form.matricule.errors %}
+                        <ul class="error-list">
+                            {% for error in form.matricule.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="{{ form.nom.id_for_label }}" class="form-label">
+                            Nom <span class="required-star">*</span>
+                        </label>
+                        {{ form.nom }}
+                        {% if form.nom.errors %}
+                        <ul class="error-list">
+                            {% for error in form.nom.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="{{ form.prenom.id_for_label }}" class="form-label">
+                            Prénom <span class="required-star">*</span>
+                        </label>
+                        {{ form.prenom }}
+                        {% if form.prenom.errors %}
+                        <ul class="error-list">
+                            {% for error in form.prenom.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.telephone.id_for_label }}" class="form-label">
+                        Téléphone
+                    </label>
+                    {{ form.telephone }}
+                    {% if form.telephone.errors %}
+                    <ul class="error-list">
+                        {% for error in form.telephone.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Section Informations professionnelles -->
+            <div class="form-section">
+                <h2 class="form-section-title">Informations professionnelles</h2>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.poste.id_for_label }}" class="form-label">
+                            Poste <span class="required-star">*</span>
+                        </label>
+                        {{ form.poste }}
+                        {% if form.poste.errors %}
+                        <ul class="error-list">
+                            {% for error in form.poste.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.departement.id_for_label }}" class="form-label">
+                            Département <span class="required-star">*</span>
+                        </label>
+                        {{ form.departement }}
+                        {% if form.departement.errors %}
+                        <ul class="error-list">
+                            {% for error in form.departement.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.date_embauche.id_for_label }}" class="form-label">
+                        Date d'embauche <span class="required-star">*</span>
+                    </label>
+                    {{ form.date_embauche }}
+                    {% if form.date_embauche.errors %}
+                    <ul class="error-list">
+                        {% for error in form.date_embauche.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Bouton d'inscription -->
+            <button type="submit" class="btn btn-register">
+                Créer mon compte
+            </button>
+        </form>
+        
+        <!-- Pied de page -->
+        <div class="auth-footer">
+            <p>Vous avez déjà un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
