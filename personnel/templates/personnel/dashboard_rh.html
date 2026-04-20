@@ -14,68 +14,10 @@
         min-height: 100vh;
     }
     
-    /* Sidebar */
-    .sidebar {
-        width: 260px;
-        background-color: var(--secondary-color);
-        padding: 0;
-        position: fixed;
-        height: 100vh;
-        left: 0;
-        top: 0;
-        overflow-y: auto;
-        z-index: 1000;
-    }
-    
-    .sidebar-header {
-        padding: 25px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .sidebar-logo {
-        color: var(--button-color);
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0;
-    }
-    
-    .sidebar-menu {
-        padding: 20px 0;
-    }
-    
-    .menu-item {
-        display: flex;
-        align-items: center;
-        padding: 14px 20px;
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: none;
-        transition: all 0.3s ease;
-        border-left: 3px solid transparent;
-    }
-    
-    .menu-item:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: white;
-        border-left-color: var(--button-color);
-    }
-    
-    .menu-item.active {
-        background-color: rgba(216, 241, 121, 0.1);
-        color: var(--button-color);
-        border-left-color: var(--button-color);
-    }
-    
-    .menu-item i {
-        font-size: 20px;
-        width: 30px;
-        margin-right: 12px;
-    }
-    
     /* Main Content */
     .main-content {
-        margin-left: 260px;
         flex: 1;
-        width: calc(100% - 260px);
+        width: calc(100%);
     }
     
     /* Top Navbar */
@@ -640,39 +582,6 @@
 
 {% block content %}
 <div class="dashboard-wrapper">
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <h1 class="sidebar-logo">RH System</h1>
-        </div>
-        
-        <div class="sidebar-menu">
-            <a href="{% url 'dashboard_rh' %}" class="menu-item active">
-                <i class="bi bi-speedometer2"></i>
-                <span>Tableau de bord</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-people-fill"></i>
-                <span>Employés</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-calendar-check-fill"></i>
-                <span>Gestion présences</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-calendar-event-fill"></i>
-                <span>Gestion congés</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-graph-up"></i>
-                <span>Rapports</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-gear-fill"></i>
-                <span>Paramètres</span>
-            </a>
-        </div>
-    </nav>
     
     <!-- Main Content -->
     <div class="main-content">

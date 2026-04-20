@@ -1,0 +1,86 @@
+<nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse show" id="sidebar">
+    <div class="position-sticky pt-3 px-3">
+        
+        <!-- Logo / Nom de l'app -->
+        <div class="d-flex align-items-center mb-4 pb-3 border-bottom border-secondary">
+            <i class="fas fa-building text-primary fs-4 me-2"></i>
+            <span class="fs-5 fw-bold text-white">RH Manager</span>
+        </div>
+
+        <!-- Menu de navigation -->
+        <ul class="nav flex-column">
+            
+            <!-- Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link text-white {% if request.resolver_match.url_name == 'dashboard' %}active bg-primary{% endif %}" 
+                   href="{% url 'dashboard_rh' %}">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    Tableau de bord
+                </a>
+            </li>
+            
+            <!-- Gestion Employés -->
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'employe' in request.resolver_match.url_name %}active bg-primary{% endif %}" 
+                   href="{% url 'employes_list' %}">
+                    <i class="fas fa-users me-2"></i>
+                    Employés
+                </a>
+            </li>
+            
+            <!-- Congés -->
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'conge' in request.resolver_match.url_name %}active bg-primary{% endif %}" 
+                   href="#">
+                    <i class="fas fa-calendar-check me-2"></i>
+                    Congés
+                </a>
+            </li>
+            
+            <!-- Présences -->
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'presence' in request.resolver_match.url_name %}active bg-primary{% endif %}" 
+                   href="#">
+                    <i class="fas fa-clock me-2"></i>
+                    Présences
+                </a>
+            </li>
+            
+            <!-- Départements (Admin RH seulement) -->
+            {% if user.employe.role == 'admin_rh' %}
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'departement' in request.resolver_match.url_name %}active bg-primary{% endif %}" 
+                   href="#">
+                    <i class="fas fa-sitemap me-2"></i>
+                    Départements
+                </a>
+            </li>
+            {% endif %}
+            
+            <!-- Paramètres -->
+            <li class="nav-item mt-4 pt-3 border-top border-secondary">
+                <a class="nav-link text-white" href="#">
+                    <i class="fas fa-cog me-2"></i>
+                    Paramètres
+                </a>
+            </li>
+        </ul>
+
+        <!-- Profil utilisateur en bas -->
+        <div class="mt-auto pt-4 border-top border-secondary">
+            <div class="d-flex align-items-center text-white">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
+                     style="width: 40px; height: 40px;">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <small class="d-block fw-bold">{{ user.employe.prenom }} {{ user.employe.nom }}</small>
+                    <small class="text-muted" style="font-size: 0.75rem;">{{ user.employe.get_role_display }}</small>
+                </div>
+                <a href="{% url 'logout' %}" class="ms-auto text-white-50 hover-white" title="Déconnexion">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
