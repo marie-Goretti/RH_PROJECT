@@ -1,5 +1,5 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
@@ -121,16 +121,116 @@ def logout_view(request):
 
 @login_required
 def dashboard_employe(request):
-    """Vue du tableau de bord Employé"""
-    # Vérifier que l'utilisateur est bien un employé
+    """Vue du tableau de bord Employé - données réelles depuis la BDD"""
     if not hasattr(request.user, 'employe') or request.user.employe.role != 'employe':
-        messages.error(request, 'Accès refusé. Vous n\'êtes pas un employé.')
+        messages.error(request, "Accès refusé.")
         return redirect('dashboard')
-    
+
+    employe = request.user.employe
+    today = date.today()
+    from datetime import timedelta, datetime
+
+    # ── Présence d'aujourd'hui ──
+    presence_aujourd_hui = Presence.objects.filter(employe=employe, date=today).first()
+
+    # ── Stats du mois en cours ──
+    presences_mois = Presence.objects.filter(
+        employe=employe,
+        date__year=today.year,
+        date__month=today.month
+    )
+    nb_presents  = presences_mois.filter(statut__in=['present', 'retard']).count()
+    nb_retards   = presences_mois.filter(statut='retard').count()
+    nb_absents   = presences_mois.filter(statut='absent').count()
+
+    # ── 7 derniers jours pour le graphique ──
+    chart_labels = []
+    chart_values = []   # 1=ponctuel, 2=retard, 0=absent, -1=pas de données (week-end)
+    chart_colors = []
+    JOURS_FR = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
+    for i in range(6, -1, -1):
+        jour = today - timedelta(days=i)
+        label = f"{JOURS_FR[jour.weekday()]} {jour.day:02d}"
+        chart_labels.append(label)
+        p = Presence.objects.filter(employe=employe, date=jour).first()
+        if p:
+            if p.statut == 'present':
+                chart_values.append(1)
+                chart_colors.append('#1F7A63')
+            elif p.statut == 'retard':
+                chart_values.append(2)
+                chart_colors.append('#ffc107')
+            else:
+                chart_values.append(0)
+                chart_colors.append('#dc3545')
+        else:
+            chart_values.append(0)
+            chart_colors.append('#E8ECEF')
+
+    # ── Historique du mois ──
+    historique = presences_mois.order_by('-date')
+
+    # ── Congés en cours / à venir ──
+    conges_actifs = employe.conges.filter(
+        date_fin__gte=today,
+        statut='approuve'
+    ).order_by('date_debut')[:3]
+
+    import json
     context = {
-        'employe': request.user.employe
+        'employe': employe,
+        'today': today,
+        'presence_aujourd_hui': presence_aujourd_hui,
+        'nb_presents': nb_presents,
+        'nb_retards': nb_retards,
+        'nb_absents': nb_absents,
+        'historique': historique,
+        'conges_actifs': conges_actifs,
+        'chart_labels_json': json.dumps(chart_labels),
+        'chart_values_json': json.dumps(chart_values),
+        'chart_colors_json': json.dumps(chart_colors),
     }
     return render(request, 'personnel/dashboard_employe.html', context)
+
+
+@login_required
+def marquer_presence(request):
+    """Endpoint AJAX : marque la présence de l'employé une seule fois par jour"""
+    import json
+    from datetime import datetime, time as dtime
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+
+    if not hasattr(request.user, 'employe'):
+        return JsonResponse({'error': 'Accès refusé'}, status=403)
+
+    employe = request.user.employe
+    today = date.today()
+
+    # Vérifier si déjà pointé aujourd'hui
+    if Presence.objects.filter(employe=employe, date=today).exists():
+        return JsonResponse({'error': 'already_marked'}, status=400)
+
+    # Déterminer le statut selon l'heure
+    now_time = datetime.now().time()
+    heure_limite = dtime(8, 0)
+    statut = 'present' if now_time <= heure_limite else 'retard'
+
+    presence = Presence.objects.create(
+        employe=employe,
+        date=today,
+        heure_arrivee=now_time,
+        statut=statut,
+        commentaire=''
+    )
+
+    return JsonResponse({
+        'success': True,
+        'statut': statut,
+        'heure': now_time.strftime('%H:%M'),
+        'date': today.strftime('%d/%m/%Y'),
+    })
 
 
 @login_required
@@ -316,12 +416,12 @@ def employe_create(request):
     """Créer un nouvel employé"""
     
     password_errors = []
- 
+
     if request.method == 'POST':
         form = EmployeForm(request.POST)
         password1 = request.POST.get('password1', '')
         password2 = request.POST.get('password2', '')
- 
+
         # Validation des mots de passe
         if not password1:
             password_errors.append('Le mot de passe est obligatoire.')
@@ -330,10 +430,9 @@ def employe_create(request):
         elif password1 != password2:
             password_errors.append('Les mots de passe ne correspondent pas.')
 
- 
         if form.is_valid() and not password_errors:
             email = form.cleaned_data['email']
- 
+
             # Vérifier que l'email n'est pas déjà utilisé comme username
             if User.objects.filter(username=email).exists():
                 form.add_error('email', 'Un compte avec cet email existe déjà.')
@@ -344,13 +443,13 @@ def employe_create(request):
                     email=email,
                     password=password1
                 )
- 
+
                 # Créer l'employé lié au User
                 employe = form.save(commit=False)
                 employe.user = user
                 employe.statut = employe.statut or 'actif'
                 employe.save()
- 
+
                 messages.success(request, f'Employé {employe.prenom} {employe.nom} ajouté avec succès !')
                 return redirect('employes_list')
         else:
@@ -358,17 +457,14 @@ def employe_create(request):
                 messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
     else:
         form = EmployeForm()
- 
+
     return render(request, 'personnel/employe_form.html', {
         'form': form,
         'action': 'create',
         'title': 'Ajouter un employé',
         'password_errors': password_errors,
     })
-                
-                
-                
-                
+
 
 @login_required
 @user_passes_test(is_admin_rh)

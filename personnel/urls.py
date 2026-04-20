@@ -1,4 +1,3 @@
-
 from django.urls import path
 from . import views
 from django.views.generic import RedirectView
@@ -11,6 +10,7 @@ urlpatterns = [
     path('dashboard/employe/', views.dashboard_employe, name='dashboard_employe'),
     path('dashboard/rh/', views.dashboard, name='dashboard'),
     path('conges/demande/', views.demande_conge, name='demande_conge'),
+    path('presence/marquer/', views.marquer_presence, name='marquer_presence'),
     
     path('employes/', views.employes_list, name='employes_list'),
     path('employes/ajouter/', views.employe_create, name='employe_create'),
