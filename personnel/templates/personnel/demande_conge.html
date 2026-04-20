@@ -1,756 +1,198 @@
 {% extends 'personnel/base.html' %}
+{% load static %}
 
 {% block title %}Demande de Congé - Gestion RH{% endblock %}
 
 {% block extra_css %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 <style>
-    body {
-        background-color: var(--primary-color);
-    }
-    
-    .dashboard-wrapper {
-        display: flex;
-        min-height: 100vh;
-    }
-    
-    /* Sidebar */
-    .sidebar {
-        width: 260px;
-        background-color: var(--secondary-color);
-        padding: 0;
-        position: fixed;
-        height: 100vh;
-        left: 0;
-        top: 0;
-        overflow-y: auto;
-    }
-    
-    .sidebar-header {
-        padding: 30px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .sidebar-logo {
-        color: var(--button-color);
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0;
-    }
-    
-    .sidebar-menu {
-        padding: 20px 0;
-    }
-    
-    .menu-item {
-        display: flex;
-        align-items: center;
-        padding: 14px 20px;
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: none;
-        transition: all 0.3s ease;
-        border-left: 3px solid transparent;
-    }
-    
-    .menu-item:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: white;
-        border-left-color: var(--button-color);
-    }
-    
-    .menu-item.active {
-        background-color: rgba(216, 241, 121, 0.1);
-        color: var(--button-color);
-        border-left-color: var(--button-color);
-    }
-    
-    .menu-item i {
-        font-size: 20px;
-        width: 30px;
-        margin-right: 12px;
-    }
-    
-    .sidebar-footer {
-        padding: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        margin-top: auto;
-    }
-    
-    .user-profile {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        background-color: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        margin-bottom: 15px;
-    }
-    
-    .user-avatar {
-        width: 45px;
-        height: 45px;
-        background-color: var(--button-color);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--secondary-color);
-        font-weight: 700;
-        font-size: 18px;
-        margin-right: 12px;
-    }
-    
-    .user-info {
-        flex: 1;
-    }
-    
-    .user-name {
-        color: white;
-        font-weight: 600;
-        font-size: 14px;
-        margin: 0;
-    }
-    
-    .user-role {
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 12px;
-        margin: 0;
-    }
-    
-    /* Main Content */
-    .main-content {
-        margin-left: 260px;
-        flex: 1;
-        padding: 30px;
-    }
-    
-    .top-bar {
-        background-color: white;
-        padding: 20px 30px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(31, 30, 48, 0.06);
-        margin-bottom: 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .page-title {
-        color: var(--secondary-color);
-        font-size: 28px;
-        font-weight: 600;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    
-    .current-time {
-        display: flex;
-        align-items: center;
-        color: #6c757d;
-        font-size: 14px;
-    }
-    
-    .current-time i {
-        margin-right: 8px;
-        color: var(--accent-color);
-    }
-    
-    /* Cards */
-    .content-card {
-        background-color: white;
-        border-radius: 12px;
-        padding: 30px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 8px rgba(31, 30, 48, 0.06);
-    }
-    
-    .card-header-custom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #f0f0f0;
-    }
-    
-    .card-title-custom {
-        font-size: 20px;
-        font-weight: 600;
-        color: var(--secondary-color);
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .card-title-custom i {
-        color: var(--accent-color);
-    }
-    
-    /* Form Styles */
-    .form-label {
-        font-weight: 600;
-        color: var(--secondary-color);
-        margin-bottom: 8px;
-    }
-    
-    .form-control,
-    .form-select {
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 12px 15px;
-        transition: all 0.3s ease;
-    }
-    
-    .form-control:focus,
-    .form-select:focus {
-        border-color: var(--accent-color);
-        box-shadow: 0 0 0 0.2rem rgba(194, 165, 249, 0.25);
-    }
-    
-    .form-text {
-        color: #6c757d;
-        font-size: 13px;
-        margin-top: 5px;
-    }
-    
-    .btn-submit {
-        background-color: var(--button-color);
-        color: var(--secondary-color);
-        border: none;
-        border-radius: 8px;
-        padding: 14px 40px;
-        font-weight: 700;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .btn-submit:hover {
-        background-color: #c9e56a;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(216, 241, 121, 0.4);
-        color: var(--secondary-color);
-    }
-    
-    /* Info Card */
-    .info-card {
-        background: linear-gradient(135deg, var(--accent-color) 0%, #b08ef5 100%);
-        border-radius: 12px;
-        padding: 25px;
-        color: white;
-        box-shadow: 0 4px 15px rgba(194, 165, 249, 0.3);
-    }
-    
-    .info-card h6 {
-        font-weight: 700;
-        margin-bottom: 15px;
-        font-size: 16px;
-    }
-    
-    .info-card ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    
-    .info-card li {
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .info-card li:last-child {
-        border-bottom: none;
-    }
-    
-    .info-divider {
-        height: 1px;
-        background: rgba(255, 255, 255, 0.3);
-        margin: 20px 0;
-    }
-    
-    /* Table */
-    .custom-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-    
-    .custom-table thead th {
-        background-color: #f8f9fa;
-        color: var(--secondary-color);
-        font-weight: 600;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        padding: 15px;
-        border-bottom: 2px solid #e0e0e0;
-        text-align: left;
-    }
-    
-    .custom-table tbody td {
-        padding: 15px;
-        border-bottom: 1px solid #f0f0f0;
-        color: #495057;
-        font-size: 14px;
-        vertical-align: middle;
-    }
-    
-    .custom-table tbody tr:hover {
-        background-color: #f8f9fa;
-    }
-    
-    /* Status Badges */
-    .status-badge {
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-    }
-    
-    .status-badge.en-attente {
-        background-color: #fff3cd;
-        color: #856404;
-    }
-    
-    .status-badge.approuve {
-        background-color: #d4edda;
-        color: #155724;
-    }
-    
-    .status-badge.refuse {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-    
-    .status-badge.annule {
-        background-color: #e2e3e5;
-        color: #383d41;
-    }
-    
-    .type-badge {
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 600;
-        background-color: #f0f0f0;
-        color: var(--secondary-color);
-    }
-    
-    /* Buttons */
-    .btn-detail {
-        background-color: transparent;
-        border: 2px solid var(--accent-color);
-        color: var(--accent-color);
-        border-radius: 6px;
-        padding: 6px 16px;
-        font-size: 13px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-    
-    .btn-detail:hover {
-        background-color: var(--accent-color);
-        color: white;
-    }
-    
-    /* Modal */
-    .modal-content {
-        border-radius: 12px;
-        border: none;
-        box-shadow: 0 10px 40px rgba(31, 30, 48, 0.2);
-    }
-    
-    .modal-header {
-        background-color: var(--secondary-color);
-        color: white;
-        border-radius: 12px 12px 0 0;
-        padding: 20px 25px;
-    }
-    
-    .modal-title {
-        font-weight: 700;
-        font-size: 18px;
-    }
-    
-    .modal-body {
-        padding: 25px;
-    }
-    
-    .modal-body p {
-        margin-bottom: 15px;
-        color: #495057;
-    }
-    
-    .modal-body strong {
-        color: var(--secondary-color);
-        font-weight: 600;
-    }
-    
-    .btn-close {
-        filter: invert(1);
-    }
-    
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-    }
-    
-    .empty-state i {
-        font-size: 64px;
-        color: #dee2e6;
-        margin-bottom: 20px;
-    }
-    
-    .empty-state p {
-        font-size: 16px;
-        margin: 0;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .sidebar {
-            display: none;
-        }
-        
-        .main-content {
-            margin-left: 0;
-        }
-    }
+    .conge-card { border-left: 4px solid #0d6efd; }
+    .statut-en-attente { color: #ffc107; }
+    .statut-approuve { color: #198754; }
+    .statut-refuse { color: #dc3545; }
+    .statut-annule { color: #6c757d; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-wrapper">
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <h1 class="sidebar-logo">RH System</h1>
-        </div>
-        
-        <div class="sidebar-menu">
-            <a href="{% url 'dashboard_employe' %}" class="menu-item">
-                <i class="bi bi-house-door"></i>
-                <span>Accueil</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-calendar-check"></i>
-                <span>Mes présences</span>
-            </a>
-            <a href="{% url 'demande_conge' %}" class="menu-item active">
-                <i class="bi bi-calendar-event"></i>
-                <span>Mes congés</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-person-circle"></i>
-                <span>Mon profil</span>
-            </a>
-        </div>
-        
-        <div class="sidebar-footer">
-            <div class="user-profile">
-                <div class="user-avatar">{{ employe.prenom.0 }}{{ employe.nom.0 }}</div>
-                <div class="user-info">
-                    <p class="user-name">{{ employe.prenom }} {{ employe.nom }}</p>
-                    <p class="user-role">Employé</p>
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Formulaire de demande -->
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-calendar-plus me-2"></i>Nouvelle Demande de Congé
                 </div>
-            </div>
-            <a href="{% url 'logout' %}" class="menu-item">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Déconnexion</span>
-            </a>
-        </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <h1 class="page-title">
-                <i class="bi bi-calendar-event"></i>
-                Gestion des Congés
-            </h1>
-            <div class="current-time">
-                <i class="bi bi-clock"></i>
-                <span id="currentDateTime"></span>
-            </div>
-        </div>
-        
-        <div class="row">
-            <!-- Formulaire de demande -->
-            <div class="col-lg-8">
-                <div class="content-card">
-                    <div class="card-header-custom">
-                        <h3 class="card-title-custom">
-                            <i class="bi bi-plus-circle-fill"></i>
-                            Nouvelle Demande de Congé
-                        </h3>
-                    </div>
-                    
+                <div class="card-body">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
-                        <div class="row">
-                            <!-- Type de congé -->
-                            <div class="col-md-12 mb-3">
-                                <label for="{{ form.type_conge.id_for_label }}" class="form-label">
-                                    <i class="bi bi-tag-fill"></i> {{ form.type_conge.label }}
-                                </label>
-                                {{ form.type_conge }}
-                                {% if form.type_conge.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ form.type_conge.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
+                        <div class="mb-3">
+                            <label for="{{ form.type_conge.id_for_label }}" class="form-label">
+                                <i class="bi bi-list-check me-1"></i>{{ form.type_conge.label }}
+                            </label>
+                            {{ form.type_conge }}
+                            {% if form.type_conge.errors %}
+                                <div class="invalid-feedback d-block">{{ form.type_conge.errors }}</div>
+                            {% endif %}
+                        </div>
 
-                            <!-- Date de début -->
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="{{ form.date_debut.id_for_label }}" class="form-label">
-                                    <i class="bi bi-calendar3"></i> {{ form.date_debut.label }}
+                                    <i class="bi bi-calendar-event me-1"></i>{{ form.date_debut.label }}
                                 </label>
                                 {{ form.date_debut }}
                                 {% if form.date_debut.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ form.date_debut.errors }}
-                                    </div>
+                                    <div class="invalid-feedback d-block">{{ form.date_debut.errors }}</div>
                                 {% endif %}
                             </div>
-
-                            <!-- Date de fin -->
                             <div class="col-md-6 mb-3">
                                 <label for="{{ form.date_fin.id_for_label }}" class="form-label">
-                                    <i class="bi bi-calendar3"></i> {{ form.date_fin.label }}
+                                    <i class="bi bi-calendar-check me-1"></i>{{ form.date_fin.label }}
                                 </label>
                                 {{ form.date_fin }}
                                 {% if form.date_fin.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ form.date_fin.errors }}
-                                    </div>
+                                    <div class="invalid-feedback d-block">{{ form.date_fin.errors }}</div>
                                 {% endif %}
-                                <small class="form-text">
-                                    <i class="bi bi-info-circle"></i> Maximum 2 mois (60 jours)
-                                </small>
-                            </div>
-
-                            <!-- Motif -->
-                            <div class="col-md-12 mb-3">
-                                <label for="{{ form.justificatif_texte.id_for_label }}" class="form-label">
-                                    <i class="bi bi-pencil-square"></i> {{ form.justificatif_texte.label }}
-                                </label>
-                                {{ form.justificatif_texte }}
-                                {% if form.justificatif_texte.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ form.justificatif_texte.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <!-- Pièce justificative -->
-                            <div class="col-md-12 mb-4">
-                                <label for="{{ form.justificatif_fichier.id_for_label }}" class="form-label">
-                                    <i class="bi bi-file-earmark-arrow-up"></i> {{ form.justificatif_fichier.label }}
-                                </label>
-                                {{ form.justificatif_fichier }}
-                                {% if form.justificatif_fichier.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ form.justificatif_fichier.errors }}
-                                    </div>
-                                {% endif %}
-                                <small class="form-text">
-                                    <i class="bi bi-file-earmark-pdf"></i> Formats acceptés: PDF, JPG, PNG
-                                </small>
                             </div>
                         </div>
+                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Durée maximale : 60 jours</small>
 
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn-submit">
-                                <i class="bi bi-send-fill"></i>
-                                Soumettre la demande
-                            </button>
+                        <div class="mb-3">
+                            <label for="{{ form.justificatif_texte.id_for_label }}" class="form-label">
+                                <i class="bi bi-pencil me-1"></i>{{ form.justificatif_texte.label }}
+                            </label>
+                            {{ form.justificatif_texte }}
+                            {% if form.justificatif_texte.errors %}
+                                <div class="invalid-feedback d-block">{{ form.justificatif_texte.errors }}</div>
+                            {% endif %}
                         </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.justificatif_fichier.id_for_label }}" class="form-label">
+                                <i class="bi bi-paperclip me-1"></i>{{ form.justificatif_fichier.label }}
+                            </label>
+                            {{ form.justificatif_fichier }}
+                            {% if form.justificatif_fichier.errors %}
+                                <div class="invalid-feedback d-block">{{ form.justificatif_fichier.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted d-block mt-1">Formats : PDF, JPG, PNG</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-send me-2"></i>Soumettre la demande
+                        </button>
                     </form>
                 </div>
             </div>
 
-            <!-- Informations -->
-            <div class="col-lg-4">
-                <div class="info-card">
-                    <h6><i class="bi bi-info-circle-fill"></i> Types de congés disponibles</h6>
-                    <ul>
-                        <li><strong>Congé annuel :</strong> Congés payés annuels</li>
-                        <li><strong>Congé maladie :</strong> Avec justificatif médical</li>
-                        <li><strong>Congé exceptionnel :</strong> Événements familiaux</li>
-                        <li><strong>Congé sans solde :</strong> Non rémunéré</li>
-                    </ul>
-                    
-                    <div class="info-divider"></div>
-                    
-                    <h6><i class="bi bi-shield-check"></i> Règles importantes</h6>
-                    <ul>
-                        <li>Durée maximale : 2 mois (60 jours)</li>
-                        <li>Délai de traitement : 48-72h</li>
-                        <li>Justificatif obligatoire pour congé maladie</li>
+            <!-- Aide -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-lightbulb me-2"></i>Informations</h6>
+                    <ul class="list-unstyled mb-0 small">
+                        <li><i class="bi bi-check-circle text-success me-1"></i>Congé annuel : Payé</li>
+                        <li><i class="bi bi-check-circle text-success me-1"></i>Congé maladie : Justificatif requis</li>
+                        <li><i class="bi bi-clock me-1"></i>Traitement : 48-72h</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Historique des congés -->
-        <div class="content-card mt-4">
-            <div class="card-header-custom">
-                <h3 class="card-title-custom">
-                    <i class="bi bi-clock-history"></i>
-                    Historique des Congés
-                </h3>
+        <!-- Historique -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <i class="bi bi-journal-text me-2"></i>Historique des Congés
+                </div>
+                <div class="card-body p-0">
+                    {% if conges %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Période</th>
+                                    <th>Statut</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for conge in conges %}
+                                <tr class="conge-card">
+                                    <td>
+                                        <strong>{{ conge.get_type_conge_display }}</strong>
+                                    </td>
+                                    <td>
+                                        <small class="d-block">Du {{ conge.date_debut|date:"d/m/Y" }}</small>
+                                        <small class="d-block">Au {{ conge.date_fin|date:"d/m/Y" }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if conge.statut == 'en_attente' %}bg-warning text-dark statut-en-attente
+                                            {% elif conge.statut == 'approuve' %}bg-success statut-approuve
+                                            {% elif conge.statut == 'refuse' %}bg-danger statut-refuse
+                                            {% elif conge.statut == 'annule' %}bg-secondary statut-annule
+                                            {% endif %}">
+                                            <i class="bi 
+                                                {% if conge.statut == 'en_attente' %}bi-hourglass-split
+                                                {% elif conge.statut == 'approuve' %}bi-check-circle-fill
+                                                {% elif conge.statut == 'refuse' %}bi-x-circle-fill
+                                                {% elif conge.statut == 'annule' %}bi-x-lg
+                                                {% endif %} me-1"></i>
+                                            {{ conge.get_statut_display }}
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-primary" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#modalConge{{ conge.id }}">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-calendar-x display-4 d-block mb-3"></i>
+                        <p>Aucune demande de congé pour le moment</p>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-            
-            {% if conges %}
-                <div class="table-responsive">
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Période</th>
-                                <th>Durée</th>
-                                <th>Statut</th>
-                                <th>Date demande</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for conge in conges %}
-                            <tr>
-                                <td>
-                                    <span class="type-badge">
-                                        {{ conge.get_type_conge_display }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <small>
-                                        <strong>Du :</strong> {{ conge.date_debut|date:"d/m/Y" }}<br>
-                                        <strong>Au :</strong> {{ conge.date_fin|date:"d/m/Y" }}
-                                    </small>
-                                </td>
-                                <td>
-                                    <strong>{{ conge.date_fin|timesince:conge.date_debut|slice:":3" }}j</strong>
-                                </td>
-                                <td>
-                                    {% if conge.statut == 'en_attente' %}
-                                        <span class="status-badge en-attente">
-                                            <i class="bi bi-hourglass-split"></i> En attente
-                                        </span>
-                                    {% elif conge.statut == 'approuve' %}
-                                        <span class="status-badge approuve">
-                                            <i class="bi bi-check-circle-fill"></i> Approuvé
-                                        </span>
-                                    {% elif conge.statut == 'refuse' %}
-                                        <span class="status-badge refuse">
-                                            <i class="bi bi-x-circle-fill"></i> Refusé
-                                        </span>
-                                    {% elif conge.statut == 'annule' %}
-                                        <span class="status-badge annule">
-                                            <i class="bi bi-slash-circle"></i> Annulé
-                                        </span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <small class="text-muted">
-                                        {{ conge.date_debut|date:"d/m/Y" }}
-                                    </small>
-                                </td>
-                                <td>
-                                    <button class="btn-detail" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#detailModal{{ conge.id }}">
-                                        <i class="bi bi-eye-fill"></i> Détails
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <!-- Modal pour les détails -->
-                            <div class="modal fade" id="detailModal{{ conge.id }}" tabindex="-1">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">
-                                                <i class="bi bi-file-text"></i> Détails de la demande
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p><strong>Type :</strong> {{ conge.get_type_conge_display }}</p>
-                                            <p><strong>Période :</strong> Du {{ conge.date_debut|date:"d/m/Y" }} au {{ conge.date_fin|date:"d/m/Y" }}</p>
-                                            <p><strong>Statut :</strong> {{ conge.get_statut_display }}</p>
-                                            
-                                            {% if conge.justificatif_texte %}
-                                                <p><strong>Motif :</strong><br>{{ conge.justificatif_texte }}</p>
-                                            {% endif %}
-                                            
-                                            {% if conge.justificatif_fichier %}
-                                                <p>
-                                                    <strong>Pièce jointe :</strong><br>
-                                                    <a href="{{ conge.justificatif_fichier.url }}" target="_blank" class="btn btn-sm btn-outline-secondary mt-2">
-                                                        <i class="bi bi-download"></i> Télécharger le fichier
-                                                    </a>
-                                                </p>
-                                            {% endif %}
-                                            
-                                            {% if conge.commentaire %}
-                                                <p><strong>Commentaire RH :</strong><br>{{ conge.commentaire }}</p>
-                                            {% endif %}
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <div class="empty-state">
-                    <i class="bi bi-inbox"></i>
-                    <p>Aucune demande de congé pour le moment</p>
-                </div>
-            {% endif %}
         </div>
     </div>
 </div>
 
-<script>
-    // Mise à jour de l'heure en temps réel
-    function updateTime() {
-        const now = new Date();
-        const dateString = now.toLocaleDateString('fr-FR', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-        const timeString = now.toLocaleTimeString('fr-FR', { 
-            hour: '2-digit', 
-            minute: '2-digit',
-            second: '2-digit'
-        });
-        
-        document.getElementById('currentDateTime').textContent = dateString + ' - ' + timeString;
-    }
-    
-    updateTime();
-    setInterval(updateTime, 1000);
-</script>
+<!-- Modals détails (à générer dynamiquement) -->
+{% for conge in conges %}
+<div class="modal fade" id="modalConge{{ conge.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Détails du congé</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Type :</strong> {{ conge.get_type_conge_display }}</p>
+                <p><strong>Période :</strong> {{ conge.date_debut|date:"d/m/Y" }} au {{ conge.date_fin|date:"d/m/Y" }}</p>
+                <p><strong>Statut :</strong> {{ conge.get_statut_display }}</p>
+                {% if conge.justificatif_texte %}
+                <p><strong>Motif :</strong> {{ conge.justificatif_texte }}</p>
+                {% endif %}
+                {% if conge.justificatif_fichier %}
+                <p><strong>Pièce jointe :</strong> 
+                    <a href="{{ conge.justificatif_fichier.url }}" target="_blank">
+                        <i class="bi bi-download me-1"></i>Télécharger
+                    </a>
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}
