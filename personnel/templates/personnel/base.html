@@ -355,18 +355,20 @@
         
         <ul class="nav flex-column px-2">
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
-                   href="{% url 'dashboard' %}">
+                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_employe' %}active{% endif %}" 
+                   href="{% if user.employe.role == 'admin_rh' %}{% url 'dashboard' %}{% else %}{% url 'dashboard_employe' %}{% endif %}">
                     <i class="fas fa-tachometer-alt"></i> Tableau de bord
                 </a>
             </li>
             
+            {% if user.employe.role == 'admin_rh' %}
             <li class="nav-item">
                 <a class="nav-link {% if 'employe' in request.resolver_match.url_name %}active{% endif %}" 
                    href="{% url 'employes_list' %}">
                     <i class="fas fa-users"></i> Employés
                 </a>
             </li>
+            {% endif %}
             
             <li class="nav-item">
                 <a class="nav-link {% if 'conge' in request.resolver_match.url_name %}active{% endif %}" 

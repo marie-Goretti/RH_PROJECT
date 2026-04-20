@@ -1,657 +1,478 @@
 {% extends 'personnel/base.html' %}
 
-{% block title %}Accueil Employé - Gestion RH{% endblock %}
+{% block title %}Mon Espace - Gestion RH{% endblock %}
 
 {% block extra_css %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 <style>
-    body {
-        background-color: var(--primary-color);
-    }
-    
-    .dashboard-wrapper {
-        display: flex;
-        min-height: 100vh;
-        background-color: var(--primary-color);
-    }
-    
-    /* Sidebar */
-    .sidebar {
-        width: 260px;
-        background-color: var(--secondary-color);
-        padding: 0;
-        position: fixed;
-        height: 100vh;
-        left: 0;
-        top: 0;
-        overflow-y: auto;
-    }
-    
-    .sidebar-header {
-        padding: 30px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .sidebar-logo {
-        color: var(--button-color);
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0;
-    }
-    
-    .sidebar-menu {
-        padding: 20px 0;
-    }
-    
-    .menu-item {
-        display: flex;
-        align-items: center;
-        padding: 14px 20px;
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: none;
-        transition: all 0.3s ease;
-        border-left: 3px solid transparent;
-    }
-    
-    .menu-item:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: white;
-        border-left-color: var(--button-color);
-    }
-    
-    .menu-item.active {
-        background-color: rgba(216, 241, 121, 0.1);
-        color: var(--button-color);
-        border-left-color: var(--button-color);
-    }
-    
-    .menu-item i {
-        font-size: 20px;
-        width: 30px;
-        margin-right: 12px;
-    }
-    
-    .sidebar-footer {
-        padding: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        margin-top: auto;
-    }
-    
-    .user-profile {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        background-color: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        margin-bottom: 15px;
-    }
-    
-    .user-avatar {
-        width: 45px;
-        height: 45px;
-        background-color: var(--button-color);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--secondary-color);
-        font-weight: 700;
-        font-size: 18px;
-        margin-right: 12px;
-    }
-    
-    .user-info {
-        flex: 1;
-    }
-    
-    .user-name {
-        color: white;
-        font-weight: 600;
-        font-size: 14px;
-        margin: 0;
-    }
-    
-    .user-role {
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 12px;
-        margin: 0;
-    }
-    
-    /* Main Content */
-    .main-content {
-        margin-left: 260px;
-        flex: 1;
-        padding: 30px;
-    }
-    
-    .top-bar {
+    /* ── Top bar ── */
+    .page-header {
         background-color: white;
         padding: 20px 30px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(31, 30, 48, 0.06);
-        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(11, 28, 45, 0.06);
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
-    
-    .page-title {
-        color: var(--secondary-color);
-        font-size: 28px;
-        font-weight: 600;
+
+    .page-header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--navy-blue);
         margin: 0;
     }
-    
-    .current-time {
+
+    .current-time-display {
+        font-size: 13px;
+        color: var(--cool-gray);
         display: flex;
         align-items: center;
-        color: #6c757d;
-        font-size: 14px;
+        gap: 8px;
     }
-    
-    .current-time i {
-        margin-right: 8px;
-        color: var(--accent-color);
+
+    .current-time-display i {
+        color: var(--emerald-green);
     }
-    
-    /* Presence Card */
+
+    /* ── Page body ── */
+    .page-body {
+        padding: 30px;
+    }
+
+    /* ── Carte présence ── */
     .presence-card {
-        background: linear-gradient(135deg, var(--secondary-color) 0%, #2d2c42 100%);
+        background: linear-gradient(135deg, var(--navy-blue) 0%, #122638 100%);
         border-radius: 12px;
         padding: 40px;
-        margin-bottom: 30px;
+        margin-bottom: 28px;
         color: white;
-        box-shadow: 0 4px 20px rgba(31, 30, 48, 0.15);
-    }
-    
-    .presence-header {
+        box-shadow: 0 4px 20px rgba(11, 28, 45, 0.18);
         text-align: center;
-        margin-bottom: 30px;
     }
-    
-    .presence-header h2 {
-        font-size: 24px;
+
+    .presence-card h2 {
+        font-size: 20px;
         font-weight: 600;
-        margin-bottom: 10px;
+        margin-bottom: 6px;
     }
-    
-    .presence-time {
-        font-size: 48px;
+
+    .presence-card .limit-info {
+        font-size: 13px;
+        color: var(--cool-gray);
+        margin-bottom: 20px;
+    }
+
+    .presence-clock {
+        font-size: 52px;
         font-weight: 700;
-        color: var(--button-color);
-        margin: 20px 0;
+        color: var(--emerald-green);
+        letter-spacing: 2px;
+        margin-bottom: 24px;
     }
-    
+
     .btn-presence {
-        background-color: var(--button-color);
-        color: var(--secondary-color);
+        background-color: var(--emerald-green);
+        color: white;
         border: none;
-        border-radius: 8px;
-        padding: 18px 50px;
+        border-radius: 10px;
+        padding: 16px 48px;
         font-weight: 700;
-        font-size: 18px;
+        font-size: 17px;
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
         gap: 10px;
+        cursor: pointer;
     }
-    
+
     .btn-presence:hover {
-        background-color: #c9e56a;
+        background-color: var(--success-light);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(216, 241, 121, 0.4);
+        box-shadow: 0 6px 20px rgba(31, 122, 99, 0.4);
+        color: white;
     }
-    
+
     .btn-presence:disabled {
-        background-color: #6c757d;
+        background-color: var(--cool-gray);
         cursor: not-allowed;
         transform: none;
+        box-shadow: none;
     }
-    
-    .presence-status {
+
+    .presence-feedback {
         margin-top: 20px;
-        padding: 15px;
-        background-color: rgba(255, 255, 255, 0.1);
+        padding: 14px 20px;
         border-radius: 8px;
-        text-align: center;
+        font-size: 14px;
+        font-weight: 500;
+        display: none;
     }
-    
-    .presence-status.success {
-        background-color: rgba(216, 241, 121, 0.2);
-        border: 1px solid var(--button-color);
+
+    .presence-feedback.success {
+        background-color: rgba(31, 122, 99, 0.2);
+        border: 1px solid var(--emerald-green);
+        color: #a8e6d8;
     }
-    
-    .presence-status.late {
-        background-color: rgba(255, 193, 7, 0.2);
+
+    .presence-feedback.late {
+        background-color: rgba(255, 193, 7, 0.15);
         border: 1px solid #ffc107;
+        color: #ffe08a;
     }
-    
-    /* Chart Card */
-    .chart-card {
+
+    /* ── Cartes stats rapides ── */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+    .stat-card {
         background-color: white;
         border-radius: 12px;
-        padding: 30px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 8px rgba(31, 30, 48, 0.06);
-    }
-    
-    .chart-header {
+        padding: 24px;
+        box-shadow: 0 2px 12px rgba(11, 28, 45, 0.06);
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 25px;
+        gap: 18px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    
-    .chart-title {
-        font-size: 20px;
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(11, 28, 45, 0.10);
+    }
+
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.green  { background-color: rgba(31, 122, 99, 0.12); color: var(--emerald-green); }
+    .stat-icon.yellow { background-color: rgba(255, 193, 7, 0.15);  color: #f0a500; }
+    .stat-icon.red    { background-color: rgba(220, 53, 69, 0.12);  color: #dc3545; }
+
+    .stat-label {
+        font-size: 12px;
+        color: var(--cool-gray);
         font-weight: 600;
-        color: var(--secondary-color);
-        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
     }
-    
+
+    .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--navy-blue);
+    }
+
+    /* ── Graphique ── */
+    .chart-card,
+    .table-card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 28px;
+        box-shadow: 0 2px 12px rgba(11, 28, 45, 0.06);
+        margin-bottom: 28px;
+    }
+
+    .card-section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--navy-blue);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .card-section-title i {
+        color: var(--emerald-green);
+    }
+
     .chart-legend {
         display: flex;
         gap: 20px;
+        margin-bottom: 20px;
     }
-    
+
     .legend-item {
         display: flex;
         align-items: center;
         font-size: 13px;
-        color: #6c757d;
+        color: var(--cool-gray);
+        gap: 6px;
     }
-    
+
     .legend-dot {
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
-        margin-right: 6px;
     }
-    
-    .legend-dot.ponctuel {
-        background-color: #28a745;
+
+    .legend-dot.ponctuel { background-color: var(--emerald-green); }
+    .legend-dot.retard   { background-color: #ffc107; }
+    .legend-dot.absent   { background-color: #dc3545; }
+
+    /* ── Tableau historique ── */
+    .table-custom thead {
+        background-color: var(--navy-blue);
+        color: white;
     }
-    
-    .legend-dot.retard {
-        background-color: #ffc107;
-    }
-    
-    .legend-dot.absent {
-        background-color: #dc3545;
-    }
-    
-    /* Table */
-    .table-card {
-        background-color: white;
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 2px 8px rgba(31, 30, 48, 0.06);
-    }
-    
-    .table-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-    
-    .table-title {
-        font-size: 20px;
+
+    .table-custom thead th {
+        padding: 13px 16px;
+        font-size: 12px;
         font-weight: 600;
-        color: var(--secondary-color);
-        margin: 0;
-    }
-    
-    .table-filter {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-    
-    .filter-label {
-        font-size: 14px;
-        color: #6c757d;
-        font-weight: 600;
-    }
-    
-    .custom-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-    
-    .custom-table thead th {
-        background-color: #f8f9fa;
-        color: var(--secondary-color);
-        font-weight: 600;
-        font-size: 13px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        padding: 15px;
-        border-bottom: 2px solid #e0e0e0;
-        text-align: left;
+        border: none;
     }
-    
-    .custom-table tbody td {
-        padding: 15px;
-        border-bottom: 1px solid #f0f0f0;
-        color: #495057;
+
+    .table-custom tbody td {
+        padding: 13px 16px;
+        color: var(--navy-blue);
+        border-bottom: 1px solid var(--gray-light);
         font-size: 14px;
+        vertical-align: middle;
     }
-    
-    .custom-table tbody tr:hover {
-        background-color: #f8f9fa;
+
+    .table-custom tbody tr:hover {
+        background-color: var(--soft-white);
     }
-    
-    .status-badge {
-        padding: 6px 12px;
+
+    /* Badges statut */
+    .badge-ponctuel {
+        background-color: rgba(31, 122, 99, 0.12);
+        color: var(--emerald-green);
+        padding: 5px 12px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 600;
-        display: inline-block;
     }
-    
-    .status-badge.ponctuel {
-        background-color: #d4edda;
-        color: #155724;
+
+    .badge-retard {
+        background-color: rgba(255, 193, 7, 0.15);
+        color: #f0a500;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
     }
-    
-    .status-badge.retard {
-        background-color: #fff3cd;
-        color: #856404;
+
+    .badge-absent {
+        background-color: rgba(220, 53, 69, 0.12);
+        color: #dc3545;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
     }
-    
-    .status-badge.absent {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-    
+
+    /* ── Empty state ── */
     .empty-state {
         text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
+        padding: 50px 20px;
+        color: var(--cool-gray);
     }
-    
+
     .empty-state i {
-        font-size: 64px;
-        color: #dee2e6;
-        margin-bottom: 20px;
+        font-size: 56px;
+        color: var(--gray-light);
+        margin-bottom: 16px;
+        display: block;
     }
-    
-    .empty-state p {
-        font-size: 16px;
-        margin: 0;
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .stats-row { grid-template-columns: 1fr; }
+        .page-body { padding: 16px; }
+        .presence-clock { font-size: 36px; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-wrapper">
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <h1 class="sidebar-logo">RH System</h1>
-        </div>
-        
-        <div class="sidebar-menu">
-            <a href="{% url 'dashboard_employe' %}" class="menu-item active">
-                <i class="bi bi-house-door"></i>
-                <span>Accueil</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-calendar-check"></i>
-                <span>Mes présences</span>
-            </a>
-            <a href="{% url 'demande_conge' %}" class="menu-item">
-                <i class="bi bi-calendar-event"></i>
-                <span>Mes congés</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="bi bi-person-circle"></i>
-                <span>Mon profil</span>
-            </a>
-        </div>
-        
-        <div class="sidebar-footer">
-            <div class="user-profile">
-                <div class="user-avatar">{{ employe.prenom.0 }}{{ employe.nom.0 }}</div>
-                <div class="user-info">
-                    <p class="user-name">{{ employe.prenom }} {{ employe.nom }}</p>
-                    <p class="user-role">Employé</p>
-                </div>
-            </div>
-            <a href="{% url 'logout' %}" class="menu-item">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Déconnexion</span>
-            </a>
-        </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <h1 class="page-title">Tableau de bord</h1>
-            <div class="current-time">
-                <i class="bi bi-clock"></i>
-                <span id="currentDateTime"></span>
-            </div>
-        </div>
-        
-        <!-- Presence Card -->
-        <div class="presence-card">
-            <div class="presence-header">
-                <h2>Enregistrer ma présence</h2>
-                <p>Heure limite : 08:00</p>
-            </div>
-            
-            <div style="text-align: center;">
-                <div class="presence-time" id="currentTime"></div>
-                <button class="btn btn-presence" id="btnMarquerPresence">
-                    <i class="bi bi-check-circle-fill"></i>
-                    Marquer ma présence
-                </button>
-                
-                <div class="presence-status" id="presenceStatus" style="display: none;"></div>
-            </div>
-        </div>
-        
-        <!-- Chart Card -->
-        <div class="chart-card">
-            <div class="chart-header">
-                <h3 class="chart-title">Mes présences des 7 derniers jours</h3>
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <span class="legend-dot ponctuel"></span>
-                        Ponctuel
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-dot retard"></span>
-                        Retard
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-dot absent"></span>
-                        Absent
-                    </div>
-                </div>
-            </div>
-            <canvas id="presenceChart" height="80"></canvas>
-        </div>
-        
-        <!-- Table Card -->
-        <div class="table-card">
-            <div class="table-header">
-                <h3 class="table-title">Historique du mois en cours</h3>
-                <div class="table-filter">
-                    <span class="filter-label">Mois :</span>
-                    <select class="form-select form-select-sm" style="width: auto;">
-                        <option selected>Janvier 2026</option>
-                        <option>Décembre 2025</option>
-                        <option>Novembre 2025</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div id="tableContent">
-                <div class="empty-state">
-                    <i class="bi bi-inbox"></i>
-                    <p>Aucune présence enregistrée pour le moment</p>
-                </div>
-            </div>
-        </div>
+
+<!-- Top bar -->
+<div class="page-header">
+    <h1><i class="fas fa-tachometer-alt me-2" style="color: var(--emerald-green);"></i>Mon espace</h1>
+    <div class="current-time-display">
+        <i class="fas fa-calendar-alt"></i>
+        <span id="currentDateTime"></span>
     </div>
 </div>
 
+<div class="page-body animate-fade-in">
+
+    <!-- Carte présence -->
+    <div class="presence-card">
+        <h2>Enregistrer ma présence</h2>
+        <p class="limit-info"><i class="fas fa-info-circle me-1"></i>Heure limite de pointage : 08h00</p>
+        <div class="presence-clock" id="currentTime">--:--:--</div>
+        <button class="btn btn-presence" id="btnPresence">
+            <i class="fas fa-check-circle"></i>
+            Marquer ma présence
+        </button>
+        <div class="presence-feedback" id="presenceFeedback"></div>
+    </div>
+
+    <!-- Stats rapides -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
+            <div>
+                <div class="stat-label">Présences ce mois</div>
+                <div class="stat-value" id="statPresences">—</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon yellow"><i class="fas fa-clock"></i></div>
+            <div>
+                <div class="stat-label">Retards ce mois</div>
+                <div class="stat-value" id="statRetards">—</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon red"><i class="fas fa-calendar-times"></i></div>
+            <div>
+                <div class="stat-label">Absences ce mois</div>
+                <div class="stat-value" id="statAbsences">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphique -->
+    <div class="chart-card">
+        <div class="card-section-title">
+            <i class="fas fa-chart-bar"></i> Mes présences — 7 derniers jours
+        </div>
+        <div class="chart-legend">
+            <div class="legend-item"><span class="legend-dot ponctuel"></span> Ponctuel</div>
+            <div class="legend-item"><span class="legend-dot retard"></span> Retard</div>
+            <div class="legend-item"><span class="legend-dot absent"></span> Absent</div>
+        </div>
+        <canvas id="presenceChart" height="80"></canvas>
+    </div>
+
+    <!-- Tableau historique -->
+    <div class="table-card">
+        <div class="card-section-title">
+            <i class="fas fa-history"></i> Historique du mois en cours
+        </div>
+        <div id="tableContent">
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>Aucune présence enregistrée pour le moment</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    // Mise à jour de l'heure en temps réel
+    // ── Horloge en temps réel ──
     function updateTime() {
         const now = new Date();
-        const timeString = now.toLocaleTimeString('fr-FR', { 
-            hour: '2-digit', 
-            minute: '2-digit',
-            second: '2-digit'
-        });
-        const dateString = now.toLocaleDateString('fr-FR', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-        
-        document.getElementById('currentTime').textContent = timeString;
-        document.getElementById('currentDateTime').textContent = dateString + ' - ' + timeString;
+        document.getElementById('currentTime').textContent = now.toLocaleTimeString('fr-FR');
+        document.getElementById('currentDateTime').textContent =
+            now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     }
-    
     updateTime();
     setInterval(updateTime, 1000);
-    
-    // Graphique des présences
+
+    // ── Graphique ──
+    const navyBlue    = '#0B1C2D';
+    const emerald     = '#1F7A63';
+    const yellow      = '#ffc107';
+    const red         = '#dc3545';
+    const coolGray    = '#9DAAAB';
+
     const ctx = document.getElementById('presenceChart').getContext('2d');
-    
-    // Données d'exemple (à remplacer par des vraies données du backend)
-    const presenceData = {
-        labels: ['Lun 30', 'Mar 31', 'Mer 01', 'Jeu 02', 'Ven 03', 'Sam 04', 'Dim 05'],
+    const chartData = {
+        labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
         datasets: [{
             label: 'Statut',
-            data: [1, 1, 2, 1, 1, 0, 0], // 0=absent, 1=ponctuel, 2=retard
-            backgroundColor: function(context) {
-                const value = context.parsed.y;
-                if (value === 1) return '#28a745'; // Ponctuel
-                if (value === 2) return '#ffc107'; // Retard
-                return '#dc3545'; // Absent
-            },
-            borderColor: function(context) {
-                const value = context.parsed.y;
-                if (value === 1) return '#28a745';
-                if (value === 2) return '#ffc107';
-                return '#dc3545';
-            },
-            borderWidth: 2,
+            data: [1, 1, 2, 1, 1, 0, 0],
+            backgroundColor: (c) => [emerald, emerald, yellow, emerald, emerald, red, red][c.dataIndex] ?? coolGray,
             borderRadius: 6,
-            barThickness: 40
+            barThickness: 36,
         }]
     };
-    
-    const chart = new Chart(ctx, {
+
+    new Chart(ctx, {
         type: 'bar',
-        data: presenceData,
+        data: chartData,
         options: {
             responsive: true,
-            maintainAspectRatio: true,
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
-                            const value = context.parsed.y;
-                            if (value === 1) return 'Présent - Ponctuel';
-                            if (value === 2) return 'Présent - Retard';
-                            return 'Absent';
-                        }
+                        label: (c) => ({ 0: 'Absent', 1: 'Ponctuel', 2: 'En retard' }[c.parsed.y] ?? '')
                     }
                 }
             },
             scales: {
                 y: {
-                    beginAtZero: true,
-                    max: 3,
-                    ticks: {
-                        stepSize: 1,
-                        callback: function(value) {
-                            if (value === 0) return 'Absent';
-                            if (value === 1) return 'Ponctuel';
-                            if (value === 2) return 'Retard';
-                            return '';
-                        }
-                    }
+                    beginAtZero: true, max: 3,
+                    ticks: { callback: (v) => ({ 0: 'Absent', 1: 'Ponctuel', 2: 'Retard', 3: '' }[v] ?? '') },
+                    grid: { color: 'rgba(157,170,171,0.15)' }
                 },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
+                x: { grid: { display: false } }
             }
         }
     });
-    
-    // Marquer la présence
-    document.getElementById('btnMarquerPresence').addEventListener('click', function() {
+
+    // ── Compteurs (simulés, à brancher sur le backend) ──
+    document.getElementById('statPresences').textContent = '12';
+    document.getElementById('statRetards').textContent   = '2';
+    document.getElementById('statAbsences').textContent  = '1';
+
+    // ── Bouton présence ──
+    document.getElementById('btnPresence').addEventListener('click', function () {
         const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const timeValue = hours * 60 + minutes;
-        const limitTime = 8 * 60; // 08:00
-        
-        let status = '';
-        let statusClass = '';
-        
-        if (timeValue <= limitTime) {
-            status = '✓ Présence enregistrée avec succès ! Vous êtes ponctuel.';
-            statusClass = 'success';
+        const minutes = now.getHours() * 60 + now.getMinutes();
+        const isLate  = minutes > 8 * 60;
+
+        const feedback = document.getElementById('presenceFeedback');
+        if (isLate) {
+            const diff = minutes - 480;
+            feedback.textContent = `⚠️ Présence enregistrée avec ${diff} minute(s) de retard.`;
+            feedback.className = 'presence-feedback late';
         } else {
-            const minutesLate = timeValue - limitTime;
-            status = `⚠️ Présence enregistrée avec ${minutesLate} minute(s) de retard.`;
-            statusClass = 'late';
+            feedback.textContent = '✓ Présence enregistrée avec succès — vous êtes ponctuel !';
+            feedback.className = 'presence-feedback success';
         }
-        
-        const statusDiv = document.getElementById('presenceStatus');
-        statusDiv.textContent = status;
-        statusDiv.className = 'presence-status ' + statusClass;
-        statusDiv.style.display = 'block';
-        
+        feedback.style.display = 'block';
+
         this.disabled = true;
-        this.textContent = '✓ Présence déjà enregistrée';
-        
-        // Mise à jour du tableau
-        updateTable(now, timeValue <= limitTime ? 'ponctuel' : 'retard');
+        this.innerHTML = '<i class="fas fa-check-circle"></i> Présence enregistrée';
+
+        // Mise à jour tableau
+        const table = `
+            <table class="table table-custom w-100">
+                <thead><tr>
+                    <th>Date</th><th>Heure d'arrivée</th><th>Statut</th><th>Commentaire</th>
+                </tr></thead>
+                <tbody><tr>
+                    <td>${now.toLocaleDateString('fr-FR')}</td>
+                    <td>${now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' })}</td>
+                    <td><span class="badge-${isLate ? 'retard' : 'ponctuel'}">${isLate ? 'En retard' : 'Ponctuel'}</span></td>
+                    <td>—</td>
+                </tr></tbody>
+            </table>`;
+        document.getElementById('tableContent').innerHTML = table;
     });
-    
-    // Fonction pour mettre à jour le tableau
-    function updateTable(date, status) {
-        const tableHTML = `
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Heure d'arrivée</th>
-                        <th>Statut</th>
-                        <th>Commentaire</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>${date.toLocaleDateString('fr-FR')}</td>
-                        <td>${date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</td>
-                        <td><span class="status-badge ${status}">${status === 'ponctuel' ? 'Ponctuel' : 'En retard'}</span></td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
-        document.getElementById('tableContent').innerHTML = tableHTML;
-    }
 </script>
 {% endblock %}
