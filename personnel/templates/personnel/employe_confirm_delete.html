@@ -1,0 +1,36 @@
+{% extends 'personnel/base.html' %}
+
+{% block title %}Supprimer {{ employe.prenom }} {{ employe.nom }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">⚠️ Confirmation de suppression</h4>
+                </div>
+                <div class="card-body text-center">
+                    <i class="fas fa-exclamation-triangle fa-4x text-warning mb-3"></i>
+                    <p class="lead">
+                        Êtes-vous sûr de vouloir supprimer l'employé :<br>
+                        <strong>{{ employe.prenom }} {{ employe.nom }}</strong><br>
+                        <small class="text-muted">Matricule: {{ employe.matricule }}</small>
+                    </p>
+                    <p class="text-danger small">Cette action est irréversible !</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <a href="{% url 'employes_list' %}" class="btn btn-secondary me-2">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Supprimer définitivement
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

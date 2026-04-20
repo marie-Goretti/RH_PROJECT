@@ -1,13 +1,14 @@
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import RegisterForm, LoginForm, CongeForm
-from .models import Employe, Conge, Presence
+from .forms import RegisterForm, LoginForm, CongeForm, EmployeForm
+from .models import Employe, Conge, Presence, Departement
 from datetime import date
 from django.db.models import Count, Q
+
 
 def register_view(request):
     """Vue pour l'inscription"""
@@ -236,3 +237,170 @@ def demande_conge(request):
     }
     
     return render(request, 'personnel/demande_conge.html', context)
+
+
+
+def liste_employes(request):
+    query = request.GET.get('q')
+
+    employes = Employe.objects.select_related('departement').all()
+
+    if query:
+        employes = employes.filter(
+            Q(nom__icontains=query) |
+            Q(prenom__icontains=query) |
+            Q(email__icontains=query) |
+            Q(poste__icontains=query) |
+            Q(departement__nom__icontains=query)
+        )
+
+    context = {
+        'employes': employes,
+        'query': query
+    }
+    return render(request, 'personnel/liste_employes.html', context)
+
+
+def is_admin_rh(user):
+    """Vérifie si l'utilisateur est admin RH"""
+    return hasattr(user, 'employe') and user.employe.role == 'admin_rh'
+
+@login_required
+@user_passes_test(is_admin_rh)
+def employes_list(request):
+    """Liste tous les employés avec recherche et filtres"""
+    
+    query = request.GET.get('q', '')
+    statut_filter = request.GET.get('statut', '')
+    departement_filter = request.GET.get('departement', '')
+    
+    employes = Employe.objects.select_related('departement').all()
+    
+    # 🔍 Filtre de recherche (nom, prénom, email, téléphone, matricule, poste)
+    if query:
+        employes = employes.filter(
+            Q(nom__icontains=query) |
+            Q(prenom__icontains=query) |
+            Q(email__icontains=query) |
+            Q(telephone__icontains=query) |
+            Q(matricule__icontains=query) |
+            Q(poste__icontains=query)
+        )
+    
+    # 🔍 Filtre par statut
+    if statut_filter:
+        employes = employes.filter(statut=statut_filter)
+    
+    # 🔍 Filtre par département
+    if departement_filter:
+        employes = employes.filter(departement_id=departement_filter)
+    
+    # Tri par nom
+    employes = employes.order_by('nom', 'prenom')
+    
+    context = {
+        'employes': employes,
+        'query': query,
+        'statut_filter': statut_filter,
+        'departement_filter': departement_filter,
+        'departements': Departement.objects.all(),
+        'statuts_choices': Employe._meta.get_field('statut').choices
+    }
+    
+    return render(request, 'personnel/employes_list.html', context)
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def employe_create(request):
+    """Créer un nouvel employé"""
+    
+    if request.method == 'POST':
+        form = EmployeForm(request.POST)
+        if form.is_valid():
+            employe = form.save(commit=False)
+            employe.statut = employe.statut or 'actif'
+            employe.save()
+            messages.success(request, f'Employé {employe.prenom} {employe.nom} ajouté avec succès !')
+            return redirect('employes_list')
+        else:
+            messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
+    else:
+        form = EmployeForm()
+    
+    return render(request, 'personnel/employe_form.html', {
+        'form': form,
+        'action': 'create',
+        'title': 'Ajouter un employé'
+    })
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def employe_detail(request, pk):
+    """Voir les détails d'un employé"""
+    
+    employe = get_object_or_404(Employe.objects.select_related('departement', 'user'), pk=pk)
+    
+    # Stats de l'employé
+    conges = employe.conges.all().order_by('-date_debut')[:5]
+    presences = employe.presences.filter(date__month=date.today().month).order_by('-date')[:10]
+    
+    context = {
+        'employe': employe,
+        'conges': conges,
+        'presences': presences
+    }
+    
+    return render(request, 'personnel/employe_detail.html', context)
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def employe_update(request, pk):
+    """Modifier un employé"""
+    
+    employe = get_object_or_404(Employe, pk=pk)
+    
+    if request.method == 'POST':
+        form = EmployeForm(request.POST, instance=employe)
+        if form.is_valid():
+            form.save()
+            # Mettre à jour l'email dans le User lié si nécessaire
+            if employe.user:
+                employe.user.email = employe.email
+                employe.user.username = employe.email
+                employe.user.save()
+            messages.success(request, f'Employé {employe.prenom} {employe.nom} modifié avec succès !')
+            return redirect('employes_list')
+        else:
+            messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
+    else:
+        form = EmployeForm(instance=employe)
+    
+    return render(request, 'personnel/employe_form.html', {
+        'form': form,
+        'action': 'update',
+        'title': f'Modifier {employe.prenom} {employe.nom}',
+        'employe': employe
+    })
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def employe_delete(request, pk):
+    """Supprimer un employé (avec confirmation)"""
+    
+    employe = get_object_or_404(Employe, pk=pk)
+    
+    if request.method == 'POST':
+        nom = employe.nom
+        # Supprimer aussi l'utilisateur lié
+        if employe.user:
+            employe.user.delete()
+        else:
+            employe.delete()
+        messages.success(request, f'Employé {nom} supprimé avec succès !')
+        return redirect('employes_list')
+    
+    return render(request, 'personnel/employe_confirm_delete.html', {'employe': employe})

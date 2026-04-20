@@ -198,3 +198,84 @@ class CongeForm(forms.ModelForm):
             'justificatif_texte': 'Motif',
             'justificatif_fichier': 'Pièce justificative (optionnel)'
         }
+
+class EmployeForm(forms.ModelForm):
+    """Formulaire pour créer/modifier un employé"""
+    
+    class Meta:
+        model = Employe
+        fields = [
+            'matricule', 'nom', 'prenom', 'email', 'telephone',
+            'poste', 'departement', 'date_embauche', 'statut', 'role'
+        ]
+        widgets = {
+            'matricule': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Matricule (ex: EMP001)'
+            }),
+            'nom': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Nom'
+            }),
+            'prenom': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Prénom'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'email@entreprise.com'
+            }),
+            'telephone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': '+225 XX XX XX XX'
+            }),
+            'poste': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Intitulé du poste'
+            }),
+            'departement': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'date_embauche': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+            'statut': forms.Select(attrs={
+                'class': 'form-select'
+            }, choices=[
+                ('actif', 'Actif'),
+                ('inactif', 'Inactif'),
+                ('conge', 'En congé'),
+                ('demission', 'Démission')
+            ]),
+            'role': forms.Select(attrs={
+                'class': 'form-select'
+            }, choices=Employe.ROLE_CHOICES)
+        }
+        labels = {
+            'matricule': 'Matricule',
+            'nom': 'Nom',
+            'prenom': 'Prénom',
+            'email': 'Email',
+            'telephone': 'Téléphone',
+            'poste': 'Poste',
+            'departement': 'Département',
+            'date_embauche': "Date d'embauche",
+            'statut': 'Statut',
+            'role': 'Rôle'
+        }
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        # Exclure l'employé actuel lors de la modification
+        pk = self.instance.pk
+        if Employe.objects.filter(email=email).exclude(pk=pk).exists():
+            raise forms.ValidationError("Cet email est déjà utilisé.")
+        return email
+    
+    def clean_matricule(self):
+        matricule = self.cleaned_data.get('matricule')
+        pk = self.instance.pk
+        if Employe.objects.filter(matricule=matricule).exclude(pk=pk).exists():
+            raise forms.ValidationError("Ce matricule est déjà utilisé.")
+        return matricule
