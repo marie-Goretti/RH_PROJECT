@@ -17,7 +17,7 @@ def register_view(request):
         # Si l'utilisateur est déjà connecté, rediriger
         if hasattr(request.user, 'employe'):
             if request.user.employe.role == 'admin_rh':
-                return redirect('dashboard_rh')
+                return redirect('dashboard')
             else:
                 return redirect('dashboard_employe')
         return redirect('dashboard')
@@ -37,7 +37,7 @@ def register_view(request):
             # Rediriger selon le rôle
             if hasattr(user, 'employe'):
                 if user.employe.role == 'admin_rh':
-                    return redirect('dashboard_rh')
+                    return redirect('dashboard')
                 else:
                     return redirect('dashboard_employe')
             
@@ -56,7 +56,7 @@ def login_view(request):
     if request.user.is_authenticated:
         if hasattr(request.user, 'employe'):
             if request.user.employe.role == 'admin_rh':
-                return redirect('dashboard_rh')
+                return redirect('dashboard')
             else:
                 return redirect('dashboard_employe')
         return redirect('dashboard')
@@ -92,7 +92,7 @@ def login_view(request):
                 # Rediriger selon le rôle
                 if hasattr(user, 'employe'):
                     if user.employe.role == 'admin_rh':
-                        return redirect('dashboard_rh')
+                        return redirect('dashboard')
                     else:
                         return redirect('dashboard_employe')
                 
@@ -113,10 +113,10 @@ def logout_view(request):
     return redirect('login')
 
 
-@login_required
-def dashboard(request):
-    """Vue temporaire pour le tableau de bord général"""
-    return render(request, 'personnel/dashboard.html')
+#@login_required
+#def dashboard(request):
+ #   """Vue temporaire pour le tableau de bord général"""
+  #  return render(request, 'personnel/dashboard.html')
 
 
 @login_required
@@ -134,7 +134,7 @@ def dashboard_employe(request):
 
 
 @login_required
-def dashboard_rh(request):
+def dashboard(request):
     """Vue du tableau de bord Admin RH avec statistiques"""
     # Vérifier que l'utilisateur est bien un admin RH
     if not hasattr(request.user, 'employe') or request.user.employe.role != 'admin_rh':
@@ -176,7 +176,7 @@ def dashboard_rh(request):
         'conges_en_attente': conges_en_attente,
     }
     
-    return render(request, 'personnel/dashboard_rh.html', context)
+    return render(request, 'personnel/dashboard.html', context)
 
 
 @login_required
@@ -276,7 +276,7 @@ def employes_list(request):
     
     employes = Employe.objects.select_related('departement').all()
     
-    # 🔍 Filtre de recherche (nom, prénom, email, téléphone, matricule, poste)
+    # Filtre de recherche (nom, prénom, email, téléphone, matricule, poste)
     if query:
         employes = employes.filter(
             Q(nom__icontains=query) |
@@ -287,11 +287,11 @@ def employes_list(request):
             Q(poste__icontains=query)
         )
     
-    # 🔍 Filtre par statut
+    # Filtre par statut
     if statut_filter:
         employes = employes.filter(statut=statut_filter)
     
-    # 🔍 Filtre par département
+    # Filtre par département
     if departement_filter:
         employes = employes.filter(departement_id=departement_filter)
     
