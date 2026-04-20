@@ -27,12 +27,14 @@
                 </div>
                 
                 <div class="col-md-3">
-                    <label class="form-label-custom">Statut</label>
-                    <select name="statut" class="form-select form-control-custom">
-                        <option value="">Tous les statuts</option>
-                        <option value="actif" {% if statut_filter == 'actif' %}selected{% endif %}>Actif</option>
-                        <option value="conge" {% if statut_filter == 'conge' %}selected{% endif %}>En congé</option>
-                        <option value="inactif" {% if statut_filter == 'inactif' %}selected{% endif %}>Inactif</option>
+                    <label class="form-label-custom">Assiduité (Aujourd'hui)</label>
+                    <select name="assiduite" class="form-select form-control-custom">
+                        <option value="">Tous</option>
+                        <option value="present" {% if assiduite_filter == 'present' %}selected{% endif %}>À l'heure</option>
+                        <option value="retard" {% if assiduite_filter == 'retard' %}selected{% endif %}>En retard</option>
+                        <option value="absent" {% if assiduite_filter == 'absent' %}selected{% endif %}>Absent</option>
+                        <option value="conge" {% if assiduite_filter == 'conge' %}selected{% endif %}>En congé</option>
+                        <option value="non_pointe" {% if assiduite_filter == 'non_pointe' %}selected{% endif %}>Non pointé</option>
                     </select>
                 </div>
                 
@@ -72,7 +74,7 @@
                         <th>Téléphone</th>
                         <th>Poste</th>
                         <th>Département</th>
-                        <th>Statut</th>
+                        <th>Assiduité</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -96,13 +98,21 @@
                         <td class="text-navy">{{ emp.poste }}</td>
                         <td>{{ emp.departement.nom|default:"-" }}</td>
                         <td>
-                            {% if emp.statut == 'actif' %}
-                                <span class="badge-actif">Actif</span>
-                            {% elif emp.statut == 'conge' %}
-                                <span class="badge-conge">En congé</span>
-                            {% else %}
-                                <span class="badge-inactif">Inactif</span>
-                            {% endif %}
+                            {% with presence=emp.presence_today|first %}
+                                {% if presence %}
+                                    {% if presence.statut == 'present' %}
+                                        <span class="badge bg-success px-3 py-2 rounded-pill"><i class="fas fa-check-circle me-1"></i>À l'heure</span>
+                                    {% elif presence.statut == 'retard' %}
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill"><i class="fas fa-clock me-1"></i>En retard</span>
+                                    {% elif presence.statut == 'absent' %}
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill"><i class="fas fa-times-circle me-1"></i>Absent</span>
+                                    {% elif presence.statut == 'conge' %}
+                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill"><i class="fas fa-umbrella-beach me-1"></i>En congé</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary px-3 py-2 rounded-pill"><i class="fas fa-question-circle me-1"></i>Non pointé</span>
+                                {% endif %}
+                            {% endwith %}
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group">

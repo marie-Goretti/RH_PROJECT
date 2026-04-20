@@ -369,9 +369,11 @@ def is_admin_rh(user):
 @user_passes_test(is_admin_rh)
 def employes_list(request):
     """Liste tous les employés avec recherche et filtres"""
+    from datetime import date
+    from django.db.models import Prefetch
     
     query = request.GET.get('q', '')
-    statut_filter = request.GET.get('statut', '')
+    assiduite_filter = request.GET.get('assiduite', '')
     departement_filter = request.GET.get('departement', '')
     
     employes = Employe.objects.select_related('departement').all()
@@ -387,9 +389,14 @@ def employes_list(request):
             Q(poste__icontains=query)
         )
     
-    # Filtre par statut
-    if statut_filter:
-        employes = employes.filter(statut=statut_filter)
+    today = date.today()
+    
+    # Filtre par assiduité (présence d'aujourd'hui)
+    if assiduite_filter:
+        if assiduite_filter == 'non_pointe':
+            employes = employes.exclude(presences__date=today)
+        else:
+            employes = employes.filter(presences__date=today, presences__statut=assiduite_filter)
     
     # Filtre par département
     if departement_filter:
@@ -398,13 +405,18 @@ def employes_list(request):
     # Tri par nom
     employes = employes.order_by('nom', 'prenom')
     
+    # Charger la présence d'aujourd'hui
+    presences_today = Presence.objects.filter(date=today)
+    employes = employes.prefetch_related(
+        Prefetch('presences', queryset=presences_today, to_attr='presence_today')
+    )
+    
     context = {
         'employes': employes,
         'query': query,
-        'statut_filter': statut_filter,
+        'assiduite_filter': assiduite_filter,
         'departement_filter': departement_filter,
         'departements': Departement.objects.all(),
-        'statuts_choices': Employe._meta.get_field('statut').choices
     }
     
     return render(request, 'personnel/employes_list.html', context)
