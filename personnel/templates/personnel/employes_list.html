@@ -1,55 +1,45 @@
 {% extends 'personnel/base.html' %}
-{% load static %}
 
 {% block title %}Gestion des Employés{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
+<div class="container-fluid px-4 py-4">
     
-    <!-- 🔹 En-tête avec titre et bouton Ajouter -->
+    <!-- En-tête -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="mb-0">👥 Gestion des Employés</h2>
-            <p class="text-muted mb-0">{{ employes.count }} employé(s) trouvé(s)</p>
+            <h2 class="text-navy mb-1 fw-bold">👥 Gestion des Employés</h2>
+            <p class="text-gray mb-0">{{ employes.count }} employé(s) trouvé(s)</p>
         </div>
-        <a href="{% url 'employe_create' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Ajouter un employé
+        <a href="{% url 'employe_create' %}" class="btn btn-primary-custom">
+            <i class="fas fa-plus me-2"></i> Ajouter un employé
         </a>
     </div>
 
-    <!-- 🔹 Barre de recherche et filtres -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form method="get" action="{% url 'employes_list' %}" class="row g-3">
-                
-                <!-- Recherche globale -->
+    <!-- Barre de recherche -->
+    <div class="card-custom mb-4">
+        <div class="card-body p-4">
+            <form method="get" class="row g-3">
                 <div class="col-md-4">
-                    <label class="form-label">🔍 Rechercher</label>
-                    <input type="text" 
-                           name="q" 
-                           class="form-control" 
-                           placeholder="Nom, email, matricule..." 
-                           value="{{ query }}">
+                    <label class="form-label-custom">🔍 Rechercher</label>
+                    <input type="text" name="q" class="form-control form-control-custom" 
+                           placeholder="Nom, email, matricule..." value="{{ query }}">
                 </div>
                 
-                <!-- Filtre statut -->
                 <div class="col-md-3">
-                    <label class="form-label">Statut</label>
-                    <select name="statut" class="form-select">
+                    <label class="form-label-custom">Statut</label>
+                    <select name="statut" class="form-select form-control-custom">
                         <option value="">Tous les statuts</option>
-                        {% for value, label in statuts_choices %}
-                        <option value="{{ value }}" {% if statut_filter == value %}selected{% endif %}>
-                            {{ label }}
-                        </option>
-                        {% endfor %}
+                        <option value="actif" {% if statut_filter == 'actif' %}selected{% endif %}>Actif</option>
+                        <option value="conge" {% if statut_filter == 'conge' %}selected{% endif %}>En congé</option>
+                        <option value="inactif" {% if statut_filter == 'inactif' %}selected{% endif %}>Inactif</option>
                     </select>
                 </div>
                 
-                <!-- Filtre département -->
                 <div class="col-md-3">
-                    <label class="form-label">Département</label>
-                    <select name="departement" class="form-select">
-                        <option value="">Tous les départements</option>
+                    <label class="form-label-custom">Département</label>
+                    <select name="departement" class="form-select form-control-custom">
+                        <option value="">Tous</option>
                         {% for dept in departements %}
                         <option value="{{ dept.id }}" {% if departement_filter == dept.id|stringformat:"s" %}selected{% endif %}>
                             {{ dept.nom }}
@@ -58,12 +48,11 @@
                     </select>
                 </div>
                 
-                <!-- Boutons -->
                 <div class="col-md-2 d-flex align-items-end gap-2">
-                    <button type="submit" class="btn btn-primary flex-grow-1">
+                    <button type="submit" class="btn btn-primary-custom flex-grow-1">
                         <i class="fas fa-search"></i>
                     </button>
-                    <a href="{% url 'employes_list' %}" class="btn btn-outline-secondary" title="Réinitialiser">
+                    <a href="{% url 'employes_list' %}" class="btn btn-outline-custom" title="Réinitialiser">
                         <i class="fas fa-times"></i>
                     </a>
                 </div>
@@ -71,128 +60,103 @@
         </div>
     </div>
 
-    <!-- 🔹 Tableau des employés -->
-    <div class="card">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Matricule</th>
-                            <th>Nom & Prénom</th>
-                            <th>Email</th>
-                            <th>Téléphone</th>
-                            <th>Poste</th>
-                            <th>Département</th>
-                            <th>Date d'embauche</th>
-                            <th>Statut</th>
-                            <th class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for emp in employes %}
-                        <tr>
-                            <td><small class="text-muted">{{ emp.matricule }}</small></td>
-                            <td>
-                                <strong>{{ emp.nom }} {{ emp.prenom }}</strong>
-                            </td>
-                            <td>
-                                <a href="mailto:{{ emp.email }}">{{ emp.email }}</a>
-                            </td>
-                            <td>{{ emp.telephone|default:"-" }}</td>
-                            <td>{{ emp.poste }}</td>
-                            <td>{{ emp.departement.nom|default:"-" }}</td>
-                            <td>{{ emp.date_embauche|date:"d/m/Y" }}</td>
-                            <td>
-                                {% if emp.statut == 'actif' %}
-                                    <span class="badge bg-success">Actif</span>
-                                {% elif emp.statut == 'inactif' %}
-                                    <span class="badge bg-secondary">Inactif</span>
-                                {% elif emp.statut == 'conge' %}
-                                    <span class="badge bg-warning text-dark">En congé</span>
-                                {% else %}
-                                    <span class="badge bg-danger">Démission</span>
-                                {% endif %}
-                            </td>
-                            <td class="text-center">
-                                <div class="btn-group" role="group">
-                                    <!-- 👁️ Détails -->
-                                    <a href="{% url 'employe_detail' emp.pk %}" 
-                                       class="btn btn-sm btn-outline-info" 
-                                       title="Voir les détails">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    
-                                    <!-- ✏️ Modifier -->
-                                    <a href="{% url 'employe_update' emp.pk %}" 
-                                       class="btn btn-sm btn-outline-warning" 
-                                       title="Modifier">
-                                        <i class="fas fa-pen"></i>
-                                    </a>
-                                    
-                                    <!-- 🗑️ Supprimer -->
-                                    <button type="button" 
-                                            class="btn btn-sm btn-outline-danger" 
-                                            title="Supprimer"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#deleteModal{{ emp.pk }}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+    <!-- Tableau -->
+    <div class="card-custom">
+        <div class="table-responsive">
+            <table class="table table-custom mb-0">
+                <thead>
+                    <tr>
+                        <th>Matricule</th>
+                        <th>Nom & Prénom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Poste</th>
+                        <th>Département</th>
+                        <th>Statut</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emp in employes %}
+                    <tr>
+                        <td><small class="text-gray">{{ emp.matricule }}</small></td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-emerald rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width: 40px; height: 40px; color: white; font-weight: 600;">
+                                    {{ emp.prenom.0 }}{{ emp.nom.0 }}
                                 </div>
-                            </td>
-                        </tr>
-                        
-                        <!-- 🔹 Modal de confirmation de suppression -->
-                        <div class="modal fade" id="deleteModal{{ emp.pk }}" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title">Confirmer la suppression</h5>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Êtes-vous sûr de vouloir supprimer l'employé :</p>
-                                        <p class="fw-bold">{{ emp.prenom }} {{ emp.nom }} ({{ emp.matricule }}) ?</p>
-                                        <p class="text-muted small">Cette action est irréversible.</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                        <form method="post" action="{% url 'employe_delete' emp.pk %}" class="d-inline">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Supprimer</button>
-                                        </form>
-                                    </div>
+                                <div>
+                                    <strong class="text-navy">{{ emp.nom }} {{ emp.prenom }}</strong>
+                                </div>
+                            </div>
+                        </td>
+                        <td><a href="mailto:{{ emp.email }}" class="text-emerald text-decoration-none">{{ emp.email }}</a></td>
+                        <td class="text-gray">{{ emp.telephone|default:"-" }}</td>
+                        <td class="text-navy">{{ emp.poste }}</td>
+                        <td>{{ emp.departement.nom|default:"-" }}</td>
+                        <td>
+                            {% if emp.statut == 'actif' %}
+                                <span class="badge-actif">Actif</span>
+                            {% elif emp.statut == 'conge' %}
+                                <span class="badge-conge">En congé</span>
+                            {% else %}
+                                <span class="badge-inactif">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'employe_detail' emp.pk %}" class="btn btn-sm btn-outline-custom" title="Voir">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'employe_update' emp.pk %}" class="btn btn-sm btn-outline-custom" title="Modifier">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger-custom" title="Supprimer"
+                                        data-bs-toggle="modal" data-bs-target="#deleteModal{{ emp.pk }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Modal suppression -->
+                    <div class="modal fade" id="deleteModal{{ emp.pk }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header bg-navy text-white">
+                                    <h5 class="modal-title">Confirmer la suppression</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Supprimer <strong>{{ emp.prenom }} {{ emp.nom }}</strong> ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <form method="post" action="{% url 'employe_delete' emp.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger-custom">Supprimer</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        {% empty %}
-                        <tr>
-                            <td colspan="9" class="text-center py-5 text-muted">
+                    </div>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <div class="text-gray">
                                 <i class="fas fa-users fa-3x mb-3"></i>
                                 <p>Aucun employé trouvé.</p>
-                                <a href="{% url 'employe_create' %}" class="btn btn-primary btn-sm">
+                                <a href="{% url 'employe_create' %}" class="btn btn-primary-custom">
                                     <i class="fas fa-plus"></i> Ajouter un employé
                                 </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-    
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-// Tooltip Bootstrap
-document.addEventListener('DOMContentLoaded', function() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-});
-</script>
 {% endblock %}
