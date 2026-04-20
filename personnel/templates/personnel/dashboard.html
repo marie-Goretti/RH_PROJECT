@@ -16,7 +16,7 @@
         position: sticky;
         top: 0;
         z-index: 999;
-        margin: -20px -30px 30px -30px; /* Compense le padding du content-area */
+        margin-bottom: 10px ; /* Compense le padding du content-area */
         padding-left: 30px; /* Garde l'alignement avec le contenu */
     }
     
@@ -546,10 +546,6 @@
                 <div class="user-avatar-top">{{ employe.prenom.0 }}{{ employe.nom.0 }}</div>
             </div>
             
-            <a href="{% url 'logout' %}" class="btn-logout">
-                <i class="bi bi-box-arrow-right"></i>
-                Déconnexion
-            </a>
         </div>
     </nav>
     

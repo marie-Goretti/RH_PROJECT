@@ -315,25 +315,60 @@ def employes_list(request):
 def employe_create(request):
     """Créer un nouvel employé"""
     
+    password_errors = []
+ 
     if request.method == 'POST':
         form = EmployeForm(request.POST)
-        if form.is_valid():
-            employe = form.save(commit=False)
-            employe.statut = employe.statut or 'actif'
-            employe.save()
-            messages.success(request, f'Employé {employe.prenom} {employe.nom} ajouté avec succès !')
-            return redirect('employes_list')
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+ 
+        # Validation des mots de passe
+        if not password1:
+            password_errors.append('Le mot de passe est obligatoire.')
+        elif len(password1) < 8:
+            password_errors.append('Le mot de passe doit contenir au moins 8 caractères.')
+        elif password1 != password2:
+            password_errors.append('Les mots de passe ne correspondent pas.')
+
+ 
+        if form.is_valid() and not password_errors:
+            email = form.cleaned_data['email']
+ 
+            # Vérifier que l'email n'est pas déjà utilisé comme username
+            if User.objects.filter(username=email).exists():
+                form.add_error('email', 'Un compte avec cet email existe déjà.')
+            else:
+                # Créer le User Django
+                user = User.objects.create_user(
+                    username=email,
+                    email=email,
+                    password=password1
+                )
+ 
+                # Créer l'employé lié au User
+                employe = form.save(commit=False)
+                employe.user = user
+                employe.statut = employe.statut or 'actif'
+                employe.save()
+ 
+                messages.success(request, f'Employé {employe.prenom} {employe.nom} ajouté avec succès !')
+                return redirect('employes_list')
         else:
-            messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
+            if not password_errors:
+                messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
     else:
         form = EmployeForm()
-    
+ 
     return render(request, 'personnel/employe_form.html', {
         'form': form,
         'action': 'create',
-        'title': 'Ajouter un employé'
+        'title': 'Ajouter un employé',
+        'password_errors': password_errors,
     })
-
+                
+                
+                
+                
 
 @login_required
 @user_passes_test(is_admin_rh)
