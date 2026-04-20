@@ -10,7 +10,10 @@ urlpatterns = [
     path('dashboard/employe/', views.dashboard_employe, name='dashboard_employe'),
     path('dashboard/rh/', views.dashboard, name='dashboard'),
     
-    path('conges/demander/', views.demande_conge, name='demande_conge'),
+    path('conges/demander/',  views.demande_conge,   name='demande_conge'),
+    path('conges/gestion/',   views.gestion_conges,  name='gestion_conges'),
+    path('conges/<int:pk>/action/<str:action>/', views.conge_action, name='conge_action'),    
+    
     #path('conges/historique/', views.historique_conges, name='historique_conges'),  # optionnel
     path('presence/marquer/', views.marquer_presence, name='marquer_presence'),
     

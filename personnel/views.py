@@ -535,3 +535,88 @@ def employe_delete(request, pk):
         return redirect('employes_list')
     
     return render(request, 'personnel/employe_confirm_delete.html', {'employe': employe})
+
+
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def gestion_conges(request):
+    """
+    Vue RH : liste toutes les demandes de congé avec filtres par statut.
+    Remplace demande_conge() pour les admins RH.
+    """
+    statut_actif = request.GET.get('statut', 'en_attente')
+
+    # Base queryset avec les relations
+    conges_qs = Conge.objects.select_related(
+        'employe', 'employe__departement'
+    ).order_by('-date_debut')
+
+    # Compteurs globaux (avant filtre)
+    nb_en_attente = conges_qs.filter(statut='en_attente').count()
+    nb_approuve   = conges_qs.filter(statut='approuve').count()
+    nb_refuse     = conges_qs.filter(statut='refuse').count()
+    total         = conges_qs.count()
+
+    # Filtre selon l'onglet actif
+    if statut_actif != 'tous':
+        conges_qs = conges_qs.filter(statut=statut_actif)
+
+    # Injecter le nombre de jours sur chaque objet (sans modifier le modèle)
+    for conge in conges_qs:
+        conge.nb_jours = (conge.date_fin - conge.date_debut).days + 1
+
+    context = {
+        'conges':        conges_qs,
+        'statut_actif':  statut_actif,
+        'nb_en_attente': nb_en_attente,
+        'nb_approuve':   nb_approuve,
+        'nb_refuse':     nb_refuse,
+        'total':         total,
+        'employe':       request.user.employe,   # pour la sidebar
+    }
+    return render(request, 'personnel/gestion_conges.html', context)
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def conge_action(request, pk, action):
+    """
+    Endpoint POST : approuver ou refuser un congé.
+    action ∈ {'approuver', 'refuser'}
+    """
+    if request.method != 'POST':
+        return redirect('gestion_conges')
+
+    conge = get_object_or_404(Conge, pk=pk)
+
+    if conge.statut != 'en_attente':
+        messages.warning(request, 'Cette demande a déjà été traitée.')
+        return redirect('gestion_conges')
+
+    if action == 'approuver':
+        conge.statut = 'approuve'
+        conge.commentaire = ''
+        conge.save()
+        messages.success(
+            request,
+            f'Congé de {conge.employe.prenom} {conge.employe.nom} approuvé avec succès !'
+        )
+
+    elif action == 'refuser':
+        commentaire = request.POST.get('commentaire', '').strip()
+        if not commentaire:
+            messages.error(request, 'Veuillez saisir un motif de refus.')
+            return redirect(f'{request.META.get("HTTP_REFERER", "/conges/gestion/")}')
+        conge.statut     = 'refuse'
+        conge.commentaire = commentaire
+        conge.save()
+        messages.success(
+            request,
+            f'Congé de {conge.employe.prenom} {conge.employe.nom} refusé.'
+        )
+
+    # Rester sur l'onglet actif
+    statut_qs = request.POST.get('statut_actif', 'en_attente')
+    return redirect(f'/conges/gestion/?statut={statut_qs}')

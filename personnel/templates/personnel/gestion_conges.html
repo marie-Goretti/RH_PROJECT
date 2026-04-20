@@ -1,0 +1,410 @@
+{% extends 'personnel/base.html' %}
+{% load static %}
+
+{% block title %}Gestion des Congés - RH Manager{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        background: linear-gradient(135deg, var(--navy-blue) 0%, #132d47 100%);
+        padding: 30px 35px;
+        color: white;
+    }
+    .page-header h4 { font-weight: 700; margin: 0; font-size: 1.4rem; }
+    .page-header p  { color: var(--cool-gray); margin: 5px 0 0; font-size: 0.9rem; }
+
+    /* ── Onglets filtres ── */
+    .filter-tabs {
+        background: white;
+        padding: 0 35px;
+        display: flex;
+        border-bottom: 2px solid var(--gray-light);
+        box-shadow: 0 2px 8px rgba(11,28,45,0.05);
+    }
+    .filter-tab {
+        padding: 16px 22px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--cool-gray);
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+    .filter-tab:hover { color: var(--navy-blue); }
+    .filter-tab.active { color: var(--emerald-green); border-bottom-color: var(--emerald-green); }
+    .filter-tab .tab-count {
+        background: var(--gray-light);
+        color: var(--gray-dark);
+        border-radius: 20px;
+        padding: 2px 8px;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+    .filter-tab.active .tab-count {
+        background: rgba(31,122,99,0.15);
+        color: var(--emerald-green);
+    }
+
+    /* ── Stats ── */
+    .content-area { padding: 28px 35px; }
+    .stats-row { display: flex; gap: 14px; margin-bottom: 26px; flex-wrap: wrap; }
+    .stat-pill {
+        background: white;
+        border-radius: 10px;
+        padding: 14px 18px;
+        box-shadow: 0 2px 10px rgba(11,28,45,0.06);
+        border: 1px solid var(--gray-light);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        min-width: 140px;
+    }
+    .stat-icon {
+        width: 40px; height: 40px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem; flex-shrink: 0;
+    }
+    .stat-num { font-size: 1.5rem; font-weight: 800; color: var(--navy-blue); line-height: 1; }
+    .stat-lbl { font-size: 0.72rem; color: var(--cool-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+
+    /* ── Carte congé ── */
+    .conge-card {
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(11,28,45,0.06);
+        border: 1px solid var(--gray-light);
+        margin-bottom: 14px;
+        transition: box-shadow 0.25s, transform 0.25s;
+        overflow: hidden;
+    }
+    .conge-card:hover { box-shadow: 0 6px 24px rgba(11,28,45,0.11); transform: translateY(-2px); }
+    .conge-card-body {
+        padding: 18px 22px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .avatar-circle {
+        width: 46px; height: 46px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--emerald-green), #2ea888);
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-weight: 700; font-size: 0.95rem; flex-shrink: 0;
+    }
+
+    .employe-info { flex: 1; min-width: 160px; }
+    .employe-info .nom { font-weight: 700; color: var(--navy-blue); font-size: 0.92rem; margin-bottom: 3px; }
+    .employe-info .poste { color: var(--cool-gray); font-size: 0.78rem; }
+
+    .conge-details { display: flex; gap: 20px; flex-wrap: wrap; flex: 2; }
+    .detail-item { min-width: 100px; }
+    .detail-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cool-gray); margin-bottom: 4px; }
+    .detail-value { font-size: 0.85rem; font-weight: 600; color: var(--navy-blue); }
+
+    /* Badges */
+    .badge-type { padding: 4px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
+    .badge-annuel     { background: rgba(31,122,99,0.12);  color: var(--emerald-green); }
+    .badge-maladie    { background: rgba(220,53,69,0.10);  color: #dc3545; }
+    .badge-exceptionnel { background: rgba(255,152,0,0.12); color: #FF9800; }
+    .badge-sans_solde { background: rgba(108,117,125,0.12); color: #6c757d; }
+
+    .badge-statut { padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+    .badge-en_attente { background: rgba(255,193,7,0.15); color: #e6a800; }
+    .badge-approuve   { background: rgba(31,122,99,0.15);  color: var(--emerald-green); }
+    .badge-refuse     { background: rgba(220,53,69,0.13);  color: #dc3545; }
+    .badge-annule     { background: rgba(108,117,125,0.12);color: #6c757d; }
+
+    .duree-badge {
+        background: var(--soft-white);
+        border: 1px solid var(--gray-light);
+        border-radius: 8px; padding: 3px 9px;
+        font-size: 0.75rem; font-weight: 700; color: var(--navy-blue);
+    }
+
+    /* Boutons action */
+    .actions-group { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+    .btn-approve {
+        background: var(--emerald-green); border: none; color: white;
+        padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+        cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+    }
+    .btn-approve:hover { background: #178a6e; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(31,122,99,0.3); }
+    .btn-refuse {
+        background: white; border: 2px solid #dc3545; color: #dc3545;
+        padding: 7px 15px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+        cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+    }
+    .btn-refuse:hover { background: #dc3545; color: white; transform: translateY(-1px); }
+
+    /* Justificatif */
+    .justificatif-strip {
+        background: rgba(31,122,99,0.05);
+        border-top: 1px solid rgba(31,122,99,0.1);
+        padding: 9px 22px; font-size: 0.8rem; color: var(--gray-dark);
+        display: flex; align-items: center; gap: 8px;
+    }
+    .justificatif-strip i { color: var(--emerald-green); }
+
+    /* Commentaire de refus affiché */
+    .refus-strip {
+        background: rgba(220,53,69,0.05);
+        border-top: 1px solid rgba(220,53,69,0.1);
+        padding: 9px 22px; font-size: 0.8rem; color: #dc3545;
+        display: flex; align-items: center; gap: 8px;
+    }
+
+    /* État vide */
+    .empty-state { text-align: center; padding: 70px 20px; color: var(--cool-gray); }
+    .empty-state i { font-size: 3.5rem; opacity: 0.25; display: block; margin-bottom: 14px; }
+    .empty-state h6 { font-weight: 700; color: var(--navy-blue); margin-bottom: 6px; }
+
+    /* Modal */
+    .modal-header-custom { background: var(--navy-blue); color: white; border-radius: 12px 12px 0 0; }
+    .modal-header-custom .btn-close { filter: invert(1); }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- En-tête -->
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+            <h4><i class="fas fa-calendar-check me-2" style="color:var(--emerald-green);"></i>Gestion des Congés</h4>
+            <p>Validez ou refusez les demandes de congé de vos employés.</p>
+        </div>
+        {% if nb_en_attente > 0 %}
+        <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill align-self-center">
+            <i class="fas fa-bell me-1"></i>{{ nb_en_attente }} demande{{ nb_en_attente|pluralize }} en attente
+        </span>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Onglets filtres -->
+<div class="filter-tabs">
+    <a href="?statut=tous" class="filter-tab {% if statut_actif == 'tous' %}active{% endif %}">
+        <i class="fas fa-list"></i> Toutes <span class="tab-count">{{ total }}</span>
+    </a>
+    <a href="?statut=en_attente" class="filter-tab {% if statut_actif == 'en_attente' %}active{% endif %}">
+        <i class="fas fa-hourglass-half"></i> En attente <span class="tab-count">{{ nb_en_attente }}</span>
+    </a>
+    <a href="?statut=approuve" class="filter-tab {% if statut_actif == 'approuve' %}active{% endif %}">
+        <i class="fas fa-check-circle"></i> Approuvées <span class="tab-count">{{ nb_approuve }}</span>
+    </a>
+    <a href="?statut=refuse" class="filter-tab {% if statut_actif == 'refuse' %}active{% endif %}">
+        <i class="fas fa-times-circle"></i> Refusées <span class="tab-count">{{ nb_refuse }}</span>
+    </a>
+</div>
+
+<!-- Contenu -->
+<div class="content-area">
+
+    <!-- Stats rapides -->
+    <div class="stats-row">
+        <div class="stat-pill">
+            <div class="stat-icon" style="background:rgba(255,193,7,0.12);">
+                <i class="fas fa-hourglass-half" style="color:#e6a800;"></i>
+            </div>
+            <div><div class="stat-num">{{ nb_en_attente }}</div><div class="stat-lbl">En attente</div></div>
+        </div>
+        <div class="stat-pill">
+            <div class="stat-icon" style="background:rgba(31,122,99,0.12);">
+                <i class="fas fa-check-circle" style="color:var(--emerald-green);"></i>
+            </div>
+            <div><div class="stat-num">{{ nb_approuve }}</div><div class="stat-lbl">Approuvées</div></div>
+        </div>
+        <div class="stat-pill">
+            <div class="stat-icon" style="background:rgba(220,53,69,0.12);">
+                <i class="fas fa-times-circle" style="color:#dc3545;"></i>
+            </div>
+            <div><div class="stat-num">{{ nb_refuse }}</div><div class="stat-lbl">Refusées</div></div>
+        </div>
+        <div class="stat-pill">
+            <div class="stat-icon" style="background:rgba(11,28,45,0.08);">
+                <i class="fas fa-calendar-alt" style="color:var(--navy-blue);"></i>
+            </div>
+            <div><div class="stat-num">{{ total }}</div><div class="stat-lbl">Total</div></div>
+        </div>
+    </div>
+
+    <!-- Liste -->
+    {% if conges %}
+        {% for conge in conges %}
+        <div class="conge-card animate-fade-in">
+            <div class="conge-card-body">
+
+                <!-- Avatar -->
+                <div class="avatar-circle">
+                    {{ conge.employe.prenom|first|upper }}{{ conge.employe.nom|first|upper }}
+                </div>
+
+                <!-- Infos employé -->
+                <div class="employe-info">
+                    <div class="nom">{{ conge.employe.prenom }} {{ conge.employe.nom }}</div>
+                    <div class="poste">{{ conge.employe.poste }}{% if conge.employe.departement %} · {{ conge.employe.departement }}{% endif %}</div>
+                </div>
+
+                <!-- Détails -->
+                <div class="conge-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Type</div>
+                        <div class="detail-value">
+                            <span class="badge-type badge-{{ conge.type_conge }}">{{ conge.get_type_conge_display }}</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Début</div>
+                        <div class="detail-value">{{ conge.date_debut|date:"d/m/Y" }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fin</div>
+                        <div class="detail-value">{{ conge.date_fin|date:"d/m/Y" }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Durée</div>
+                        <div class="detail-value">
+                            <span class="duree-badge">{{ conge.nb_jours }} j</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Statut</div>
+                        <div class="detail-value">
+                            <span class="badge-statut badge-{{ conge.statut }}">
+                                {% if conge.statut == 'en_attente' %}<i class="fas fa-hourglass-half me-1"></i>
+                                {% elif conge.statut == 'approuve' %}<i class="fas fa-check me-1"></i>
+                                {% elif conge.statut == 'refuse' %}<i class="fas fa-times me-1"></i>
+                                {% elif conge.statut == 'annule' %}<i class="fas fa-ban me-1"></i>{% endif %}
+                                {{ conge.get_statut_display }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="actions-group">
+                    {% if conge.statut == 'en_attente' %}
+                    <form method="POST" action="{% url 'conge_action' conge.pk 'approuver' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-approve"
+                            onclick="return confirm('Approuver le congé de {{ conge.employe.prenom }} {{ conge.employe.nom }} ?')">
+                            <i class="fas fa-check"></i> Approuver
+                        </button>
+                    </form>
+                    <button class="btn-refuse" data-bs-toggle="modal" data-bs-target="#modalRefus{{ conge.pk }}">
+                        <i class="fas fa-times"></i> Refuser
+                    </button>
+                    {% else %}
+                    <span class="text-muted small fst-italic" style="font-size:0.78rem;">Traité</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Justificatif texte -->
+            {% if conge.justificatif_texte %}
+            <div class="justificatif-strip">
+                <i class="fas fa-comment-alt"></i>
+                <span><strong>Motif :</strong> {{ conge.justificatif_texte|truncatechars:150 }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Fichier joint -->
+            {% if conge.justificatif_fichier %}
+            <div class="justificatif-strip">
+                <i class="fas fa-paperclip"></i>
+                <a href="{{ conge.justificatif_fichier.url }}" target="_blank" style="color:var(--emerald-green); font-weight:600;">
+                    Pièce jointe — consulter le document
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Commentaire de refus -->
+            {% if conge.statut == 'refuse' and conge.commentaire %}
+            <div class="refus-strip">
+                <i class="fas fa-exclamation-circle"></i>
+                <span><strong>Motif du refus :</strong> {{ conge.commentaire }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Modal refus -->
+        {% if conge.statut == 'en_attente' %}
+        <div class="modal fade" id="modalRefus{{ conge.pk }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius:14px; overflow:hidden; border:none; box-shadow:0 20px 60px rgba(11,28,45,0.2);">
+                    <div class="modal-header modal-header-custom p-4">
+                        <h6 class="modal-title fw-bold mb-0">
+                            <i class="fas fa-times-circle me-2"></i>Refuser la demande de congé
+                        </h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form method="POST" action="{% url 'conge_action' conge.pk 'refuser' %}">
+                        {% csrf_token %}
+                        <div class="modal-body p-4">
+                            <!-- Résumé -->
+                            <div class="p-3 rounded-3 mb-3" style="background:var(--soft-white); border:1px solid var(--gray-light);">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-circle" style="width:38px;height:38px;font-size:0.85rem;">
+                                        {{ conge.employe.prenom|first|upper }}{{ conge.employe.nom|first|upper }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold" style="color:var(--navy-blue);font-size:0.9rem;">
+                                            {{ conge.employe.prenom }} {{ conge.employe.nom }}
+                                        </div>
+                                        <div style="font-size:0.78rem; color:var(--cool-gray);">
+                                            {{ conge.get_type_conge_display }} · {{ conge.date_debut|date:"d/m/Y" }} → {{ conge.date_fin|date:"d/m/Y" }} · <strong>{{ conge.nb_jours }} j</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-1">
+                                <label class="form-label fw-bold" style="color:var(--navy-blue); font-size:0.875rem;">
+                                    Motif du refus <span class="text-danger">*</span>
+                                </label>
+                                <textarea name="commentaire" class="form-control" rows="3"
+                                    placeholder="Expliquez la raison du refus à l'employé..."
+                                    required
+                                    style="border:2px solid var(--gray-light); border-radius:8px; font-size:0.875rem; resize:none;"></textarea>
+                                <div class="form-text">Ce motif sera visible par l'employé.</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="border-top:1px solid var(--gray-light); padding:14px 22px; gap:10px;">
+                            <button type="button" class="btn btn-light fw-semibold" data-bs-dismiss="modal" style="border-radius:8px;">
+                                Annuler
+                            </button>
+                            <button type="submit" class="btn btn-danger fw-bold" style="border-radius:8px;">
+                                <i class="fas fa-times me-1"></i> Confirmer le refus
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% endfor %}
+
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-calendar-times"></i>
+        <h6>Aucune demande trouvée</h6>
+        <p style="font-size:0.875rem;">
+            {% if statut_actif == 'en_attente' %}Aucune demande en attente de validation.
+            {% elif statut_actif == 'approuve' %}Aucune demande approuvée pour le moment.
+            {% elif statut_actif == 'refuse' %}Aucune demande refusée.
+            {% else %}Aucune demande de congé enregistrée.{% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
