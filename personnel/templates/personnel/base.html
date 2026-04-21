@@ -365,7 +365,7 @@
             
             {% if user.employe.role == 'admin_rh' %}
             <li class="nav-item">
-                <a class="nav-link {% if 'employe' in request.resolver_match.url_name %}active{% endif %}" 
+                <a class="nav-link {% if 'employe' in request.resolver_match.url_name and 'departement' not in request.resolver_match.url_name and 'dashboard' not in request.resolver_match.url_name %}active{% endif %}" 
                    href="{% url 'employes_list' %}">
                     <i class="fas fa-users"></i> Employés
                 </a>
