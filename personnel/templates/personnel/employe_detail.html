@@ -3,106 +3,172 @@
 {% block title %}{{ employe.prenom }} {{ employe.nom }} - Détails{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container-fluid px-4 py-4">
     
     <!-- Navigation -->
-    <div class="d-flex align-items-center mb-4">
-        <a href="{% url 'employes_list' %}" class="btn btn-outline-secondary me-3">
-            <i class="fas fa-arrow-left"></i> Retour
-        </a>
-        <h2 class="mb-0">📋 Fiche Employé</h2>
+    <div class="mb-5">
+        <div class="d-flex align-items-center mb-2">
+            <a href="{% url 'employes_list' %}" class="text-gray text-decoration-none me-2" style="font-weight: 500;">
+                <i class="fas fa-chevron-left me-1"></i> Retour
+            </a>
+            <span class="text-gray mx-2" style="font-size: 12px;"><i class="fas fa-chevron-right"></i></span>
+            <span class="text-navy" style="font-weight: 500;">Employés</span>
+        </div>
+        <h1 class="text-navy mb-1" style="font-weight: 800; font-size: 32px;">Tous les employés</h1>
+        <p class="text-gray" style="font-size: 15px;">Informations détaillées</p>
     </div>
 
-    <div class="row">
-        <!-- 🔹 Informations principales -->
-        <div class="col-lg-5">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">👤 Informations Personnelles</h5>
+    <div class="row g-4">
+        <!-- Colonne de gauche (Profil) -->
+        <div class="col-lg-5 col-xl-4">
+            <!-- Carte Profil -->
+            <div class="card-custom p-4 mb-4" style="border-radius: 16px;">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="rounded-circle bg-soft d-flex align-items-center justify-content-center me-3" 
+                         style="width: 80px; height: 80px; font-size: 28px; color: var(--emerald-green); font-weight: 700;">
+                        {{ employe.prenom.0 }}{{ employe.nom.0 }}
+                    </div>
+                    <div>
+                        <h4 class="text-navy mb-2" style="font-weight: 700; font-size: 22px;">{{ employe.prenom }} {{ employe.nom }}</h4>
+                        <span class="badge" style="background-color: rgba(255, 152, 0, 0.15); color: #E68A00; padding: 6px 14px; font-weight: 600; border-radius: 20px; font-size: 13px;">
+                            {{ employe.poste }}
+                        </span>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="text-center mb-4">
-                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" 
-                             style="width: 100px; height: 100px;">
-                            <i class="fas fa-user fa-3x text-muted"></i>
-                        </div>
-                        <h4 class="mt-3 mb-1">{{ employe.prenom }} {{ employe.nom }}</h4>
-                        <p class="text-muted mb-0">{{ employe.poste }}</p>
+
+                <div class="row mb-4 mt-2">
+                    <div class="col-6">
+                        <small class="text-gray d-block mb-1" style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">DÉPARTEMENT</small>
+                        <span class="text-navy" style="font-weight: 600; font-size: 14px;">{{ employe.departement.nom|default:"-" }}</span>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-gray d-block mb-1" style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">DATE D'ADHÉSION</small>
+                        <span class="text-navy" style="font-weight: 600; font-size: 14px;">{{ employe.date_embauche|date:"d M, Y" }}</span>
+                    </div>
+                </div>
+
+                <div class="bg-soft p-3 mb-4" style="border-radius: 12px;">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-envelope text-gray me-3"></i>
+                        <a href="mailto:{{ employe.email }}" class="text-navy text-decoration-none" style="font-weight: 600; font-size: 14px;">{{ employe.email }}</a>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-phone-alt text-gray me-3"></i>
+                        <span class="text-navy" style="font-size: 14px; font-weight: 600;">{{ employe.telephone|default:"-" }}</span>
+                    </div>
+                </div>
+                
+                <!-- Statut & Actions -->
+                <div class="pt-4" style="border-top: 1px dashed rgba(157, 170, 171, 0.3);">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <small class="text-gray" style="font-weight: 600; text-transform: uppercase; font-size: 12px;">Statut actuel</small>
                         {% if employe.statut == 'actif' %}
-                            <span class="badge bg-success mt-2">Actif</span>
+                            <span class="badge bg-emerald rounded-pill px-3 py-2" style="font-weight: 600;">Actif</span>
+                        {% elif employe.statut == 'inactif' %}
+                            <span class="badge bg-danger rounded-pill px-3 py-2" style="font-weight: 600;">Inactif</span>
                         {% else %}
-                            <span class="badge bg-secondary mt-2">{{ employe.get_statut_display }}</span>
+                            <span class="badge rounded-pill px-3 py-2" style="background-color: #FF9800; color: white; font-weight: 600;">En congé</span>
                         {% endif %}
                     </div>
                     
-                    <dl class="row mb-0">
-                        <dt class="col-5">Matricule</dt>
-                        <dd class="col-7">{{ employe.matricule }}</dd>
-                        
-                        <dt class="col-5">Email</dt>
-                        <dd class="col-7">
-                            <a href="mailto:{{ employe.email }}">{{ employe.email }}</a>
-                        </dd>
-                        
-                        <dt class="col-5">Téléphone</dt>
-                        <dd class="col-7">{{ employe.telephone|default:"-" }}</dd>
-                        
-                        <dt class="col-5">Département</dt>
-                        <dd class="col-7">{{ employe.departement.nom|default:"-" }}</dd>
-                        
-                        <dt class="col-5">Date d'embauche</dt>
-                        <dd class="col-7">{{ employe.date_embauche|date:"d/m/Y" }}</dd>
-                        
-                        <dt class="col-5">Rôle</dt>
-                        <dd class="col-7">{{ employe.get_role_display }}</dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 🔹 Actions et historiques -->
-        <div class="col-lg-7">
-            <!-- Boutons d'action -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h6 class="card-title mb-3">⚙️ Actions</h6>
-                    <div class="btn-group">
-                        <a href="{% url 'employe_update' employe.pk %}" class="btn btn-warning">
-                            <i class="fas fa-pen"></i> Modifier
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'employe_update' employe.pk %}" class="btn flex-grow-1" style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); border: none; font-weight: 600; border-radius: 8px; padding: 10px;">
+                            <i class="fas fa-pen me-1"></i> Modifier
                         </a>
-                        <button type="button" class="btn btn-danger" 
-                                data-bs-toggle="modal" data-bs-target="#deleteModal">
-                            <i class="fas fa-trash"></i> Supprimer
+                        <button type="button" class="btn" style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545; border: none; font-weight: 600; border-radius: 8px; padding: 10px;" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fas fa-trash me-1"></i> Supprimer
                         </button>
                     </div>
                 </div>
             </div>
-            
-            <!-- Congés récents -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h6 class="mb-0">🏖️ Congés récents</h6>
+        </div>
+
+        <!-- Colonne de droite -->
+        <div class="col-lg-7 col-xl-8">
+            <div class="row g-4">
+                <!-- Informations administratives -->
+                <div class="col-12">
+                    <div class="card-custom p-4" style="border-radius: 16px;">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-navy m-0" style="font-weight: 700; font-size: 20px;">Informations administratives</h4>
+                            <i class="fas fa-ellipsis-v text-gray" style="cursor: pointer;"></i>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between py-3" style="border-bottom: 1px dashed rgba(157, 170, 171, 0.4);">
+                            <span class="text-gray" style="font-weight: 500; font-size: 14px;">Numéro matricule</span>
+                            <strong class="text-navy" style="font-weight: 600;">{{ employe.matricule }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between py-3" style="border-bottom: 1px dashed rgba(157, 170, 171, 0.4);">
+                            <span class="text-gray" style="font-weight: 500; font-size: 14px;">Niveau d'accès (Rôle)</span>
+                            <strong class="text-navy" style="font-weight: 600;">{{ employe.get_role_display }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between py-3" style="border-bottom: 1px dashed rgba(157, 170, 171, 0.4);">
+                            <span class="text-gray" style="font-weight: 500; font-size: 14px;">Membre depuis</span>
+                            <strong class="text-navy" style="font-weight: 600;">{{ employe.user.date_joined|date:"d/m/Y"|default:employe.date_embauche|date:"d/m/Y" }}</strong>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    {% if conges %}
-                    <ul class="list-group list-group-flush">
-                        {% for conge in conges %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>{{ conge.get_type_conge_display }}</strong>
-                                <small class="text-muted d-block">
-                                    {{ conge.date_debut|date:"d/m/Y" }} - {{ conge.date_fin|date:"d/m/Y" }}
-                                </small>
+
+                <!-- Congés récents -->
+                <div class="col-md-6">
+                    <div class="card-custom p-4 h-100" style="border-radius: 16px;">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-navy m-0" style="font-weight: 700; font-size: 20px;">Congés récents</h4>
+                        </div>
+                        
+                        {% if conges %}
+                            {% for conge in conges %}
+                            <div class="py-3 {% if not forloop.last %}border-bottom{% endif %}" style="border-bottom-style: dashed !important; border-bottom-color: rgba(157, 170, 171, 0.4) !important;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <strong class="text-navy" style="font-size: 14px; font-weight: 600;">{{ conge.get_type_conge_display }}</strong>
+                                    <span class="badge {% if conge.statut == 'approuve' %}bg-emerald{% elif conge.statut == 'refuse' %}bg-danger{% else %}bg-warning text-dark{% endif %} rounded-pill px-2 py-1" style="font-size: 11px;">
+                                        {{ conge.get_statut_display }}
+                                    </span>
+                                </div>
+                                <span class="text-gray" style="font-size: 13px; font-weight: 500;">{{ conge.date_debut|date:"d M" }} - {{ conge.date_fin|date:"d M Y" }}</span>
                             </div>
-                            <span class="badge {% if conge.statut == 'approuve' %}bg-success{% elif conge.statut == 'refuse' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
-                                {{ conge.get_statut_display }}
-                            </span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p class="text-muted mb-0">Aucun congé enregistré.</p>
-                    {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-umbrella-beach fa-2x text-soft mb-2" style="color: rgba(157, 170, 171, 0.5) !important;"></i>
+                                <p class="text-gray mb-0" style="font-size: 14px; font-weight: 500;">Aucun congé enregistré</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Présences récentes -->
+                <div class="col-md-6">
+                    <div class="card-custom p-4 h-100" style="border-radius: 16px;">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-navy m-0" style="font-weight: 700; font-size: 20px;">Présences (ce mois)</h4>
+                        </div>
+                        
+                        {% if presences %}
+                            {% for p in presences|slice:":4" %}
+                            <div class="d-flex justify-content-between align-items-center py-3 {% if not forloop.last %}border-bottom{% endif %}" style="border-bottom-style: dashed !important; border-bottom-color: rgba(157, 170, 171, 0.4) !important;">
+                                <div>
+                                    <strong class="text-navy d-block mb-1" style="font-size: 14px; font-weight: 600;">{{ p.date|date:"d F Y" }}</strong>
+                                    <span class="text-gray" style="font-size: 13px; font-weight: 500;"><i class="far fa-clock me-1"></i>{{ p.heure_arrivee|time:"H:i"|default:"-" }}</span>
+                                </div>
+                                <div>
+                                    {% if p.statut == 'present' %}
+                                        <span class="badge" style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-weight: 600; padding: 6px 10px;">À l'heure</span>
+                                    {% elif p.statut == 'retard' %}
+                                        <span class="badge" style="background-color: rgba(255, 152, 0, 0.1); color: #FF9800; font-weight: 600; padding: 6px 10px;">En retard</span>
+                                    {% else %}
+                                        <span class="badge" style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545; font-weight: 600; padding: 6px 10px;">Absent</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="far fa-calendar-times fa-2x text-soft mb-2" style="color: rgba(157, 170, 171, 0.5) !important;"></i>
+                                <p class="text-gray mb-0" style="font-size: 14px; font-weight: 500;">Aucune présence pointée</p>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,21 +176,21 @@
 </div>
 
 <!-- Modal suppression -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
+<div class="modal fade text-start" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Supprimer l'employé</h5>
+        <div class="modal-content border-0" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title" style="font-weight: 600;">Confirmer la suppression</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <p>Confirmer la suppression de <strong>{{ employe.prenom }} {{ employe.nom }}</strong> ?</p>
+            <div class="modal-body p-4">
+                <p class="m-0 text-navy" style="font-size: 16px;">Voulez-vous vraiment supprimer l'employé <strong>{{ employe.prenom }} {{ employe.nom }}</strong> ?</p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <form method="post" action="{% url 'employe_delete' employe.pk %}">
+            <div class="modal-footer border-0 pb-4 pe-4">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" action="{% url 'employe_delete' employe.pk %}" class="m-0">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">Supprimer</button>
                 </form>
             </div>
         </div>
