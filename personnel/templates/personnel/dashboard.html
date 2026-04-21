@@ -45,7 +45,7 @@
             <p class="page-subtitle text-gray mt-1" style="font-size: 15px;">Bienvenue</p>
         </div>
         <div class="search-bar position-relative" style="width: 300px;">
-            <i class="bi bi-search position-absolute"
+            <i class="ph-thin ph-magnifying-glass position-absolute"
                 style="left: 15px; top: 50%; transform: translateY(-50%); color: var(--cool-gray);"></i>
             <input type="text" placeholder="Search" id="searchInput" class="w-100 rounded-pill"
                 style="padding: 12px 15px 12px 45px;">
@@ -57,7 +57,7 @@
         <div class="col-md-3">
             <div class="card-custom p-4 h-100 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-people text-navy me-3"
+                    <i class="ph-thin ph-users text-navy me-3"
                         style="font-size: 1.2rem; background: rgba(11, 28, 45, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
                     <span class="text-gray" style="font-size: 14px; font-weight: 500;">Total employés</span>
                 </div>
@@ -68,7 +68,7 @@
                     </div>
                     <span class="badge"
                         style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-size: 13px; font-weight: 600;"><i
-                            class="bi bi-arrow-up-short"></i> Actifs</span>
+                            class="ph-thin ph-arrow-up"></i> Actifs</span>
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@
         <div class="col-md-3">
             <div class="card-custom p-4 h-100 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-person-check text-emerald me-3"
+                    <i class="ph-thin ph-user-check text-emerald me-3"
                         style="font-size: 1.2rem; background: rgba(31, 122, 99, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
                     <span class="text-gray" style="font-size: 14px; font-weight: 500;">Présences</span>
                 </div>
@@ -88,7 +88,7 @@
                     </div>
                     <span class="badge"
                         style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-size: 13px; font-weight: 600;"><i
-                            class="bi bi-check2"></i> En cours</span>
+                            class="ph-thin ph-check"></i> En cours</span>
                 </div>
             </div>
         </div>
@@ -96,7 +96,7 @@
         <div class="col-md-3">
             <div class="card-custom p-4 h-100 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-clock-history text-danger me-3"
+                    <i class="ph-thin ph-clock-counter-clockwise text-danger me-3"
                         style="font-size: 1.2rem; background: rgba(220, 53, 69, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
                     <span class="text-gray" style="font-size: 14px; font-weight: 500;">Retards</span>
                 </div>
@@ -108,7 +108,7 @@
                     </div>
                     <span class="badge"
                         style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545; font-size: 13px; font-weight: 600;"><i
-                            class="bi bi-arrow-down-short"></i> Baisse</span>
+                            class="ph-thin ph-arrow-down"></i> Baisse</span>
                 </div>
             </div>
         </div>
@@ -116,7 +116,7 @@
         <div class="col-md-3">
             <div class="card-custom p-4 h-100 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-calendar-x me-3"
+                    <i class="ph-thin ph-calendar-x me-3"
                         style="color: #FF9800; font-size: 1.2rem; background: rgba(255, 193, 7, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
                     <span class="text-gray" style="font-size: 14px; font-weight: 500;">Congés en attente</span>
                 </div>
@@ -128,7 +128,7 @@
                     </div>
                     <span class="badge"
                         style="background-color: rgba(255, 193, 7, 0.1); color: #FF9800; font-size: 13px; font-weight: 600;"><i
-                            class="bi bi-hourglass"></i> Attente</span>
+                            class="ph-thin ph-hourglass"></i> Attente</span>
                 </div>
             </div>
         </div>
@@ -176,11 +176,11 @@
                 <!-- Export Dropdown -->
                 <div class="dropdown">
                     <button class="btn btn-sm btn-outline-custom rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-download"></i> Exporter
+                        <i class="ph-thin ph-download-simple"></i> Exporter
                     </button>
                     <ul class="dropdown-menu shadow-sm border-0">
-                        <li><a class="dropdown-item" href="#" onclick="exportExcel(event)"><i class="bi bi-file-earmark-excel text-success me-2"></i>Excel</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="exportPDF(event)"><i class="bi bi-file-earmark-pdf text-danger me-2"></i>PDF</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="exportExcel(event)"><i class="ph-thin ph-file-xls text-success me-2"></i>Excel</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="exportPDF(event)"><i class="ph-thin ph-file-pdf text-danger me-2"></i>PDF</a></li>
                     </ul>
                 </div>
                 <a href="{% url 'employes_list' %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">Voir Tout</a>
@@ -248,11 +248,11 @@
                         </td>
                         <td class="py-3 text-end">
                             <a href="{% url 'employe_detail' emp.pk %}" class="btn btn-sm text-gray" title="Voir"><i
-                                    class="bi bi-eye"></i></a>
+                                    class="ph-thin ph-eye"></i></a>
                             <a href="{% url 'employe_update' emp.pk %}" class="btn btn-sm text-gray" title="Modifier"><i
-                                    class="bi bi-pencil"></i></a>
+                                    class="ph-thin ph-pencil-simple"></i></a>
                             <button class="btn btn-sm text-danger" title="Supprimer" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal{{ emp.pk }}"><i class="bi bi-trash"></i></button>
+                                data-bs-target="#deleteModal{{ emp.pk }}"><i class="ph-thin ph-trash"></i></button>
                         </td>
                     </tr>
                     {% empty %}

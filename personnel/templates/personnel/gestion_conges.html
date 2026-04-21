@@ -179,12 +179,12 @@
 <div class="page-header">
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
         <div>
-            <h4><i class="fas fa-calendar-check me-2" style="color:var(--emerald-green);"></i>Gestion des Congés</h4>
+            <h4><i class="ph-thin ph-calendar-check me-2" style="color:var(--emerald-green);"></i>Gestion des Congés</h4>
             <p>Validez ou refusez les demandes de congé de vos employés.</p>
         </div>
         {% if nb_en_attente > 0 %}
         <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill align-self-center">
-            <i class="fas fa-bell me-1"></i>{{ nb_en_attente }} demande{{ nb_en_attente|pluralize }} en attente
+            <i class="ph-thin ph-bell me-1"></i>{{ nb_en_attente }} demande{{ nb_en_attente|pluralize }} en attente
         </span>
         {% endif %}
     </div>
@@ -193,16 +193,16 @@
 <!-- Onglets filtres -->
 <div class="filter-tabs">
     <a href="?statut=tous" class="filter-tab {% if statut_actif == 'tous' %}active{% endif %}">
-        <i class="fas fa-list"></i> Toutes <span class="tab-count">{{ total }}</span>
+        <i class="ph-thin ph-list"></i> Toutes <span class="tab-count">{{ total }}</span>
     </a>
     <a href="?statut=en_attente" class="filter-tab {% if statut_actif == 'en_attente' %}active{% endif %}">
-        <i class="fas fa-hourglass-half"></i> En attente <span class="tab-count">{{ nb_en_attente }}</span>
+        <i class="ph-thin ph-hourglass"></i> En attente <span class="tab-count">{{ nb_en_attente }}</span>
     </a>
     <a href="?statut=approuve" class="filter-tab {% if statut_actif == 'approuve' %}active{% endif %}">
-        <i class="fas fa-check-circle"></i> Approuvées <span class="tab-count">{{ nb_approuve }}</span>
+        <i class="ph-thin ph-check-circle"></i> Approuvées <span class="tab-count">{{ nb_approuve }}</span>
     </a>
     <a href="?statut=refuse" class="filter-tab {% if statut_actif == 'refuse' %}active{% endif %}">
-        <i class="fas fa-times-circle"></i> Refusées <span class="tab-count">{{ nb_refuse }}</span>
+        <i class="ph-thin ph-x-circle"></i> Refusées <span class="tab-count">{{ nb_refuse }}</span>
     </a>
 </div>
 
@@ -213,25 +213,25 @@
     <div class="stats-row">
         <div class="stat-pill">
             <div class="stat-icon" style="background:rgba(255,193,7,0.12);">
-                <i class="fas fa-hourglass-half" style="color:#e6a800;"></i>
+                <i class="ph-thin ph-hourglass" style="color:#e6a800;"></i>
             </div>
             <div><div class="stat-num">{{ nb_en_attente }}</div><div class="stat-lbl">En attente</div></div>
         </div>
         <div class="stat-pill">
             <div class="stat-icon" style="background:rgba(31,122,99,0.12);">
-                <i class="fas fa-check-circle" style="color:var(--emerald-green);"></i>
+                <i class="ph-thin ph-check-circle" style="color:var(--emerald-green);"></i>
             </div>
             <div><div class="stat-num">{{ nb_approuve }}</div><div class="stat-lbl">Approuvées</div></div>
         </div>
         <div class="stat-pill">
             <div class="stat-icon" style="background:rgba(220,53,69,0.12);">
-                <i class="fas fa-times-circle" style="color:#dc3545;"></i>
+                <i class="ph-thin ph-x-circle" style="color:#dc3545;"></i>
             </div>
             <div><div class="stat-num">{{ nb_refuse }}</div><div class="stat-lbl">Refusées</div></div>
         </div>
         <div class="stat-pill">
             <div class="stat-icon" style="background:rgba(11,28,45,0.08);">
-                <i class="fas fa-calendar-alt" style="color:var(--navy-blue);"></i>
+                <i class="ph-thin ph-calendar-blank" style="color:var(--navy-blue);"></i>
             </div>
             <div><div class="stat-num">{{ total }}</div><div class="stat-lbl">Total</div></div>
         </div>
@@ -280,10 +280,10 @@
                         <div class="detail-label">Statut</div>
                         <div class="detail-value">
                             <span class="badge-statut badge-{{ conge.statut }}">
-                                {% if conge.statut == 'en_attente' %}<i class="fas fa-hourglass-half me-1"></i>
-                                {% elif conge.statut == 'approuve' %}<i class="fas fa-check me-1"></i>
-                                {% elif conge.statut == 'refuse' %}<i class="fas fa-times me-1"></i>
-                                {% elif conge.statut == 'annule' %}<i class="fas fa-ban me-1"></i>{% endif %}
+                                {% if conge.statut == 'en_attente' %}<i class="ph-thin ph-hourglass me-1"></i>
+                                {% elif conge.statut == 'approuve' %}<i class="ph-thin ph-check me-1"></i>
+                                {% elif conge.statut == 'refuse' %}<i class="ph-thin ph-x me-1"></i>
+                                {% elif conge.statut == 'annule' %}<i class="ph-thin ph-prohibit me-1"></i>{% endif %}
                                 {{ conge.get_statut_display }}
                             </span>
                         </div>
@@ -297,11 +297,11 @@
                         {% csrf_token %}
                         <button type="submit" class="btn-approve"
                             onclick="return confirm('Approuver le congé de {{ conge.employe.prenom }} {{ conge.employe.nom }} ?')">
-                            <i class="fas fa-check"></i> Approuver
+                            <i class="ph-thin ph-check"></i> Approuver
                         </button>
                     </form>
                     <button class="btn-refuse" data-bs-toggle="modal" data-bs-target="#modalRefus{{ conge.pk }}">
-                        <i class="fas fa-times"></i> Refuser
+                        <i class="ph-thin ph-x"></i> Refuser
                     </button>
                     {% else %}
                     <span class="text-muted small fst-italic" style="font-size:0.78rem;">Traité</span>
@@ -312,7 +312,7 @@
             <!-- Justificatif texte -->
             {% if conge.justificatif_texte %}
             <div class="justificatif-strip">
-                <i class="fas fa-comment-alt"></i>
+                <i class="ph-thin ph-chat-circle"></i>
                 <span><strong>Motif :</strong> {{ conge.justificatif_texte|truncatechars:150 }}</span>
             </div>
             {% endif %}
@@ -320,7 +320,7 @@
             <!-- Fichier joint -->
             {% if conge.justificatif_fichier %}
             <div class="justificatif-strip">
-                <i class="fas fa-paperclip"></i>
+                <i class="ph-thin ph-paperclip"></i>
                 <a href="{{ conge.justificatif_fichier.url }}" target="_blank" style="color:var(--emerald-green); font-weight:600;">
                     Pièce jointe — consulter le document
                 </a>
@@ -330,7 +330,7 @@
             <!-- Commentaire de refus -->
             {% if conge.statut == 'refuse' and conge.commentaire %}
             <div class="refus-strip">
-                <i class="fas fa-exclamation-circle"></i>
+                <i class="ph-thin ph-warning-circle"></i>
                 <span><strong>Motif du refus :</strong> {{ conge.commentaire }}</span>
             </div>
             {% endif %}
@@ -343,7 +343,7 @@
                 <div class="modal-content" style="border-radius:14px; overflow:hidden; border:none; box-shadow:0 20px 60px rgba(11,28,45,0.2);">
                     <div class="modal-header modal-header-custom p-4">
                         <h6 class="modal-title fw-bold mb-0">
-                            <i class="fas fa-times-circle me-2"></i>Refuser la demande de congé
+                            <i class="ph-thin ph-x-circle me-2"></i>Refuser la demande de congé
                         </h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
@@ -382,7 +382,7 @@
                                 Annuler
                             </button>
                             <button type="submit" class="btn btn-danger fw-bold" style="border-radius:8px;">
-                                <i class="fas fa-times me-1"></i> Confirmer le refus
+                                <i class="ph-thin ph-x me-1"></i> Confirmer le refus
                             </button>
                         </div>
                     </form>
@@ -395,7 +395,7 @@
 
     {% else %}
     <div class="empty-state">
-        <i class="fas fa-calendar-times"></i>
+        <i class="ph-thin ph-calendar-x"></i>
         <h6>Aucune demande trouvée</h6>
         <p style="font-size:0.875rem;">
             {% if statut_actif == 'en_attente' %}Aucune demande en attente de validation.

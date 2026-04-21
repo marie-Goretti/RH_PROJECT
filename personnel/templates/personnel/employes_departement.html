@@ -10,7 +10,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{% url 'departements_list' %}" class="text-decoration-none text-emerald">
-                    <i class="fas fa-building me-1"></i> Départements
+                    <i class="ph-thin ph-buildings"></i> Départements
                 </a>
             </li>
             <li class="breadcrumb-item active">{{ departement.nom }}</li>
@@ -24,7 +24,7 @@
             <p class="text-gray mb-0">{{ employes.count }} employé{{ employes.count|pluralize }} trouvé{{ employes.count|pluralize }}</p>
         </div>
         <a href="{% url 'departements_list' %}" class="btn btn-outline-custom">
-            <i class="fas fa-arrow-left me-2"></i> Retour
+            <i class="ph-thin ph-arrow-left me-2"></i> Retour
         </a>
     </div>
 
@@ -33,7 +33,7 @@
     <div class="card-custom mb-4">
         <div class="card-body p-4">
             <h6 class="text-navy mb-2">
-                <i class="fas fa-info-circle me-2"></i> À propos
+                <i class="ph-thin ph-info me-2"></i> À propos
             </h6>
             <p class="text-gray mb-0">{{ departement.description }}</p>
         </div>
@@ -74,7 +74,7 @@
                         <td><a href="mailto:{{ employe.email }}" class="text-emerald text-decoration-none">{{ employe.email }}</a></td>
                         <td class="text-navy">{{ employe.poste }}</td>
                         <td class="text-gray">
-                            <i class="fas fa-calendar-alt me-1"></i>
+                            <i class="ph-thin ph-calendar-blank me-1"></i>
                             {{ employe.date_embauche|date:"d/m/Y" }}
                         </td>
                         <td>
@@ -92,11 +92,11 @@
                             <div class="btn-group" role="group">
                                 <a href="{% url 'employe_detail' employe.pk %}" 
                                    class="btn btn-sm btn-primary-custom" title="Voir les détails">
-                                    <i class="fas fa-eye"></i>
+                                    <i class="ph-thin ph-eye"></i>
                                 </a>
                                 <a href="{% url 'employe_update' employe.pk %}" 
                                    class="btn btn-sm btn-outline-custom" title="Modifier">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="ph-thin ph-pencil-simple"></i>
                                 </a>
                             </div>
                         </td>
@@ -107,7 +107,7 @@
         </div>
         {% else %}
         <div class="card-body p-5 text-center">
-            <i class="fas fa-user-slash" style="font-size: 3rem; color: var(--cool-gray);"></i>
+            <i class="ph-thin ph-user-slash" style="font-size: 3rem; color: var(--cool-gray);"></i>
             <h5 class="mt-3 text-navy">Aucun employé</h5>
             <p class="text-gray">Ce département n'a pas encore d'employés assignés.</p>
         </div>

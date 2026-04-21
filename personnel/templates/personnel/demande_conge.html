@@ -9,7 +9,7 @@
     <!-- En-tête -->
     <div class="mb-4">
         <h2 class="text-navy mb-1 fw-bold">
-            <i class="fas fa-calendar-alt me-2"></i> Gestion des Congés
+            <i class="ph-thin ph-calendar-blank me-2"></i> Gestion des Congés
         </h2>
         <p class="text-gray mb-0">Demandez vos congés et consultez l'historique de vos demandes</p>
     </div>
@@ -19,7 +19,7 @@
         <div class="col-lg-5">
             <div class="card-custom">
                 <div class="card-header-custom">
-                    <i class="fas fa-plus me-2"></i> Nouvelle Demande de Congé
+                    <i class="ph-thin ph-plus me-2"></i> Nouvelle Demande de Congé
                 </div>
                 <div class="card-body p-4">
                     <form method="post" enctype="multipart/form-data">
@@ -28,13 +28,13 @@
                         <!-- Type de congé -->
                         <div class="mb-4">
                             <label for="{{ form.type_conge.id_for_label }}" class="form-label-custom">
-                                <i class="fas fa-list-check me-2"></i> Type de congé
+                                <i class="ph-thin ph-list-checks me-2"></i> Type de congé
                                 <span class="text-danger">*</span>
                             </label>
                             {{ form.type_conge }}
                             {% if form.type_conge.errors %}
                                 <div class="invalid-feedback d-block mt-2">
-                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.type_conge.errors.0 }}
+                                    <i class="ph-thin ph-warning-circle me-1"></i>{{ form.type_conge.errors.0 }}
                                 </div>
                             {% endif %}
                         </div>
@@ -43,25 +43,25 @@
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <label for="{{ form.date_debut.id_for_label }}" class="form-label-custom">
-                                    <i class="fas fa-calendar-plus me-2"></i> Début
+                                    <i class="ph-thin ph-calendar-plus me-2"></i> Début
                                     <span class="text-danger">*</span>
                                 </label>
                                 {{ form.date_debut }}
                                 {% if form.date_debut.errors %}
                                     <div class="invalid-feedback d-block mt-2">
-                                        <i class="fas fa-exclamation-circle me-1"></i>{{ form.date_debut.errors.0 }}
+                                        <i class="ph-thin ph-warning-circle me-1"></i>{{ form.date_debut.errors.0 }}
                                     </div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
                                 <label for="{{ form.date_fin.id_for_label }}" class="form-label-custom">
-                                    <i class="fas fa-calendar-check me-2"></i> Fin
+                                    <i class="ph-thin ph-calendar-check"></i> Fin
                                     <span class="text-danger">*</span>
                                 </label>
                                 {{ form.date_fin }}
                                 {% if form.date_fin.errors %}
                                     <div class="invalid-feedback d-block mt-2">
-                                        <i class="fas fa-exclamation-circle me-1"></i>{{ form.date_fin.errors.0 }}
+                                        <i class="ph-thin ph-warning-circle me-1"></i>{{ form.date_fin.errors.0 }}
                                     </div>
                                 {% endif %}
                             </div>
@@ -69,19 +69,19 @@
 
                         <!-- Info durée -->
                         <div class="alert alert-info py-2 px-3 mb-4 small">
-                            <i class="fas fa-info-circle me-2"></i>
+                            <i class="ph-thin ph-info me-2"></i>
                             <strong>Durée maximale :</strong> 60 jours
                         </div>
 
                         <!-- Motif -->
                         <div class="mb-4">
                             <label for="{{ form.justificatif_texte.id_for_label }}" class="form-label-custom">
-                                <i class="fas fa-pen-square me-2"></i> Motif (optionnel)
+                                <i class="ph-thin ph-pencil-simple-square me-2"></i> Motif (optionnel)
                             </label>
                             {{ form.justificatif_texte }}
                             {% if form.justificatif_texte.errors %}
                                 <div class="invalid-feedback d-block mt-2">
-                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.justificatif_texte.errors.0 }}
+                                    <i class="ph-thin ph-warning-circle me-1"></i>{{ form.justificatif_texte.errors.0 }}
                                 </div>
                             {% endif %}
                         </div>
@@ -89,23 +89,23 @@
                         <!-- Pièce jointe -->
                         <div class="mb-4">
                             <label for="{{ form.justificatif_fichier.id_for_label }}" class="form-label-custom">
-                                <i class="fas fa-paperclip me-2"></i> Pièce justificative (optionnel)
+                                <i class="ph-thin ph-paperclip me-2"></i> Pièce justificative (optionnel)
                             </label>
                             {{ form.justificatif_fichier }}
                             <small class="text-gray d-block mt-2">
-                                <i class="fas fa-check-circle text-success me-1"></i>
+                                <i class="ph-thin ph-check-circle text-success me-1"></i>
                                 Formats acceptés: PDF, JPG, PNG
                             </small>
                             {% if form.justificatif_fichier.errors %}
                                 <div class="invalid-feedback d-block mt-2">
-                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.justificatif_fichier.errors.0 }}
+                                    <i class="ph-thin ph-warning-circle me-1"></i>{{ form.justificatif_fichier.errors.0 }}
                                 </div>
                             {% endif %}
                         </div>
 
                         <!-- Bouton soumettre -->
                         <button type="submit" class="btn btn-primary-custom w-100">
-                            <i class="fas fa-paper-plane me-2"></i> Soumettre la demande
+                            <i class="ph-thin ph-paper-plane-tilt me-2"></i> Soumettre la demande
                         </button>
                     </form>
                 </div>
@@ -114,26 +114,26 @@
             <!-- Bloc d'information -->
             <div class="card-custom mt-4">
                 <div class="card-header-custom">
-                    <i class="fas fa-lightbulb me-2"></i> Informations
+                    <i class="ph-thin ph-lightbulb me-2"></i> Informations
                 </div>
                 <div class="card-body p-4">
                     <div class="mb-3">
                         <h6 class="text-navy fw-bold mb-2">
-                            <i class="fas fa-check-circle text-emerald me-2"></i> Congé annuel
+                            <i class="ph-thin ph-check-circle text-emerald me-2"></i> Congé annuel
                         </h6>
                         <p class="text-gray small mb-0">Payé - Sans justificatif requis</p>
                     </div>
                     
                     <div class="mb-3">
                         <h6 class="text-navy fw-bold mb-2">
-                            <i class="fas fa-check-circle text-emerald me-2"></i> Congé maladie
+                            <i class="ph-thin ph-check-circle text-emerald me-2"></i> Congé maladie
                         </h6>
                         <p class="text-gray small mb-0">Justificatif médical requis après 3 jours</p>
                     </div>
 
                     <div class="mb-0">
                         <h6 class="text-navy fw-bold mb-2">
-                            <i class="fas fa-clock text-emerald me-2"></i> Traitement
+                            <i class="ph-thin ph-clock text-emerald me-2"></i> Traitement
                         </h6>
                         <p class="text-gray small mb-0">Réponse en 48-72 heures</p>
                     </div>
@@ -145,7 +145,7 @@
         <div class="col-lg-7">
             <div class="card-custom">
                 <div class="card-header-custom">
-                    <i class="fas fa-history me-2"></i> Historique des Demandes
+                    <i class="ph-thin ph-clock-counter-clockwise me-2"></i> Historique des Demandes
                 </div>
                 
                 {% if conges %}
@@ -166,13 +166,13 @@
                                 <tr>
                                     <td>
                                         <strong class="text-navy">
-                                            <i class="fas fa-calendar me-1"></i>
+                                            <i class="ph-thin ph-calendar me-1"></i>
                                             {{ conge.get_type_conge_display }}
                                         </strong>
                                     </td>
                                     <td>
                                         <small class="text-gray">
-                                            <i class="fas fa-calendar-alt me-1"></i>
+                                            <i class="ph-thin ph-calendar-blank me-1"></i>
                                             {{ conge.date_debut|date:"d/m/Y" }}
                                         </small>
                                         <small class="d-block text-gray">
@@ -188,19 +188,19 @@
                                     <td>
                                         {% if conge.statut == 'en_attente' %}
                                             <span class="badge bg-warning text-dark">
-                                                <i class="fas fa-hourglass-half me-1"></i> En attente
+                                                <i class="ph-thin ph-hourglass me-1"></i> En attente
                                             </span>
                                         {% elif conge.statut == 'approuve' %}
                                             <span class="badge bg-success">
-                                                <i class="fas fa-check-circle me-1"></i> Approuvé
+                                                <i class="ph-thin ph-check-circle me-1"></i> Approuvé
                                             </span>
                                         {% elif conge.statut == 'refuse' %}
                                             <span class="badge bg-danger">
-                                                <i class="fas fa-times-circle me-1"></i> Refusé
+                                                <i class="ph-thin ph-x-circle me-1"></i> Refusé
                                             </span>
                                         {% elif conge.statut == 'annule' %}
                                             <span class="badge bg-secondary">
-                                                <i class="fas fa-ban me-1"></i> Annulé
+                                                <i class="ph-thin ph-prohibit me-1"></i> Annulé
                                             </span>
                                         {% endif %}
                                     </td>
@@ -209,7 +209,7 @@
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#modalConge{{ conge.id }}"
                                                 title="Voir les détails">
-                                            <i class="fas fa-eye"></i>
+                                            <i class="ph-thin ph-eye"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -220,7 +220,7 @@
                 </div>
                 {% else %}
                 <div class="card-body p-5 text-center">
-                    <i class="fas fa-calendar-times" style="font-size: 3rem; color: var(--cool-gray);"></i>
+                    <i class="ph-thin ph-calendar-x" style="font-size: 3rem; color: var(--cool-gray);"></i>
                     <h6 class="text-navy mt-3 fw-bold">Aucune demande de congé</h6>
                     <p class="text-gray small mb-0">Vous n'avez pas encore soumis de demande de congé</p>
                 </div>
@@ -237,7 +237,7 @@
         <div class="modal-content">
             <div class="modal-header bg-navy text-white">
                 <h5 class="modal-title" id="modalLabel{{ conge.id }}">
-                    <i class="fas fa-calendar me-2"></i> Détails du congé
+                    <i class="ph-thin ph-calendar me-2"></i> Détails du congé
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -245,7 +245,7 @@
                 <!-- Type -->
                 <div class="mb-3">
                     <h6 class="text-navy fw-bold mb-1">
-                        <i class="fas fa-list-check me-2"></i> Type
+                        <i class="ph-thin ph-list-checks me-2"></i> Type
                     </h6>
                     <p class="text-gray mb-0">{{ conge.get_type_conge_display }}</p>
                 </div>
@@ -255,7 +255,7 @@
                 <!-- Période -->
                 <div class="mb-3">
                     <h6 class="text-navy fw-bold mb-1">
-                        <i class="fas fa-calendar-alt me-2"></i> Période
+                        <i class="ph-thin ph-calendar-blank me-2"></i> Période
                     </h6>
                     <p class="text-gray mb-0">
                         {{ conge.date_debut|date:"d/m/Y" }} au {{ conge.date_fin|date:"d/m/Y" }}
@@ -267,23 +267,23 @@
                 <!-- Statut -->
                 <div class="mb-3">
                     <h6 class="text-navy fw-bold mb-1">
-                        <i class="fas fa-flag me-2"></i> Statut
+                        <i class="ph-thin ph-flag me-2"></i> Statut
                     </h6>
                     {% if conge.statut == 'en_attente' %}
                         <span class="badge bg-warning text-dark">
-                            <i class="fas fa-hourglass-half me-1"></i> En attente
+                            <i class="ph-thin ph-hourglass me-1"></i> En attente
                         </span>
                     {% elif conge.statut == 'approuve' %}
                         <span class="badge bg-success">
-                            <i class="fas fa-check-circle me-1"></i> Approuvé
+                            <i class="ph-thin ph-check-circle me-1"></i> Approuvé
                         </span>
                     {% elif conge.statut == 'refuse' %}
                         <span class="badge bg-danger">
-                            <i class="fas fa-times-circle me-1"></i> Refusé
+                            <i class="ph-thin ph-x-circle me-1"></i> Refusé
                         </span>
                     {% elif conge.statut == 'annule' %}
                         <span class="badge bg-secondary">
-                            <i class="fas fa-ban me-1"></i> Annulé
+                            <i class="ph-thin ph-prohibit me-1"></i> Annulé
                         </span>
                     {% endif %}
                 </div>
@@ -294,7 +294,7 @@
                 {% if conge.justificatif_texte %}
                 <div class="mb-3">
                     <h6 class="text-navy fw-bold mb-1">
-                        <i class="fas fa-pen-square me-2"></i> Motif
+                        <i class="ph-thin ph-pencil-simple-square me-2"></i> Motif
                     </h6>
                     <p class="text-gray mb-0">{{ conge.justificatif_texte }}</p>
                 </div>
@@ -305,10 +305,10 @@
                 {% if conge.justificatif_fichier %}
                 <div class="mb-0">
                     <h6 class="text-navy fw-bold mb-1">
-                        <i class="fas fa-paperclip me-2"></i> Pièce jointe
+                        <i class="ph-thin ph-paperclip me-2"></i> Pièce jointe
                     </h6>
                     <a href="{{ conge.justificatif_fichier.url }}" target="_blank" class="btn btn-sm btn-primary-custom">
-                        <i class="fas fa-download me-1"></i> Télécharger
+                        <i class="ph-thin ph-download-simple me-1"></i> Télécharger
                     </a>
                 </div>
                 {% endif %}
@@ -318,7 +318,7 @@
                 <hr>
                 <div class="alert alert-danger py-2 px-3 small mb-0">
                     <h6 class="text-danger fw-bold mb-1">
-                        <i class="fas fa-info-circle me-2"></i> Motif du refus
+                        <i class="ph-thin ph-info me-2"></i> Motif du refus
                     </h6>
                     <p class="mb-0">{{ conge.commentaire }}</p>
                 </div>
@@ -326,7 +326,7 @@
             </div>
             <div class="modal-footer p-3">
                 <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i> Fermer
+                    <i class="ph-thin ph-x me-1"></i> Fermer
                 </button>
             </div>
         </div>
@@ -420,7 +420,7 @@
 
 {% endblock %}
                                 <label for="{{ form.date_fin.id_for_label }}" class="form-label">
-                                    <i class="bi bi-calendar-check me-1"></i>{{ form.date_fin.label }}
+                                    <i class="ph-thin ph-calendar-check me-1"></i>{{ form.date_fin.label }}
                                 </label>
                                 {{ form.date_fin }}
                                 {% if form.date_fin.errors %}
@@ -428,11 +428,11 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Durée maximale : 60 jours</small>
+                        <small class="text-muted"><i class="ph-thin ph-info me-1"></i>Durée maximale : 60 jours</small>
 
                         <div class="mb-3">
                             <label for="{{ form.justificatif_texte.id_for_label }}" class="form-label">
-                                <i class="bi bi-pencil me-1"></i>{{ form.justificatif_texte.label }}
+                                <i class="ph-thin ph-pencil-simple me-1"></i>{{ form.justificatif_texte.label }}
                             </label>
                             {{ form.justificatif_texte }}
                             {% if form.justificatif_texte.errors %}
@@ -442,7 +442,7 @@
 
                         <div class="mb-4">
                             <label for="{{ form.justificatif_fichier.id_for_label }}" class="form-label">
-                                <i class="bi bi-paperclip me-1"></i>{{ form.justificatif_fichier.label }}
+                                <i class="ph-thin ph-paperclip me-1"></i>{{ form.justificatif_fichier.label }}
                             </label>
                             {{ form.justificatif_fichier }}
                             {% if form.justificatif_fichier.errors %}
@@ -452,7 +452,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100">
-                            <i class="bi bi-send me-2"></i>Soumettre la demande
+                            <i class="ph-thin ph-paper-plane-tilt me-2"></i>Soumettre la demande
                         </button>
                     </form>
                 </div>
@@ -461,11 +461,11 @@
             <!-- Aide -->
             <div class="card mt-3">
                 <div class="card-body">
-                    <h6 class="card-title"><i class="bi bi-lightbulb me-2"></i>Informations</h6>
+                    <h6 class="card-title"><i class="ph-thin ph-lightbulb me-2"></i>Informations</h6>
                     <ul class="list-unstyled mb-0 small">
-                        <li><i class="bi bi-check-circle text-success me-1"></i>Congé annuel : Payé</li>
-                        <li><i class="bi bi-check-circle text-success me-1"></i>Congé maladie : Justificatif requis</li>
-                        <li><i class="bi bi-clock me-1"></i>Traitement : 48-72h</li>
+                        <li><i class="ph-thin ph-check-circle text-success me-1"></i>Congé annuel : Payé</li>
+                        <li><i class="ph-thin ph-check-circle text-success me-1"></i>Congé maladie : Justificatif requis</li>
+                        <li><i class="ph-thin ph-clock me-1"></i>Traitement : 48-72h</li>
                     </ul>
                 </div>
             </div>
@@ -475,7 +475,7 @@
         <div class="col-lg-7">
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <i class="bi bi-journal-text me-2"></i>Historique des Congés
+                    <i class="ph-thin ph-notebook me-2"></i>Historique des Congés
                 </div>
                 <div class="card-body p-0">
                     {% if conges %}
@@ -519,7 +519,7 @@
                                         <button class="btn btn-sm btn-outline-primary" 
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#modalConge{{ conge.id }}">
-                                            <i class="bi bi-eye"></i>
+                                            <i class="ph-thin ph-eye"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -529,7 +529,7 @@
                     </div>
                     {% else %}
                     <div class="text-center py-5 text-muted">
-                        <i class="bi bi-calendar-x display-4 d-block mb-3"></i>
+                        <i class="ph-thin ph-calendar-x display-4 d-block mb-3"></i>
                         <p>Aucune demande de congé pour le moment</p>
                     </div>
                     {% endif %}
@@ -558,7 +558,7 @@
                 {% if conge.justificatif_fichier %}
                 <p><strong>Pièce jointe :</strong> 
                     <a href="{{ conge.justificatif_fichier.url }}" target="_blank">
-                        <i class="bi bi-download me-1"></i>Télécharger
+                        <i class="ph-thin ph-download-simple me-1"></i>Télécharger
                     </a>
                 </p>
                 {% endif %}

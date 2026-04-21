@@ -12,7 +12,7 @@
             <p class="text-gray mb-0">{{ departements.count }} département(s)</p>
         </div>
         <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addDepartementModal">
-            <i class="fas fa-plus me-2"></i> Ajouter un département
+            <i class="ph-thin ph-plus me-2"></i> Ajouter un département
         </button>
     </div>
 
@@ -25,11 +25,11 @@
                            placeholder="Rechercher un département..." value="{{ query }}">
                 </div>
                 <button type="submit" class="btn btn-primary-custom">
-                    <i class="fas fa-search"></i>
+                    <i class="ph-thin ph-magnifying-glass"></i>
                 </button>
                 {% if query %}
                 <a href="{% url 'departements_list' %}" class="btn btn-outline-custom" title="Réinitialiser">
-                    <i class="fas fa-times"></i>
+                    <i class="ph-thin ph-x"></i>
                 </a>
                 {% endif %}
             </form>
@@ -66,7 +66,7 @@
                     <!-- Liste des employés (max 5) -->
                     <div class="mt-3">
                         <label class="form-label-custom small mb-2">
-                            <i class="fas fa-users me-1"></i> Employés
+                            <i class="ph-thin ph-users"></i> Employés
                         </label>
                         
                         {% if departement.employes.all %}
@@ -90,12 +90,12 @@
                         <!-- Bouton "Voir plus" si plus de 5 employés -->
                         {% if departement.employes.all|length > 5 %}
                         <div class="alert alert-info py-2 px-3 small mb-0">
-                            <i class="fas fa-info-circle me-1"></i> +{{ departement.employes.all|length|add:"-5" }} autre{{ departement.employes.all|length|add:"-5"|pluralize }}
+                            <i class="ph-thin ph-info me-1"></i> +{{ departement.employes.all|length|add:"-5" }} autre{{ departement.employes.all|length|add:"-5"|pluralize }}
                         </div>
                         {% endif %}
                         {% else %}
                         <div class="alert alert-light py-2 px-3 small mb-0">
-                            <i class="fas fa-inbox me-1"></i> Aucun employé assigné
+                            <i class="ph-thin ph-tray me-1"></i> Aucun employé assigné
                         </div>
                         {% endif %}
                     </div>
@@ -104,11 +104,11 @@
                 <!-- Pied de la carte -->
                 <div class="card-footer bg-light p-3 d-flex gap-2" style="border-top: 1px solid #E8ECEF;">
                     <a href="{% url 'employes_departement' departement.pk %}" class="btn btn-sm btn-primary-custom flex-grow-1">
-                        <i class="fas fa-eye me-1"></i> Voir plus
+                        <i class="ph-thin ph-eye me-1"></i> Voir plus
                     </a>
                     <button type="button" class="btn btn-sm btn-outline-custom" 
                             onclick="editDepartement({{ departement.id }}, '{{ departement.nom|escapejs }}', '{{ departement.description|escapejs }}')">
-                        <i class="fas fa-edit"></i>
+                        <i class="ph-thin ph-pencil-simple"></i>
                     </button>
                 </div>
             </div>
@@ -117,7 +117,7 @@
         <div class="col-12">
             <div class="card-custom">
                 <div class="card-body p-5 text-center">
-                    <i class="fas fa-building" style="font-size: 3rem; color: var(--cool-gray);"></i>
+                    <i class="ph-thin ph-buildings" style="font-size: 3rem; color: var(--cool-gray);"></i>
                     <h5 class="mt-3 text-navy">Aucun département trouvé</h5>
                     <p class="text-gray">
                         {% if query %}
@@ -139,7 +139,7 @@
         <div class="modal-content">
             <div class="modal-header bg-navy text-white">
                 <h5 class="modal-title" id="addDepartementLabel">
-                    <i class="fas fa-plus me-2"></i> Ajouter un département
+                    <i class="ph-thin ph-plus me-2"></i> Ajouter un département
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -177,10 +177,10 @@
 
                 <div class="modal-footer p-3">
                     <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> Annuler
+                        <i class="ph-thin ph-x me-1"></i> Annuler
                     </button>
                     <button type="submit" class="btn btn-primary-custom">
-                        <i class="fas fa-save me-1"></i> Ajouter
+                        <i class="ph-thin ph-floppy-disk me-1"></i> Ajouter
                     </button>
                 </div>
             </form>
@@ -194,7 +194,7 @@
         <div class="modal-content">
             <div class="modal-header bg-navy text-white">
                 <h5 class="modal-title" id="editDepartementLabel">
-                    <i class="fas fa-edit me-2"></i> Modifier le département
+                    <i class="ph-thin ph-pencil-simple me-2"></i> Modifier le département
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -220,10 +220,10 @@
 
                 <div class="modal-footer p-3">
                     <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> Annuler
+                        <i class="ph-thin ph-x me-1"></i> Annuler
                     </button>
                     <button type="submit" class="btn btn-primary-custom">
-                        <i class="fas fa-save me-1"></i> Modifier
+                        <i class="ph-thin ph-floppy-disk me-1"></i> Modifier
                     </button>
                 </div>
             </form>

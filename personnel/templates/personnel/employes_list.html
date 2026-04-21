@@ -12,7 +12,7 @@
             <p class="text-gray mb-0">{{ employes.count }} employé(s) trouvé(s)</p>
         </div>
         <a href="{% url 'employe_create' %}" class="btn btn-primary-custom">
-            <i class="fas fa-plus me-2"></i> Ajouter un employé
+            <i class="ph-thin ph-plus me-2"></i> Ajouter un employé
         </a>
     </div>
 
@@ -52,10 +52,10 @@
                 
                 <div class="col-md-2 d-flex align-items-end gap-2">
                     <button type="submit" class="btn btn-primary-custom flex-grow-1">
-                        <i class="fas fa-search"></i>
+                        <i class="ph-thin ph-magnifying-glass"></i>
                     </button>
                     <a href="{% url 'employes_list' %}" class="btn btn-outline-custom" title="Réinitialiser">
-                        <i class="fas fa-times"></i>
+                        <i class="ph-thin ph-x"></i>
                     </a>
                 </div>
             </form>
@@ -101,30 +101,30 @@
                             {% with presence=emp.presence_today|first %}
                                 {% if presence %}
                                     {% if presence.statut == 'present' %}
-                                        <span class="badge bg-success px-3 py-2 rounded-pill"><i class="fas fa-check-circle me-1"></i>À l'heure</span>
+                                        <span class="badge bg-success px-3 py-2 rounded-pill"><i class="ph-thin ph-check-circle me-1"></i>À l'heure</span>
                                     {% elif presence.statut == 'retard' %}
-                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill"><i class="fas fa-clock me-1"></i>En retard</span>
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill"><i class="ph-thin ph-clock me-1"></i>En retard</span>
                                     {% elif presence.statut == 'absent' %}
-                                        <span class="badge bg-danger px-3 py-2 rounded-pill"><i class="fas fa-times-circle me-1"></i>Absent</span>
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill"><i class="ph-thin ph-x-circle me-1"></i>Absent</span>
                                     {% elif presence.statut == 'conge' %}
-                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill"><i class="fas fa-umbrella-beach me-1"></i>En congé</span>
+                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill"><i class="ph-thin ph-umbrella me-1"></i>En congé</span>
                                     {% endif %}
                                 {% else %}
-                                    <span class="badge bg-secondary px-3 py-2 rounded-pill"><i class="fas fa-question-circle me-1"></i>Non pointé</span>
+                                    <span class="badge bg-secondary px-3 py-2 rounded-pill"><i class="ph-thin ph-question me-1"></i>Non pointé</span>
                                 {% endif %}
                             {% endwith %}
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group">
                                 <a href="{% url 'employe_detail' emp.pk %}" class="btn btn-sm btn-outline-custom" title="Voir">
-                                    <i class="fas fa-eye"></i>
+                                    <i class="ph-thin ph-eye"></i>
                                 </a>
                                 <a href="{% url 'employe_update' emp.pk %}" class="btn btn-sm btn-outline-custom" title="Modifier">
-                                    <i class="fas fa-pen"></i>
+                                    <i class="ph-thin ph-pencil-simple"></i>
                                 </a>
                                 <button type="button" class="btn btn-sm btn-danger-custom" title="Supprimer"
                                         data-bs-toggle="modal" data-bs-target="#deleteModal{{ emp.pk }}">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="ph-thin ph-trash"></i>
                                 </button>
                             </div>
                         </td>
@@ -134,10 +134,10 @@
                     <tr>
                         <td colspan="8" class="text-center py-5">
                             <div class="text-gray">
-                                <i class="fas fa-users fa-3x mb-3"></i>
+                                <i class="ph-thin ph-users"></i>
                                 <p>Aucun employé trouvé.</p>
                                 <a href="{% url 'employe_create' %}" class="btn btn-primary-custom">
-                                    <i class="fas fa-plus"></i> Ajouter un employé
+                                    <i class="ph-thin ph-plus"></i> Ajouter un employé
                                 </a>
                             </div>
                         </td>

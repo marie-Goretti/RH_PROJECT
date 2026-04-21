@@ -224,9 +224,9 @@
 
 <!-- Top bar -->
 <div class="page-header">
-    <h1><i class="fas fa-tachometer-alt me-2" style="color: var(--emerald-green);"></i>Mon espace</h1>
+    <h1><i class="ph-thin ph-gauge me-2" style="color: var(--emerald-green);"></i>Mon espace</h1>
     <div class="current-time-display">
-        <i class="fas fa-calendar-alt"></i>
+        <i class="ph-thin ph-calendar-blank"></i>
         <span id="currentDateTime">{{ today|date:"l d F Y" }}</span>
     </div>
 </div>
@@ -236,13 +236,13 @@
     <!-- ── Carte présence ── -->
     <div class="presence-card">
         <h2>Enregistrer ma présence</h2>
-        <p class="limit-info"><i class="fas fa-info-circle me-1"></i>Heure limite de pointage : 08h00</p>
+        <p class="limit-info"><i class="ph-thin ph-info me-1"></i>Heure limite de pointage : 08h00</p>
         <div class="presence-clock" id="currentTime">--:--:--</div>
 
         {% if presence_aujourd_hui %}
             <!-- Déjà pointé aujourd'hui -->
             <button class="btn btn-presence already-marked" disabled>
-                <i class="fas fa-check-circle"></i>
+                <i class="ph-thin ph-check-circle"></i>
                 Présence enregistrée aujourd'hui
             </button>
             <div class="presence-feedback {% if presence_aujourd_hui.statut == 'retard' %}late{% else %}success{% endif %}">
@@ -255,7 +255,7 @@
         {% else %}
             <!-- Pas encore pointé -->
             <button class="btn btn-presence" id="btnPresence">
-                <i class="fas fa-check-circle"></i>
+                <i class="ph-thin ph-check-circle"></i>
                 Marquer ma présence
             </button>
             <div class="presence-feedback" id="presenceFeedback" style="display:none;"></div>
@@ -265,21 +265,21 @@
     <!-- ── Stats rapides ── -->
     <div class="stats-row">
         <div class="stat-card">
-            <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
+            <div class="stat-icon green"><i class="ph-thin ph-user-check"></i></div>
             <div>
                 <div class="stat-label">Présences ce mois</div>
                 <div class="stat-value">{{ nb_presents }}</div>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon yellow"><i class="fas fa-clock"></i></div>
+            <div class="stat-icon yellow"><i class="ph-thin ph-clock"></i></div>
             <div>
                 <div class="stat-label">Retards ce mois</div>
                 <div class="stat-value">{{ nb_retards }}</div>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon red"><i class="fas fa-calendar-times"></i></div>
+            <div class="stat-icon red"><i class="ph-thin ph-calendar-x"></i></div>
             <div>
                 <div class="stat-label">Absences ce mois</div>
                 <div class="stat-value">{{ nb_absents }}</div>
@@ -290,7 +290,7 @@
     <!-- ── Graphique 7 derniers jours ── -->
     <div class="chart-card">
         <div class="card-section-title">
-            <i class="fas fa-chart-bar"></i> Mes présences — 7 derniers jours
+            <i class="ph-thin ph-chart-bar"></i> Mes présences — 7 derniers jours
         </div>
         <div class="chart-legend">
             <div class="legend-item"><span class="legend-dot ponctuel"></span> Ponctuel</div>
@@ -303,7 +303,7 @@
     <!-- ── Historique du mois ── -->
     <div class="table-card">
         <div class="card-section-title">
-            <i class="fas fa-history"></i> Historique du mois en cours
+            <i class="ph-thin ph-clock-counter-clockwise"></i> Historique du mois en cours
         </div>
         {% if historique %}
         <table class="table-custom">
@@ -344,7 +344,7 @@
         </table>
         {% else %}
         <div class="empty-state">
-            <i class="fas fa-inbox"></i>
+            <i class="ph-thin ph-tray"></i>
             <p>Aucune présence enregistrée ce mois-ci</p>
         </div>
         {% endif %}
@@ -353,7 +353,7 @@
     <!-- ── Congés approuvés à venir ── -->
     <div class="conge-card">
         <div class="card-section-title">
-            <i class="fas fa-calendar-check"></i> Mes congés approuvés à venir
+            <i class="ph-thin ph-calendar-check"></i> Mes congés approuvés à venir
         </div>
         {% if conges_actifs %}
             {% for c in conges_actifs %}
@@ -369,7 +369,7 @@
             {% endfor %}
         {% else %}
         <div class="empty-state">
-            <i class="fas fa-calendar"></i>
+            <i class="ph-thin ph-calendar"></i>
             <p>Aucun congé approuvé à venir</p>
         </div>
         {% endif %}
@@ -447,7 +447,7 @@
     if (btnPresence) {
         btnPresence.addEventListener('click', function () {
             this.disabled = true;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+            this.innerHTML = '<i class="ph-thin ph-spinner ph-spin"></i> Enregistrement...';
 
             fetch("{% url 'marquer_presence' %}", {
                 method: 'POST',
@@ -468,7 +468,7 @@
                         feedback.className = 'presence-feedback success';
                     }
                     feedback.style.display = 'block';
-                    btnPresence.innerHTML = '<i class="fas fa-check-circle"></i> Présence enregistrée';
+                    btnPresence.innerHTML = '<i class="ph-thin ph-check-circle"></i> Présence enregistrée';
                     btnPresence.classList.add('already-marked');
 
                     // Recharger la page après 2s pour mettre à jour les stats
@@ -477,14 +477,14 @@
                     feedback.textContent = 'Vous avez déjà enregistré votre présence aujourd\'hui.';
                     feedback.className = 'presence-feedback error';
                     feedback.style.display = 'block';
-                    btnPresence.innerHTML = '<i class="fas fa-check-circle"></i> Présence déjà enregistrée';
+                    btnPresence.innerHTML = '<i class="ph-thin ph-check-circle"></i> Présence déjà enregistrée';
                     btnPresence.classList.add('already-marked');
                 } else {
                     feedback.textContent = 'Une erreur est survenue. Veuillez réessayer.';
                     feedback.className = 'presence-feedback error';
                     feedback.style.display = 'block';
                     btnPresence.disabled = false;
-                    btnPresence.innerHTML = '<i class="fas fa-check-circle"></i> Marquer ma présence';
+                    btnPresence.innerHTML = '<i class="ph-thin ph-check-circle"></i> Marquer ma présence';
                 }
             })
             .catch(() => {
@@ -493,7 +493,7 @@
                 feedback.className = 'presence-feedback error';
                 feedback.style.display = 'block';
                 btnPresence.disabled = false;
-                btnPresence.innerHTML = '<i class="fas fa-check-circle"></i> Marquer ma présence';
+                btnPresence.innerHTML = '<i class="ph-thin ph-check-circle"></i> Marquer ma présence';
             });
         });
     }

@@ -11,7 +11,7 @@
                     <h4 class="mb-0">Confirmation de suppression</h4>
                 </div>
                 <div class="card-body text-center">
-                    <i class="fas fa-exclamation-triangle fa-4x text-warning mb-3"></i>
+                    <i class="ph-thin ph-warning fa-4x text-warning mb-3"></i>
                     <p class="lead">
                         Êtes-vous sûr de vouloir supprimer l'employé :<br>
                         <strong>{{ employe.prenom }} {{ employe.nom }}</strong><br>
@@ -22,10 +22,10 @@
                     <form method="post">
                         {% csrf_token %}
                         <a href="{% url 'employes_list' %}" class="btn btn-secondary me-2">
-                            <i class="fas fa-times"></i> Annuler
+                            <i class="ph-thin ph-x"></i> Annuler
                         </a>
                         <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash"></i> Supprimer définitivement
+                            <i class="ph-thin ph-trash"></i> Supprimer définitivement
                         </button>
                     </form>
                 </div>
