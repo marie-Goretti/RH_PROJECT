@@ -10,21 +10,24 @@
         border: 1px solid var(--gray-light);
         transition: all 0.3s ease;
     }
+
     .search-bar input:focus {
         outline: none;
         border-color: var(--emerald-green);
         box-shadow: 0 0 0 3px rgba(31, 122, 99, 0.1);
     }
-    
+
     /* 🔹 Table Adjustments */
     .table-borderless th {
         border-bottom: 2px solid var(--gray-light) !important;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
+
     .table-borderless td {
         border-bottom: 1px solid var(--gray-light) !important;
     }
+
     .table-borderless tr:last-child td {
         border-bottom: none !important;
     }
@@ -37,21 +40,25 @@
     <!-- Top Header mimicking the image -->
     <div class="d-flex justify-content-between align-items-center mb-5">
         <div>
-            <h1 class="page-title text-navy m-0" style="font-size: 32px; font-weight: 800;">Salut {{ employe.prenom }} 👋</h1>
+            <h1 class="page-title text-navy m-0" style="font-size: 32px; font-weight: 800;">Salut {{ employe.prenom }}
+            </h1>
             <p class="page-subtitle text-gray mt-1" style="font-size: 15px;">Bienvenue</p>
         </div>
         <div class="search-bar position-relative" style="width: 300px;">
-            <i class="bi bi-search position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%); color: var(--cool-gray);"></i>
-            <input type="text" placeholder="Search" id="searchInput" class="w-100 rounded-pill" style="padding: 12px 15px 12px 45px;">
+            <i class="bi bi-search position-absolute"
+                style="left: 15px; top: 50%; transform: translateY(-50%); color: var(--cool-gray);"></i>
+            <input type="text" placeholder="Search" id="searchInput" class="w-100 rounded-pill"
+                style="padding: 12px 15px 12px 45px;">
         </div>
     </div>
-    
+
     <!-- Stats Cards -->
     <div class="row g-4 mb-5">
         <div class="col-md-3">
             <div class="card-custom p-4 h-100 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-people text-navy me-3" style="font-size: 1.2rem; background: rgba(11, 28, 45, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
+                    <i class="bi bi-people text-navy me-3"
+                        style="font-size: 1.2rem; background: rgba(11, 28, 45, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
                     <span class="text-gray" style="font-size: 14px; font-weight: 500;">Total employés</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-end mt-2">
@@ -59,60 +66,74 @@
                         <h2 class="text-navy m-0" style="font-weight: 800; font-size: 32px;">{{ total_employes }}</h2>
                         <small class="text-gray" style="font-size: 12px;">Mise à jour aujourd'hui</small>
                     </div>
-                    <span class="badge" style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-size: 13px; font-weight: 600;"><i class="bi bi-arrow-up-short"></i> Actifs</span>
+                    <span class="badge"
+                        style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-size: 13px; font-weight: 600;"><i
+                            class="bi bi-arrow-up-short"></i> Actifs</span>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-3">
             <div class="card-custom p-4 h-100 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-person-check text-emerald me-3" style="font-size: 1.2rem; background: rgba(31, 122, 99, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
+                    <i class="bi bi-person-check text-emerald me-3"
+                        style="font-size: 1.2rem; background: rgba(31, 122, 99, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
                     <span class="text-gray" style="font-size: 14px; font-weight: 500;">Présences</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-end mt-2">
                     <div>
-                        <h2 class="text-navy m-0" style="font-weight: 800; font-size: 32px;">{{ presences_aujourdhui }}</h2>
+                        <h2 class="text-navy m-0" style="font-weight: 800; font-size: 32px;">{{ presences_aujourdhui }}
+                        </h2>
                         <small class="text-gray" style="font-size: 12px;">Présents aujourd'hui</small>
                     </div>
-                    <span class="badge" style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-size: 13px; font-weight: 600;"><i class="bi bi-check2"></i> En cours</span>
+                    <span class="badge"
+                        style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-size: 13px; font-weight: 600;"><i
+                            class="bi bi-check2"></i> En cours</span>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-3">
             <div class="card-custom p-4 h-100 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-clock-history text-danger me-3" style="font-size: 1.2rem; background: rgba(220, 53, 69, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
+                    <i class="bi bi-clock-history text-danger me-3"
+                        style="font-size: 1.2rem; background: rgba(220, 53, 69, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
                     <span class="text-gray" style="font-size: 14px; font-weight: 500;">Retards</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-end mt-2">
                     <div>
-                        <h2 class="text-navy m-0" style="font-weight: 800; font-size: 32px;">{{ retards_aujourdhui }}</h2>
+                        <h2 class="text-navy m-0" style="font-weight: 800; font-size: 32px;">{{ retards_aujourdhui }}
+                        </h2>
                         <small class="text-gray" style="font-size: 12px;">Retards ce mois</small>
                     </div>
-                    <span class="badge" style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545; font-size: 13px; font-weight: 600;"><i class="bi bi-arrow-down-short"></i> Baisse</span>
+                    <span class="badge"
+                        style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545; font-size: 13px; font-weight: 600;"><i
+                            class="bi bi-arrow-down-short"></i> Baisse</span>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-3">
             <div class="card-custom p-4 h-100 d-flex flex-column justify-content-between">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-calendar-x me-3" style="color: #FF9800; font-size: 1.2rem; background: rgba(255, 193, 7, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
+                    <i class="bi bi-calendar-x me-3"
+                        style="color: #FF9800; font-size: 1.2rem; background: rgba(255, 193, 7, 0.1); padding: 8px 12px; border-radius: 8px;"></i>
                     <span class="text-gray" style="font-size: 14px; font-weight: 500;">Congés en attente</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-end mt-2">
                     <div>
-                        <h2 class="text-navy m-0" style="font-weight: 800; font-size: 32px;">{{ conges_en_attente }}</h2>
+                        <h2 class="text-navy m-0" style="font-weight: 800; font-size: 32px;">{{ conges_en_attente }}
+                        </h2>
                         <small class="text-gray" style="font-size: 12px;">Demandes à traiter</small>
                     </div>
-                    <span class="badge" style="background-color: rgba(255, 193, 7, 0.1); color: #FF9800; font-size: 13px; font-weight: 600;"><i class="bi bi-hourglass"></i> Attente</span>
+                    <span class="badge"
+                        style="background-color: rgba(255, 193, 7, 0.1); color: #FF9800; font-size: 13px; font-weight: 600;"><i
+                            class="bi bi-hourglass"></i> Attente</span>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Charts Section -->
     <div class="row g-4 mb-5">
         <!-- Donut Chart -->
@@ -127,15 +148,17 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Line Chart -->
         <div class="col-md-7">
             <div class="card-custom p-4 h-100">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="text-navy m-0" style="font-weight: 700;">Évolution des présences</h5>
                     <div class="d-flex gap-2">
-                        <span class="badge bg-soft text-gray rounded-pill px-3 py-2">7 Jours</span>
-                        <span class="badge bg-emerald text-white rounded-pill px-3 py-2">30 Jours</span>
+                        <span class="badge bg-emerald text-white rounded-pill px-3 py-2" id="filter-7j"
+                            style="cursor: pointer;">7 Jours</span>
+                        <span class="badge bg-soft text-gray rounded-pill px-3 py-2" id="filter-30j"
+                            style="cursor: pointer;">30 Jours</span>
                     </div>
                 </div>
                 <div style="position: relative; height: 250px;">
@@ -144,28 +167,32 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Employees Table -->
     <div class="card-custom p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="text-navy m-0" style="font-weight: 700;">Vue d'ensemble de l'assiduité</h5>
             <div class="d-flex gap-3 align-items-center">
-                <select class="form-select form-select-sm border-0 bg-soft text-gray rounded-pill px-3 py-2" id="filterDepartment" style="width: auto; font-weight: 500;">
+                <select class="form-select form-select-sm border-0 bg-soft text-gray rounded-pill px-3 py-2"
+                    id="filterDepartment" style="width: auto; font-weight: 500;">
                     <option value="">Tous les départements</option>
                     {% for dept in departements %}
                     <option value="{{ dept.id }}">{{ dept.nom }}</option>
                     {% endfor %}
                 </select>
-                <select class="form-select form-select-sm border-0 bg-soft text-gray rounded-pill px-3 py-2" id="filterStatus" style="width: auto; font-weight: 500;">
-                    <option value="">Tous les statuts</option>
-                    <option value="actif">Actif</option>
-                    <option value="conge">En congé</option>
-                    <option value="inactif">Inactif</option>
+                <select class="form-select form-select-sm border-0 bg-soft text-gray rounded-pill px-3 py-2"
+                    id="filterStatus" style="width: auto; font-weight: 500;">
+                    <option value="">Toutes les assiduités</option>
+                    <option value="présent">Présent</option>
+                    <option value="en retard">En retard</option>
+                    <option value="absent">Absent</option>
+                    <option value="non pointé">Non pointé</option>
                 </select>
-                <a href="{% url 'employe_create' %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">Voir Tout</a>
+                <a href="{% url 'employes_list' %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">Voir
+                    Tout</a>
             </div>
         </div>
-        
+
         <div class="table-responsive">
             <table class="table table-borderless align-middle" id="employeesTable">
                 <thead>
@@ -174,7 +201,7 @@
                         <th class="text-gray pb-3">Matricule</th>
                         <th class="text-gray pb-3">Département</th>
                         <th class="text-gray pb-3">Email</th>
-                        <th class="text-gray pb-3">Statut</th>
+                        <th class="text-gray pb-3">Assiduité</th>
                         <th class="text-gray pb-3 text-end">Actions</th>
                     </tr>
                 </thead>
@@ -183,55 +210,62 @@
                     <tr>
                         <td class="py-3">
                             <div class="d-flex align-items-center">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-weight: bold;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                                    style="width: 40px; height: 40px; background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-weight: bold;">
                                     {{ emp.prenom.0 }}{{ emp.nom.0 }}
                                 </div>
                                 <div>
-                                    <h6 class="m-0 text-navy" style="font-weight: 600;">{{ emp.prenom }} {{ emp.nom }}</h6>
+                                    <h6 class="m-0 text-navy" style="font-weight: 600;">{{ emp.prenom }} {{ emp.nom }}
+                                    </h6>
                                     <small class="text-gray">{{ emp.poste }}</small>
                                 </div>
                             </div>
                         </td>
                         <td class="py-3 text-gray" style="font-weight: 500;">{{ emp.matricule }}</td>
                         <td class="py-3 text-gray" style="font-weight: 500;">{{ emp.departement.nom|default:"-" }}</td>
-                        <td class="py-3 text-gray" style="font-weight: 500;"><a href="mailto:{{ emp.email }}" class="text-gray text-decoration-none">{{ emp.email }}</a></td>
+                        <td class="py-3 text-gray" style="font-weight: 500;"><a href="mailto:{{ emp.email }}"
+                                class="text-gray text-decoration-none">{{ emp.email }}</a></td>
                         <td class="py-3">
-                            <span class="badge badge-{{ emp.statut|lower }} rounded-pill px-3 py-2" style="font-weight: 600;">
-                                {{ emp.get_statut_display|default:emp.statut }}
-                            </span>
+                            {% if emp.presence_today %}
+                            {% with p=emp.presence_today.0 %}
+                            {% if p.statut == 'present' %}
+                            <span class="badge rounded-pill px-3 py-2"
+                                style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-weight: 600;">Présent</span>
+                            {% elif p.statut == 'retard' %}
+                            <span class="badge rounded-pill px-3 py-2"
+                                style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545; font-weight: 600;">En
+                                retard</span>
+                            {% elif p.statut == 'absent' %}
+                            <span class="badge rounded-pill px-3 py-2"
+                                style="background-color: rgba(108, 117, 125, 0.1); color: #6c757d; font-weight: 600;">Absent</span>
+                            {% elif p.statut == 'conge' %}
+                            <span class="badge rounded-pill px-3 py-2"
+                                style="background-color: rgba(255, 193, 7, 0.1); color: #ffc107; font-weight: 600;">En
+                                congé</span>
+                            {% else %}
+                            <span class="badge bg-soft text-gray rounded-pill px-3 py-2" style="font-weight: 600;">{{
+                                p.get_statut_display }}</span>
+                            {% endif %}
+                            {% endwith %}
+                            {% else %}
+                            <span class="badge bg-soft text-gray rounded-pill px-3 py-2" style="font-weight: 600;">Non
+                                pointé</span>
+                            {% endif %}
                         </td>
                         <td class="py-3 text-end">
-                            <a href="{% url 'employe_detail' emp.pk %}" class="btn btn-sm text-gray" title="Voir"><i class="bi bi-eye"></i></a>
-                            <a href="{% url 'employe_update' emp.pk %}" class="btn btn-sm text-gray" title="Modifier"><i class="bi bi-pencil"></i></a>
-                            <button class="btn btn-sm text-danger" title="Supprimer" data-bs-toggle="modal" data-bs-target="#deleteModal{{ emp.pk }}"><i class="bi bi-trash"></i></button>
+                            <a href="{% url 'employe_detail' emp.pk %}" class="btn btn-sm text-gray" title="Voir"><i
+                                    class="bi bi-eye"></i></a>
+                            <a href="{% url 'employe_update' emp.pk %}" class="btn btn-sm text-gray" title="Modifier"><i
+                                    class="bi bi-pencil"></i></a>
+                            <button class="btn btn-sm text-danger" title="Supprimer" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{ emp.pk }}"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
-                    
-                    <!-- Modal suppression -->
-                    <div class="modal fade text-start" id="deleteModal{{ emp.pk }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content border-0" style="border-radius: 12px; overflow: hidden;">
-                                <div class="modal-header bg-danger text-white border-0">
-                                    <h5 class="modal-title" style="font-weight: 600;">Confirmer la suppression</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body p-4">
-                                    <p class="m-0 text-navy" style="font-size: 16px;">Voulez-vous vraiment supprimer l'employé <strong>{{ emp.prenom }} {{ emp.nom }}</strong> ?</p>
-                                </div>
-                                <div class="modal-footer border-0 pb-4 pe-4">
-                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
-                                    <form method="post" action="{% url 'employe_delete' emp.pk %}" class="m-0">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger rounded-pill px-4">Supprimer</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center py-5 text-muted">
-                            Aucun employé trouvé. <a href="{% url 'employe_create' %}" class="text-emerald">Ajouter un employé</a>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            Aucun employé trouvé. <a href="{% url 'employe_create' %}" class="text-emerald">Ajouter un
+                                employé</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -241,24 +275,54 @@
     </div>
 </div>
 
+<!-- Modals de suppression -->
+{% for emp in employes %}
+<div class="modal fade text-start" id="deleteModal{{ emp.pk }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content border-0" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title" style="font-weight: 600;">Confirmer la suppression</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="m-0 text-navy" style="font-size: 16px;">Voulez-vous vraiment supprimer l'employé <strong>{{ emp.prenom }} {{ emp.nom }}</strong> ?</p>
+            </div>
+            <div class="modal-footer border-0 pb-4 pe-4">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" action="{% url 'employe_delete' emp.pk %}" class="m-0">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
+    // 🔹 Données historiques (30 jours) injectées depuis la vue
+    const historyDataText = `{{ chart_data_json|safe }}`;
+    const historyData = JSON.parse(historyDataText);
+
     // 🔹 Graphique des présences
     const ctx1 = document.getElementById('presenceChart').getContext('2d');
-    new Chart(ctx1, {
+    const presenceChart = new Chart(ctx1, {
         type: 'line',
         data: {
-            labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+            labels: historyData.labels.slice(-7),
             datasets: [{
                 label: 'Présents',
-                data: [45, 48, 46, 50, 47, 20, 15],
+                data: historyData.presents.slice(-7),
                 borderColor: '#1F7A63',
                 backgroundColor: 'rgba(31, 122, 99, 0.1)',
                 tension: 0.4,
                 fill: true
             }, {
                 label: 'Retards',
-                data: [5, 3, 4, 2, 3, 1, 0],
+                data: historyData.retards.slice(-7),
                 borderColor: '#0B1C2D',
                 backgroundColor: 'rgba(11, 28, 45, 0.1)',
                 tension: 0.4,
@@ -269,17 +333,37 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            scales: { 
-                y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+            scales: {
+                y: { beginAtZero: true, grid: { borderDash: [5, 5] }, ticks: { stepSize: 1 } },
                 x: { grid: { display: false } }
             }
         }
     });
-    
+
+    // 🔹 Filtres du graphique d'évolution
+    document.getElementById('filter-7j')?.addEventListener('click', function () {
+        this.className = 'badge bg-emerald text-white rounded-pill px-3 py-2';
+        document.getElementById('filter-30j').className = 'badge bg-soft text-gray rounded-pill px-3 py-2';
+        presenceChart.data.labels = historyData.labels.slice(-7);
+        presenceChart.data.datasets[0].data = historyData.presents.slice(-7);
+        presenceChart.data.datasets[1].data = historyData.retards.slice(-7);
+        presenceChart.update();
+    });
+
+    document.getElementById('filter-30j')?.addEventListener('click', function () {
+        this.className = 'badge bg-emerald text-white rounded-pill px-3 py-2';
+        document.getElementById('filter-7j').className = 'badge bg-soft text-gray rounded-pill px-3 py-2';
+        presenceChart.data.labels = historyData.labels;
+        presenceChart.data.datasets[0].data = historyData.presents;
+        presenceChart.data.datasets[1].data = historyData.retards;
+        presenceChart.update();
+    });
+
+
     // 🔹 Données pour le graphique (injectées via JSON pour éviter les erreurs du linter IDE)
     const deptLabelsText = `[{% for dept in departements %}"{{ dept.nom|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}]`;
     const deptCountsText = `[{% for dept in departements %}{{ dept.employes.count|default:0 }}{% if not forloop.last %},{% endif %}{% endfor %}]`;
-    
+
     // Graphique par département
     const ctx2 = document.getElementById('departmentChart').getContext('2d');
     new Chart(ctx2, {
@@ -297,35 +381,35 @@
             responsive: true,
             maintainAspectRatio: false,
             cutout: '70%',
-            plugins: { 
+            plugins: {
                 legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8 } }
             }
         }
     });
-    
+
     // 🔹 Recherche en temps réel
-    document.getElementById('searchInput')?.addEventListener('input', function(e) {
+    document.getElementById('searchInput')?.addEventListener('input', function (e) {
         const searchTerm = e.target.value.toLowerCase();
         document.querySelectorAll('#employeesTable tbody tr').forEach(row => {
             const text = row.textContent.toLowerCase();
             row.style.display = text.includes(searchTerm) ? '' : 'none';
         });
     });
-    
+
     // 🔹 Filtres
     function applyFilters() {
         const dept = document.getElementById('filterDepartment')?.value.toLowerCase();
         const status = document.getElementById('filterStatus')?.value.toLowerCase();
-        
+
         document.querySelectorAll('#employeesTable tbody tr').forEach(row => {
-            // Dans la nouvelle table: index 2 = Département, index 4 = Statut
+            // Dans la nouvelle table: index 2 = Département, index 4 = Assiduité
             const rowDept = row.children[2]?.textContent.toLowerCase() || '';
             const rowStatus = row.children[4]?.textContent.toLowerCase() || '';
             const match = (!dept || rowDept.includes(dept)) && (!status || rowStatus.includes(status));
             row.style.display = match ? '' : 'none';
         });
     }
-    
+
     document.getElementById('filterDepartment')?.addEventListener('change', applyFilters);
     document.getElementById('filterStatus')?.addEventListener('change', applyFilters);
 </script>

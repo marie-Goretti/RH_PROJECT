@@ -130,27 +130,6 @@
                         </td>
                     </tr>
                     
-                    <!-- Modal suppression -->
-                    <div class="modal fade" id="deleteModal{{ emp.pk }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header bg-navy text-white">
-                                    <h5 class="modal-title">Confirmer la suppression</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Supprimer <strong>{{ emp.prenom }} {{ emp.nom }}</strong> ?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                    <form method="post" action="{% url 'employe_delete' emp.pk %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger-custom">Supprimer</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     {% empty %}
                     <tr>
                         <td colspan="8" class="text-center py-5">
@@ -169,4 +148,30 @@
         </div>
     </div>
 </div>
+
+<!-- Modals de suppression -->
+{% for emp in employes %}
+<div class="modal fade" id="deleteModal{{ emp.pk }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Supprimer <strong>{{ emp.prenom }} {{ emp.nom }}</strong> ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" action="{% url 'employe_delete' emp.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" class="btn btn-danger-custom">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 {% endblock %}

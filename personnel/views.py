@@ -242,10 +242,16 @@ def dashboard(request):
         return redirect('dashboard')
     
     from datetime import date
-    from django.db.models import Count, Q
+    from django.db.models import Count, Q, Prefetch
+    from personnel.models import Presence
     
-    # Récupérer tous les employés
-    employes = Employe.objects.all().order_by('nom')
+    today = date.today()
+    presences_today = Presence.objects.filter(date=today)
+    
+    # Récupérer tous les employés avec leur présence du jour
+    employes = Employe.objects.prefetch_related(
+        Prefetch('presences', queryset=presences_today, to_attr='presence_today')
+    ).order_by('nom')
     
     # Statistiques
     total_employes = employes.filter(statut='actif').count()
@@ -270,6 +276,43 @@ def dashboard(request):
     # Départements (pour le graphique et les filtres)
     departements = Departement.objects.all()
     
+    # ------------------
+    # Historique des présences (30 derniers jours) pour le graphique
+    # ------------------
+    from datetime import timedelta
+    import json
+    
+    date_30_jours = today - timedelta(days=29)
+    presences_historique = Presence.objects.filter(
+        date__gte=date_30_jours,
+        statut__in=['present', 'retard']
+    ).values('date', 'statut').annotate(count=Count('id'))
+    
+    historique_dict = {}
+    for p in presences_historique:
+        d_str = p['date'].strftime('%d/%m')
+        if d_str not in historique_dict:
+            historique_dict[d_str] = {'present': 0, 'retard': 0}
+        historique_dict[d_str][p['statut']] = p['count']
+        
+    chart_labels_30j = []
+    chart_presents_30j = []
+    chart_retards_30j = []
+    
+    for i in range(29, -1, -1):
+        d = today - timedelta(days=i)
+        d_str = d.strftime('%d/%m')
+        chart_labels_30j.append(d_str)
+        data = historique_dict.get(d_str, {'present': 0, 'retard': 0})
+        chart_presents_30j.append(data['present'])
+        chart_retards_30j.append(data['retard'])
+        
+    chart_data_json = json.dumps({
+        'labels': chart_labels_30j,
+        'presents': chart_presents_30j,
+        'retards': chart_retards_30j
+    })
+    
     context = {
         'employe': request.user.employe,
         'employes': employes,
@@ -278,6 +321,7 @@ def dashboard(request):
         'retards_aujourdhui': retards_aujourdhui,
         'conges_en_attente': conges_en_attente,
         'departements': departements,
+        'chart_data_json': chart_data_json,
     }
     
     return render(request, 'personnel/dashboard.html', context)
@@ -548,6 +592,11 @@ def employe_delete(request, pk):
         else:
             employe.delete()
         messages.success(request, f'Employé {nom} supprimé avec succès !')
+        
+        # Rediriger vers la page d'origine
+        next_url = request.POST.get('next') or request.META.get('HTTP_REFERER')
+        if next_url:
+            return redirect(next_url)
         return redirect('employes_list')
     
     return render(request, 'personnel/employe_confirm_delete.html', {'employe': employe})

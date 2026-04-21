@@ -390,9 +390,13 @@
     setInterval(updateClock, 1000);
 
     // ── Graphique depuis la BDD (données Django → JSON) ──
-    const chartLabels = {{ chart_labels_json|safe }};
-    const chartValues = {{ chart_values_json|safe }};
-    const chartColors = {{ chart_colors_json|safe }};
+    const chartLabelsText = `{{ chart_labels_json|safe }}`;
+    const chartValuesText = `{{ chart_values_json|safe }}`;
+    const chartColorsText = `{{ chart_colors_json|safe }}`;
+    
+    const chartLabels = JSON.parse(chartLabelsText);
+    const chartValues = JSON.parse(chartValuesText);
+    const chartColors = JSON.parse(chartColorsText);
 
     const ctx = document.getElementById('presenceChart').getContext('2d');
     new Chart(ctx, {
@@ -436,8 +440,10 @@
     });
 
     // ── Marquage de présence AJAX (une seule fois par jour) ──
-    {% if not presence_aujourd_hui %}
-    const btnPresence = document.getElementById('btnPresence');
+    const hasPresenceToday = "{{ presence_aujourd_hui|yesno:'true,false' }}" === "true";
+    
+    if (!hasPresenceToday) {
+        const btnPresence = document.getElementById('btnPresence');
     if (btnPresence) {
         btnPresence.addEventListener('click', function () {
             this.disabled = true;
@@ -491,6 +497,6 @@
             });
         });
     }
-    {% endif %}
+    }
 </script>
 {% endblock %}
