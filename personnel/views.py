@@ -741,6 +741,23 @@ def departement_create(request):
 
 @login_required
 @user_passes_test(is_admin_rh)
+def departement_update(request, pk):
+    """Modifier un département"""
+    departement = get_object_or_404(Departement, pk=pk)
+    
+    if request.method == 'POST':
+        form = DepartementForm(request.POST, instance=departement)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Département {departement.nom} modifié avec succès !')
+        else:
+            messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
+            
+    return redirect('departements_list')
+
+
+@login_required
+@user_passes_test(is_admin_rh)
 def employes_departement(request, pk):
     """Voir tous les employés d'un département"""
     

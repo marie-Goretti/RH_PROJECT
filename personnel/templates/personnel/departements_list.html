@@ -106,8 +106,10 @@
                     <a href="{% url 'employes_departement' departement.pk %}" class="btn btn-sm btn-primary-custom flex-grow-1">
                         <i class="ph-thin ph-eye me-1"></i> Voir plus
                     </a>
-                    <button type="button" class="btn btn-sm btn-outline-custom" 
-                            onclick="editDepartement({{ departement.id }}, '{{ departement.nom|escapejs }}', '{{ departement.description|escapejs }}')">
+                    <button type="button" class="btn btn-sm btn-outline-custom edit-departement-btn" 
+                            data-id="{{ departement.id }}"
+                            data-nom="{{ departement.nom }}"
+                            data-description="{{ departement.description|default_if_none:'' }}">
                         <i class="ph-thin ph-pencil-simple"></i>
                     </button>
                 </div>
@@ -296,14 +298,27 @@
 </style>
 
 <script>
-    // Fonction pour éditer un département
-    function editDepartement(id, nom, description) {
-        document.getElementById('editNom').value = nom;
-        document.getElementById('editDescription').value = description;
-        // Pour la démo, on affiche juste le modal
-        // En production, il faudrait configurer l'action du formulaire
-        new bootstrap.Modal(document.getElementById('editDepartementModal')).show();
-    }
+    // Ecouteur d'événement pour l'édition d'un département
+    document.addEventListener('DOMContentLoaded', function() {
+        const editButtons = document.querySelectorAll('.edit-departement-btn');
+        
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const nom = this.getAttribute('data-nom');
+                const description = this.getAttribute('data-description');
+                
+                document.getElementById('editNom').value = nom;
+                document.getElementById('editDescription').value = description;
+                
+                // Mettre à jour l'action du formulaire avec l'ID du département
+                const form = document.getElementById('editForm');
+                form.action = `/departements/${id}/modifier/`;
+                
+                new bootstrap.Modal(document.getElementById('editDepartementModal')).show();
+            });
+        });
+    });
 </script>
 
 {% endblock %}
