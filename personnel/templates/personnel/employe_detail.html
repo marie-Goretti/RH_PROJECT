@@ -102,10 +102,7 @@
                             <span class="text-gray" style="font-weight: 500; font-size: 14px;">Niveau d'accès (Rôle)</span>
                             <strong class="text-navy" style="font-weight: 600;">{{ employe.get_role_display }}</strong>
                         </div>
-                        <div class="d-flex justify-content-between py-3" style="border-bottom: 1px dashed rgba(157, 170, 171, 0.4);">
-                            <span class="text-gray" style="font-weight: 500; font-size: 14px;">Membre depuis</span>
-                            <strong class="text-navy" style="font-weight: 600;">{{ employe.user.date_joined|date:"d/m/Y"|default:employe.date_embauche|date:"d/m/Y" }}</strong>
-                        </div>
+                    
                     </div>
                 </div>
 
