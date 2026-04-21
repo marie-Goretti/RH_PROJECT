@@ -68,7 +68,7 @@ class RegisterForm(UserCreationForm):
     )
     date_embauche = forms.DateField(
         required=True,
-        widget=forms.DateInput(attrs={
+        widget=forms.DateInput(format='%Y-%m-%d', attrs={
             'class': 'form-control',
             'type': 'date'
         })
@@ -170,12 +170,12 @@ class CongeForm(forms.ModelForm):
                 'class': 'form-select',
                 'required': True
             }),
-            'date_debut': forms.DateInput(attrs={
+            'date_debut': forms.DateInput(format='%Y-%m-%d', attrs={
                 'type': 'date',
                 'class': 'form-control',
                 'required': True
             }),
-            'date_fin': forms.DateInput(attrs={
+            'date_fin': forms.DateInput(format='%Y-%m-%d', attrs={
                 'type': 'date',
                 'class': 'form-control',
                 'required': True
@@ -236,7 +236,7 @@ class EmployeForm(forms.ModelForm):
             'departement': forms.Select(attrs={
                 'class': 'form-select'
             }),
-            'date_embauche': forms.DateInput(attrs={
+            'date_embauche': forms.DateInput(format='%Y-%m-%d', attrs={
                 'type': 'date',
                 'class': 'form-control'
             }),
