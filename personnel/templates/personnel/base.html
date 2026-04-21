@@ -464,6 +464,18 @@
                 sidebar.classList.remove('show');
             }
         });
+        
+        // Disparition automatique des alertes (messages) après 2 secondes
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alertNode => {
+                if (typeof bootstrap !== 'undefined') {
+                    const bsAlert = bootstrap.Alert.getOrCreateInstance(alertNode);
+                    bsAlert.close();
+                } else {
+                    alertNode.remove();
+                }
+            });
+        }, 2000);
     </script>
     
     {% block extra_js %}{% endblock %}
