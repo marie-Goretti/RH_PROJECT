@@ -1,11 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}RH Manager{% endblock %}</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -13,7 +14,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+
     <style>
         /* 🔹 PALETTE DE COULEURS OFFICIELLE */
         :root {
@@ -21,14 +24,14 @@
             --emerald-green: #1F7A63;
             --soft-white: #F5F7FA;
             --cool-gray: #9DAAAB;
-            
+
             /* Couleurs dérivées pour les états */
             --success-light: #2E8B75;
             --navy-dark: #061018;
             --gray-light: #E8ECEF;
             --gray-dark: #6B7A7D;
         }
-        
+
         /* 🔹 Sidebar */
         .sidebar {
             min-height: 100vh;
@@ -41,7 +44,7 @@
             padding-top: 0;
             box-shadow: 2px 0 10px rgba(11, 28, 45, 0.1);
         }
-        
+
         .sidebar .nav-link {
             color: var(--cool-gray) !important;
             padding: 12px 20px;
@@ -50,40 +53,40 @@
             transition: all 0.3s ease;
             font-weight: 500;
         }
-        
+
         .sidebar .nav-link:hover {
             background-color: rgba(31, 122, 99, 0.15);
             color: var(--emerald-green) !important;
         }
-        
+
         .sidebar .nav-link.active {
             background-color: var(--emerald-green);
             color: white !important;
         }
-        
+
         .sidebar .nav-link i {
             margin-right: 10px;
             width: 20px;
         }
-        
+
         /* Logo/Nom de l'app */
         .sidebar-brand {
             padding: 20px;
             border-bottom: 1px solid rgba(157, 170, 171, 0.2);
             margin-bottom: 20px;
         }
-        
+
         .sidebar-brand h5 {
             color: white;
             margin: 0;
             font-weight: 700;
         }
-        
+
         .sidebar-brand i {
             color: var(--emerald-green);
             margin-right: 10px;
         }
-        
+
         /* Profil utilisateur en bas */
         .sidebar-profile {
             position: absolute;
@@ -94,20 +97,20 @@
             border-top: 1px solid rgba(157, 170, 171, 0.2);
             background-color: rgba(6, 16, 24, 0.3);
         }
-        
+
         .sidebar-profile .user-name {
             color: white;
             font-weight: 600;
             margin: 0;
             font-size: 14px;
         }
-        
+
         .sidebar-profile .user-role {
             color: var(--cool-gray);
             font-size: 12px;
             margin: 0;
         }
-        
+
         /* 🔹 Main Content */
         .main-content {
             margin-left: 250px;
@@ -115,7 +118,7 @@
             background-color: var(--soft-white);
             min-height: 100vh;
         }
-        
+
         /* 🔹 Top Navbar */
         .top-navbar {
             background-color: white;
@@ -128,7 +131,7 @@
             top: 0;
             z-index: 999;
         }
-        
+
         /* 🔹 Boutons */
         .btn-primary-custom {
             background-color: var(--emerald-green);
@@ -139,7 +142,7 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary-custom:hover {
             background-color: var(--navy-blue);
             border-color: var(--navy-blue);
@@ -147,7 +150,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(31, 122, 99, 0.3);
         }
-        
+
         .btn-outline-custom {
             background-color: transparent;
             border: 2px solid var(--emerald-green);
@@ -157,24 +160,24 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-        
+
         .btn-outline-custom:hover {
             background-color: var(--emerald-green);
             color: white;
         }
-        
+
         .btn-danger-custom {
             background-color: #dc3545;
             border-color: #dc3545;
             color: white;
         }
-        
+
         .btn-danger-custom:hover {
             background-color: #c82333;
             border-color: #c82333;
             color: white;
         }
-        
+
         /* 🔹 Cartes */
         .card-custom {
             background-color: white;
@@ -183,12 +186,12 @@
             border: none;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .card-custom:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 24px rgba(11, 28, 45, 0.12);
         }
-        
+
         .card-header-custom {
             background-color: var(--navy-blue);
             color: white;
@@ -196,19 +199,19 @@
             border-radius: 12px 12px 0 0 !important;
             font-weight: 600;
         }
-        
+
         /* 🔹 Tableaux */
         .table-custom {
             background-color: white;
             border-radius: 12px;
             overflow: hidden;
         }
-        
+
         .table-custom thead {
             background-color: var(--navy-blue);
             color: white;
         }
-        
+
         .table-custom thead th {
             border: none;
             padding: 15px;
@@ -217,18 +220,18 @@
             font-size: 13px;
             letter-spacing: 0.5px;
         }
-        
+
         .table-custom tbody td {
             padding: 15px;
             border-bottom: 1px solid var(--gray-light);
             color: var(--navy-blue);
             vertical-align: middle;
         }
-        
+
         .table-custom tbody tr:hover {
             background-color: var(--soft-white);
         }
-        
+
         /* 🔹 Badges de statut */
         .badge-actif {
             background-color: rgba(31, 122, 99, 0.15);
@@ -238,7 +241,7 @@
             font-weight: 600;
             font-size: 12px;
         }
-        
+
         .badge-conge {
             background-color: rgba(255, 193, 7, 0.15);
             color: #FF9800;
@@ -247,7 +250,7 @@
             font-weight: 600;
             font-size: 12px;
         }
-        
+
         .badge-inactif {
             background-color: rgba(220, 53, 69, 0.15);
             color: #dc3545;
@@ -256,7 +259,7 @@
             font-weight: 600;
             font-size: 12px;
         }
-        
+
         /* 🔹 Inputs et Formulaires */
         .form-control-custom {
             border: 2px solid var(--gray-light);
@@ -265,30 +268,46 @@
             font-size: 14px;
             transition: all 0.3s ease;
         }
-        
+
         .form-control-custom:focus {
             border-color: var(--emerald-green);
             box-shadow: 0 0 0 3px rgba(31, 122, 99, 0.1);
             outline: none;
         }
-        
+
         .form-label-custom {
             color: var(--navy-blue);
             font-weight: 600;
             font-size: 14px;
             margin-bottom: 8px;
         }
-        
+
         /* 🔹 Textes */
-        .text-navy { color: var(--navy-blue) !important; }
-        .text-emerald { color: var(--emerald-green) !important; }
-        .text-gray { color: var(--cool-gray) !important; }
-        
+        .text-navy {
+            color: var(--navy-blue) !important;
+        }
+
+        .text-emerald {
+            color: var(--emerald-green) !important;
+        }
+
+        .text-gray {
+            color: var(--cool-gray) !important;
+        }
+
         /* 🔹 Arrière-plans */
-        .bg-navy { background-color: var(--navy-blue) !important; }
-        .bg-emerald { background-color: var(--emerald-green) !important; }
-        .bg-soft { background-color: var(--soft-white) !important; }
-        
+        .bg-navy {
+            background-color: var(--navy-blue) !important;
+        }
+
+        .bg-emerald {
+            background-color: var(--emerald-green) !important;
+        }
+
+        .bg-soft {
+            background-color: var(--soft-white) !important;
+        }
+
         /* 🔹 Sidebar Toggle (Mobile) */
         .sidebar-toggle {
             display: none;
@@ -305,44 +324,52 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .sidebar-toggle:hover {
             background-color: var(--navy-blue);
         }
-        
+
         /* 🔹 Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
             }
-            
+
             .sidebar.show {
                 transform: translateX(0);
             }
-            
+
             .main-content {
                 margin-left: 0;
             }
-            
+
             .sidebar-toggle {
                 display: block;
             }
         }
-        
+
         /* 🔹 Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         .animate-fade-in {
             animation: fadeIn 0.5s ease;
         }
     </style>
-    
+
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 
     <!-- 🔹 Bouton toggle sidebar (mobile) -->
@@ -353,62 +380,62 @@
     <!-- 🔹 Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <h5><i class="ph-thin ph-buildings"></i> RH Manager</h5>
+            <h5><i class="ph-thin ph-buildings"></i> <span style="font-family: 'Roboto Slab', serif; letter-spacing: 1px;">RHOPTIMA</span></h5>
         </div>
-        
+
         <ul class="nav flex-column px-2">
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_employe' %}active{% endif %}" 
-                   href="{% if user.employe.role == 'admin_rh' %}{% url 'dashboard' %}{% else %}{% url 'dashboard_employe' %}{% endif %}">
+                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_employe' %}active{% endif %}"
+                    href="{% if user.employe.role == 'admin_rh' %}{% url 'dashboard' %}{% else %}{% url 'dashboard_employe' %}{% endif %}">
                     <i class="ph-thin ph-gauge"></i> Tableau de bord
                 </a>
             </li>
-            
+
             {% if user.employe.role == 'admin_rh' %}
             <li class="nav-item">
-                <a class="nav-link {% if 'employe' in request.resolver_match.url_name and 'departement' not in request.resolver_match.url_name and 'dashboard' not in request.resolver_match.url_name %}active{% endif %}" 
-                   href="{% url 'employes_list' %}">
+                <a class="nav-link {% if 'employe' in request.resolver_match.url_name and 'departement' not in request.resolver_match.url_name and 'dashboard' not in request.resolver_match.url_name %}active{% endif %}"
+                    href="{% url 'employes_list' %}">
                     <i class="ph-thin ph-users"></i> Employés
                 </a>
             </li>
             {% endif %}
-            
+
             <li class="nav-item">
                 {% if user.employe.role == 'admin_rh' %}
                 <a class="nav-link {% if 'conge' in request.resolver_match.url_name %}active{% endif %}"
-                   href="{% url 'gestion_conges' %}">
+                    href="{% url 'gestion_conges' %}">
                     <i class="ph-thin ph-calendar-check"></i> Congés
                     {% if conges_en_attente_count > 0 %}
                     <span class="ms-auto badge"
-                          style="background:rgba(255,193,7,0.25);color:#e6a800;font-size:0.7rem;padding:3px 7px;border-radius:12px;">
+                        style="background:rgba(255,193,7,0.25);color:#e6a800;font-size:0.7rem;padding:3px 7px;border-radius:12px;">
                         {{ conges_en_attente_count }}
                     </span>
                     {% endif %}
                 </a>
                 {% else %}
                 <a class="nav-link {% if 'conge' in request.resolver_match.url_name %}active{% endif %}"
-                   href="{% url 'demande_conge' %}">
+                    href="{% url 'demande_conge' %}">
                     <i class="ph-thin ph-calendar-check"></i> Congés
                 </a>
                 {% endif %}
             </li>
-            
+
             {% if user.employe.role == 'admin_rh' %}
             <li class="nav-item">
-                <a class="nav-link {% if 'departement' in request.resolver_match.url_name %}active{% endif %}" 
-                   href="{% url 'departements_list' %}">
+                <a class="nav-link {% if 'departement' in request.resolver_match.url_name %}active{% endif %}"
+                    href="{% url 'departements_list' %}">
                     <i class="ph-thin ph-tree-structure"></i> Départements
                 </a>
             </li>
             {% endif %}
-            
+
             <li class="nav-item mt-4">
                 <a class="nav-link" href="#">
                     <i class="ph-thin ph-gear"></i> Paramètres
                 </a>
             </li>
         </ul>
-        
+
         <!-- Profil utilisateur -->
         <div class="sidebar-profile">
             <p class="user-name">{{ user.employe.prenom }} {{ user.employe.nom }}</p>
@@ -421,12 +448,13 @@
 
     <!-- 🔹 Contenu principal -->
     <main class="main-content">
-        
+
         <!-- Messages Django -->
         {% if messages %}
         <div class="container-fluid px-4 mt-3">
             {% for message in messages %}
-            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show animate-fade-in" role="alert">
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show animate-fade-in"
+                role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
@@ -436,29 +464,29 @@
 
         <!-- Contenu spécifique -->
         {% block content %}{% endblock %}
-        
+
     </main>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Script sidebar -->
     <script>
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('show');
         }
-        
-        document.addEventListener('click', function(e) {
+
+        document.addEventListener('click', function (e) {
             const sidebar = document.getElementById('sidebar');
             const toggle = document.getElementById('sidebarToggle');
-            if (window.innerWidth <= 768 && 
-                !sidebar.contains(e.target) && 
-                !toggle.contains(e.target) && 
+            if (window.innerWidth <= 768 &&
+                !sidebar.contains(e.target) &&
+                !toggle.contains(e.target) &&
                 sidebar.classList.contains('show')) {
                 sidebar.classList.remove('show');
             }
         });
-        
+
         // Disparition automatique des alertes (messages) après 2 secondes
         setTimeout(() => {
             document.querySelectorAll('.alert').forEach(alertNode => {
@@ -471,7 +499,8 @@
             });
         }, 2000);
     </script>
-    
+
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>
