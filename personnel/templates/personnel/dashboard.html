@@ -173,23 +173,17 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="text-navy m-0" style="font-weight: 700;">Vue d'ensemble de l'assiduité</h5>
             <div class="d-flex gap-3 align-items-center">
-                <select class="form-select form-select-sm border-0 bg-soft text-gray rounded-pill px-3 py-2"
-                    id="filterDepartment" style="width: auto; font-weight: 500;">
-                    <option value="">Tous les départements</option>
-                    {% for dept in departements %}
-                    <option value="{{ dept.id }}">{{ dept.nom }}</option>
-                    {% endfor %}
-                </select>
-                <select class="form-select form-select-sm border-0 bg-soft text-gray rounded-pill px-3 py-2"
-                    id="filterStatus" style="width: auto; font-weight: 500;">
-                    <option value="">Toutes les assiduités</option>
-                    <option value="présent">Présent</option>
-                    <option value="en retard">En retard</option>
-                    <option value="absent">Absent</option>
-                    <option value="non pointé">Non pointé</option>
-                </select>
-                <a href="{% url 'employes_list' %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">Voir
-                    Tout</a>
+                <!-- Export Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-custom rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-download"></i> Exporter
+                    </button>
+                    <ul class="dropdown-menu shadow-sm border-0">
+                        <li><a class="dropdown-item" href="#" onclick="exportExcel(event)"><i class="bi bi-file-earmark-excel text-success me-2"></i>Excel</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="exportPDF(event)"><i class="bi bi-file-earmark-pdf text-danger me-2"></i>PDF</a></li>
+                    </ul>
+                </div>
+                <a href="{% url 'employes_list' %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">Voir Tout</a>
             </div>
         </div>
 
@@ -396,21 +390,38 @@
         });
     });
 
-    // 🔹 Filtres
-    function applyFilters() {
-        const dept = document.getElementById('filterDepartment')?.value.toLowerCase();
-        const status = document.getElementById('filterStatus')?.value.toLowerCase();
-
-        document.querySelectorAll('#employeesTable tbody tr').forEach(row => {
-            // Dans la nouvelle table: index 2 = Département, index 4 = Assiduité
-            const rowDept = row.children[2]?.textContent.toLowerCase() || '';
-            const rowStatus = row.children[4]?.textContent.toLowerCase() || '';
-            const match = (!dept || rowDept.includes(dept)) && (!status || rowStatus.includes(status));
-            row.style.display = match ? '' : 'none';
+    // 🔹 Export fonctions
+    function exportExcel(e) {
+        e.preventDefault();
+        const table = document.getElementById('employeesTable');
+        const cloneTable = table.cloneNode(true);
+        
+        cloneTable.querySelectorAll('tr').forEach(row => {
+            if(row.lastElementChild) row.removeChild(row.lastElementChild);
         });
+
+        const wb = XLSX.utils.table_to_book(cloneTable, {sheet: "Assiduité"});
+        XLSX.writeFile(wb, "Assiduite_Employes.xlsx");
     }
 
-    document.getElementById('filterDepartment')?.addEventListener('change', applyFilters);
-    document.getElementById('filterStatus')?.addEventListener('change', applyFilters);
+    function exportPDF(e) {
+        e.preventDefault();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.text("Vue d'ensemble de l'assiduité", 14, 15);
+        
+        doc.autoTable({
+            html: '#employeesTable',
+            startY: 20,
+            ignoreColumns: [5], // Index de la colonne Actions
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [11, 28, 45] }
+        });
+        doc.save('Assiduite_Employes.pdf');
+    }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 {% endblock %}
