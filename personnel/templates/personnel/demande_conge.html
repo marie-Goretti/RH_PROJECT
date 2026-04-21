@@ -3,50 +3,422 @@
 
 {% block title %}Demande de Congé - Gestion RH{% endblock %}
 
-{% block extra_css %}
-<style>
-    .conge-card { border-left: 4px solid #0d6efd; }
-    .statut-en-attente { color: #ffc107; }
-    .statut-approuve { color: #198754; }
-    .statut-refuse { color: #dc3545; }
-    .statut-annule { color: #6c757d; }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="row">
-        <!-- Formulaire de demande -->
-        <div class="col-lg-5 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <i class="bi bi-calendar-plus me-2"></i>Nouvelle Demande de Congé
+<div class="container-fluid px-4 py-4">
+    
+    <!-- En-tête -->
+    <div class="mb-4">
+        <h2 class="text-navy mb-1 fw-bold">
+            <i class="fas fa-calendar-alt me-2"></i> Gestion des Congés
+        </h2>
+        <p class="text-gray mb-0">Demandez vos congés et consultez l'historique de vos demandes</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Formulaire de demande (Gauche) -->
+        <div class="col-lg-5">
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <i class="fas fa-plus me-2"></i> Nouvelle Demande de Congé
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
-                        <div class="mb-3">
-                            <label for="{{ form.type_conge.id_for_label }}" class="form-label">
-                                <i class="bi bi-list-check me-1"></i>{{ form.type_conge.label }}
+                        <!-- Type de congé -->
+                        <div class="mb-4">
+                            <label for="{{ form.type_conge.id_for_label }}" class="form-label-custom">
+                                <i class="fas fa-list-check me-2"></i> Type de congé
+                                <span class="text-danger">*</span>
                             </label>
                             {{ form.type_conge }}
                             {% if form.type_conge.errors %}
-                                <div class="invalid-feedback d-block">{{ form.type_conge.errors }}</div>
+                                <div class="invalid-feedback d-block mt-2">
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.type_conge.errors.0 }}
+                                </div>
                             {% endif %}
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.date_debut.id_for_label }}" class="form-label">
-                                    <i class="bi bi-calendar-event me-1"></i>{{ form.date_debut.label }}
+                        <!-- Dates -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.date_debut.id_for_label }}" class="form-label-custom">
+                                    <i class="fas fa-calendar-plus me-2"></i> Début
+                                    <span class="text-danger">*</span>
                                 </label>
                                 {{ form.date_debut }}
                                 {% if form.date_debut.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.date_debut.errors }}</div>
+                                    <div class="invalid-feedback d-block mt-2">
+                                        <i class="fas fa-exclamation-circle me-1"></i>{{ form.date_debut.errors.0 }}
+                                    </div>
                                 {% endif %}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.date_fin.id_for_label }}" class="form-label-custom">
+                                    <i class="fas fa-calendar-check me-2"></i> Fin
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.date_fin }}
+                                {% if form.date_fin.errors %}
+                                    <div class="invalid-feedback d-block mt-2">
+                                        <i class="fas fa-exclamation-circle me-1"></i>{{ form.date_fin.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Info durée -->
+                        <div class="alert alert-info py-2 px-3 mb-4 small">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Durée maximale :</strong> 60 jours
+                        </div>
+
+                        <!-- Motif -->
+                        <div class="mb-4">
+                            <label for="{{ form.justificatif_texte.id_for_label }}" class="form-label-custom">
+                                <i class="fas fa-pen-square me-2"></i> Motif (optionnel)
+                            </label>
+                            {{ form.justificatif_texte }}
+                            {% if form.justificatif_texte.errors %}
+                                <div class="invalid-feedback d-block mt-2">
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.justificatif_texte.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Pièce jointe -->
+                        <div class="mb-4">
+                            <label for="{{ form.justificatif_fichier.id_for_label }}" class="form-label-custom">
+                                <i class="fas fa-paperclip me-2"></i> Pièce justificative (optionnel)
+                            </label>
+                            {{ form.justificatif_fichier }}
+                            <small class="text-gray d-block mt-2">
+                                <i class="fas fa-check-circle text-success me-1"></i>
+                                Formats acceptés: PDF, JPG, PNG
+                            </small>
+                            {% if form.justificatif_fichier.errors %}
+                                <div class="invalid-feedback d-block mt-2">
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.justificatif_fichier.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Bouton soumettre -->
+                        <button type="submit" class="btn btn-primary-custom w-100">
+                            <i class="fas fa-paper-plane me-2"></i> Soumettre la demande
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bloc d'information -->
+            <div class="card-custom mt-4">
+                <div class="card-header-custom">
+                    <i class="fas fa-lightbulb me-2"></i> Informations
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <h6 class="text-navy fw-bold mb-2">
+                            <i class="fas fa-check-circle text-emerald me-2"></i> Congé annuel
+                        </h6>
+                        <p class="text-gray small mb-0">Payé - Sans justificatif requis</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6 class="text-navy fw-bold mb-2">
+                            <i class="fas fa-check-circle text-emerald me-2"></i> Congé maladie
+                        </h6>
+                        <p class="text-gray small mb-0">Justificatif médical requis après 3 jours</p>
+                    </div>
+
+                    <div class="mb-0">
+                        <h6 class="text-navy fw-bold mb-2">
+                            <i class="fas fa-clock text-emerald me-2"></i> Traitement
+                        </h6>
+                        <p class="text-gray small mb-0">Réponse en 48-72 heures</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historique (Droite) -->
+        <div class="col-lg-7">
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <i class="fas fa-history me-2"></i> Historique des Demandes
+                </div>
+                
+                {% if conges %}
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-custom mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Période</th>
+                                    <th>Durée</th>
+                                    <th>Statut</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for conge in conges %}
+                                <tr>
+                                    <td>
+                                        <strong class="text-navy">
+                                            <i class="fas fa-calendar me-1"></i>
+                                            {{ conge.get_type_conge_display }}
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <small class="text-gray">
+                                            <i class="fas fa-calendar-alt me-1"></i>
+                                            {{ conge.date_debut|date:"d/m/Y" }}
+                                        </small>
+                                        <small class="d-block text-gray">
+                                            <i class="fas fa-arrow-right me-1" style="width: 12px;"></i>
+                                            {{ conge.date_fin|date:"d/m/Y" }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-navy">
+                                            {{ conge.date_fin|add:conge.date_debut|add:"1" }} jour{{ conge.date_fin|add:conge.date_debut|add:"1"|pluralize }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if conge.statut == 'en_attente' %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-hourglass-half me-1"></i> En attente
+                                            </span>
+                                        {% elif conge.statut == 'approuve' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i> Approuvé
+                                            </span>
+                                        {% elif conge.statut == 'refuse' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times-circle me-1"></i> Refusé
+                                            </span>
+                                        {% elif conge.statut == 'annule' %}
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-ban me-1"></i> Annulé
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-primary-custom" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#modalConge{{ conge.id }}"
+                                                title="Voir les détails">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <div class="card-body p-5 text-center">
+                    <i class="fas fa-calendar-times" style="font-size: 3rem; color: var(--cool-gray);"></i>
+                    <h6 class="text-navy mt-3 fw-bold">Aucune demande de congé</h6>
+                    <p class="text-gray small mb-0">Vous n'avez pas encore soumis de demande de congé</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals détails -->
+{% for conge in conges %}
+<div class="modal fade" id="modalConge{{ conge.id }}" tabindex="-1" aria-labelledby="modalLabel{{ conge.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="modalLabel{{ conge.id }}">
+                    <i class="fas fa-calendar me-2"></i> Détails du congé
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <!-- Type -->
+                <div class="mb-3">
+                    <h6 class="text-navy fw-bold mb-1">
+                        <i class="fas fa-list-check me-2"></i> Type
+                    </h6>
+                    <p class="text-gray mb-0">{{ conge.get_type_conge_display }}</p>
+                </div>
+
+                <hr>
+
+                <!-- Période -->
+                <div class="mb-3">
+                    <h6 class="text-navy fw-bold mb-1">
+                        <i class="fas fa-calendar-alt me-2"></i> Période
+                    </h6>
+                    <p class="text-gray mb-0">
+                        {{ conge.date_debut|date:"d/m/Y" }} au {{ conge.date_fin|date:"d/m/Y" }}
+                    </p>
+                </div>
+
+                <hr>
+
+                <!-- Statut -->
+                <div class="mb-3">
+                    <h6 class="text-navy fw-bold mb-1">
+                        <i class="fas fa-flag me-2"></i> Statut
+                    </h6>
+                    {% if conge.statut == 'en_attente' %}
+                        <span class="badge bg-warning text-dark">
+                            <i class="fas fa-hourglass-half me-1"></i> En attente
+                        </span>
+                    {% elif conge.statut == 'approuve' %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-check-circle me-1"></i> Approuvé
+                        </span>
+                    {% elif conge.statut == 'refuse' %}
+                        <span class="badge bg-danger">
+                            <i class="fas fa-times-circle me-1"></i> Refusé
+                        </span>
+                    {% elif conge.statut == 'annule' %}
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-ban me-1"></i> Annulé
+                        </span>
+                    {% endif %}
+                </div>
+
+                <hr>
+
+                <!-- Motif -->
+                {% if conge.justificatif_texte %}
+                <div class="mb-3">
+                    <h6 class="text-navy fw-bold mb-1">
+                        <i class="fas fa-pen-square me-2"></i> Motif
+                    </h6>
+                    <p class="text-gray mb-0">{{ conge.justificatif_texte }}</p>
+                </div>
+                <hr>
+                {% endif %}
+
+                <!-- Pièce jointe -->
+                {% if conge.justificatif_fichier %}
+                <div class="mb-0">
+                    <h6 class="text-navy fw-bold mb-1">
+                        <i class="fas fa-paperclip me-2"></i> Pièce jointe
+                    </h6>
+                    <a href="{{ conge.justificatif_fichier.url }}" target="_blank" class="btn btn-sm btn-primary-custom">
+                        <i class="fas fa-download me-1"></i> Télécharger
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Commentaire si refusé -->
+                {% if conge.statut == 'refuse' and conge.commentaire %}
+                <hr>
+                <div class="alert alert-danger py-2 px-3 small mb-0">
+                    <h6 class="text-danger fw-bold mb-1">
+                        <i class="fas fa-info-circle me-2"></i> Motif du refus
+                    </h6>
+                    <p class="mb-0">{{ conge.commentaire }}</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer p-3">
+                <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<style>
+    :root {
+        --navy-blue: #0B1C2D;
+        --emerald-green: #1F7A63;
+        --soft-white: #F5F7FA;
+        --cool-gray: #9DAAAB;
+        --gray-light: #E8ECEF;
+    }
+
+    .form-label-custom {
+        font-weight: 600;
+        color: var(--navy-blue);
+        margin-bottom: 8px;
+        display: block;
+        font-size: 14px;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid var(--gray-light);
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--emerald-green);
+        box-shadow: 0 0 0 0.2rem rgba(31, 122, 99, 0.25);
+    }
+
+    .text-navy {
+        color: var(--navy-blue);
+    }
+
+    .text-gray {
+        color: var(--cool-gray);
+    }
+
+    .text-emerald {
+        color: var(--emerald-green);
+    }
+
+    .text-danger {
+        color: #dc3545;
+    }
+
+    .text-success {
+        color: #2E8B75;
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 13px;
+    }
+
+    .alert-info {
+        background-color: rgba(31, 122, 99, 0.1);
+        border: 1px solid var(--gray-light);
+        color: var(--navy-blue);
+        border-radius: 8px;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: var(--soft-white);
+    }
+
+    .modal-content {
+        border-radius: 12px;
+        border: none;
+    }
+
+    .modal-header {
+        border-radius: 12px 12px 0 0;
+        border-bottom: none;
+    }
+</style>
+
+{% endblock %}
                                 <label for="{{ form.date_fin.id_for_label }}" class="form-label">
                                     <i class="bi bi-calendar-check me-1"></i>{{ form.date_fin.label }}
                                 </label>
@@ -195,4 +567,3 @@
     </div>
 </div>
 {% endfor %}
-{% endblock %}
