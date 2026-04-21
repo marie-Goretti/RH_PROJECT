@@ -11,9 +11,21 @@
             <h2 class="text-navy mb-1 fw-bold">Gestion des Employés</h2>
             <p class="text-gray mb-0">{{ employes.count }} employé(s) trouvé(s)</p>
         </div>
-        <a href="{% url 'employe_create' %}" class="btn btn-primary-custom">
-            <i class="ph-thin ph-plus me-2"></i> Ajouter un employé
-        </a>
+        <div class="d-flex gap-3 align-items-center">
+            <!-- Export Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="ph-thin ph-download-simple me-2"></i> Exporter
+                </button>
+                <ul class="dropdown-menu shadow-sm border-0">
+                    <li><a class="dropdown-item" href="#" onclick="exportExcel(event)"><i class="ph-thin ph-file-xls text-success me-2"></i>Excel</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="exportPDF(event)"><i class="ph-thin ph-file-pdf text-danger me-2"></i>PDF</a></li>
+                </ul>
+            </div>
+            <a href="{% url 'employe_create' %}" class="btn btn-primary-custom">
+                <i class="ph-thin ph-plus me-2"></i> Ajouter un employé
+            </a>
+        </div>
     </div>
 
     <!-- Barre de recherche -->
@@ -65,7 +77,7 @@
     <!-- Tableau -->
     <div class="card-custom">
         <div class="table-responsive">
-            <table class="table table-custom mb-0">
+            <table class="table table-custom mb-0" id="employeesListTable">
                 <thead>
                     <tr>
                         <th>Matricule</th>
@@ -172,5 +184,40 @@
     </div>
 </div>
 {% endfor %}
+
+<script>
+    function exportExcel(e) {
+        e.preventDefault();
+        const table = document.getElementById('employeesListTable');
+        const cloneTable = table.cloneNode(true);
+        
+        cloneTable.querySelectorAll('tr').forEach(row => {
+            if(row.lastElementChild) row.removeChild(row.lastElementChild);
+        });
+
+        const wb = XLSX.utils.table_to_book(cloneTable, {sheet: "Employes"});
+        XLSX.writeFile(wb, "Liste_Employes.xlsx");
+    }
+
+    function exportPDF(e) {
+        e.preventDefault();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.text("Liste des Employés", 14, 15);
+        
+        doc.autoTable({
+            html: '#employeesListTable',
+            startY: 20,
+            ignoreColumns: [7], // Index de la colonne Actions
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [11, 28, 45] }
+        });
+        doc.save('Liste_Employes.pdf');
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
 {% endblock %}
