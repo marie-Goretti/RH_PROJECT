@@ -81,7 +81,8 @@
                 <thead>
                     <tr>
                         <th>Matricule</th>
-                        <th>Nom & Prénom</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
                         <th>Email</th>
                         <th>Téléphone</th>
                         <th>Poste</th>
@@ -95,15 +96,10 @@
                     <tr>
                         <td><small class="text-gray">{{ emp.matricule }}</small></td>
                         <td>
-                            <div class="d-flex align-items-center">
-                                <div class="bg-emerald rounded-circle d-flex align-items-center justify-content-center me-3" 
-                                     style="width: 40px; height: 40px; color: white; font-weight: 600;">
-                                    {{ emp.prenom.0 }}{{ emp.nom.0 }}
-                                </div>
-                                <div>
-                                    <strong class="text-navy">{{ emp.nom }} {{ emp.prenom }}</strong>
-                                </div>
-                            </div>
+                            <strong class="text-navy">{{ emp.nom }}</strong>
+                        </td>
+                        <td>
+                            <strong class="text-navy">{{ emp.prenom }}</strong>
                         </td>
                         <td><a href="mailto:{{ emp.email }}" class="text-emerald text-decoration-none">{{ emp.email }}</a></td>
                         <td class="text-gray">{{ emp.telephone|default:"-" }}</td>
@@ -143,7 +139,7 @@
                     
                     {% empty %}
                     <tr>
-                        <td colspan="8" class="text-center py-5">
+                        <td colspan="9" class="text-center py-5">
                             <div class="text-gray">
                                 <i class="ph-thin ph-users"></i>
                                 <p>Aucun employé trouvé.</p>
@@ -209,7 +205,7 @@
         doc.autoTable({
             html: '#employeesListTable',
             startY: 20,
-            ignoreColumns: [7], // Index de la colonne Actions
+            ignoreColumns: [8], // Index de la colonne Actions
             styles: { fontSize: 8 },
             headStyles: { fillColor: [11, 28, 45] }
         });

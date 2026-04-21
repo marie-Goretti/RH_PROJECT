@@ -182,63 +182,46 @@
             <table class="table table-borderless align-middle" id="employeesTable">
                 <thead>
                     <tr>
-                        <th class="text-gray pb-3">Nom employé</th>
                         <th class="text-gray pb-3">Matricule</th>
-                        <th class="text-gray pb-3">Département</th>
+                        <th class="text-gray pb-3">Nom</th>
+                        <th class="text-gray pb-3">Prénom</th>
                         <th class="text-gray pb-3">Email</th>
+                        <th class="text-gray pb-3">Téléphone</th>
+                        <th class="text-gray pb-3">Poste</th>
+                        <th class="text-gray pb-3">Département</th>
                         <th class="text-gray pb-3">Assiduité</th>
-                        <th class="text-gray pb-3 text-end">Actions</th>
+                        <th class="text-gray pb-3 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for emp in employes %}
+                    {% for emp in employes|slice:":10" %}
                     <tr>
+                        <td class="py-3"><small class="text-gray">{{ emp.matricule }}</small></td>
+                        <td class="py-3"><strong class="text-navy">{{ emp.nom }}</strong></td>
+                        <td class="py-3"><strong class="text-navy">{{ emp.prenom }}</strong></td>
+                        <td class="py-3"><a href="mailto:{{ emp.email }}" class="text-emerald text-decoration-none">{{ emp.email }}</a></td>
+                        <td class="py-3 text-gray">{{ emp.telephone|default:"-" }}</td>
+                        <td class="py-3 text-navy">{{ emp.poste }}</td>
+                        <td class="py-3 text-gray">{{ emp.departement.nom|default:"-" }}</td>
                         <td class="py-3">
-                            <div class="d-flex align-items-center">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                                    style="width: 40px; height: 40px; background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-weight: bold;">
-                                    {{ emp.prenom.0 }}{{ emp.nom.0 }}
-                                </div>
-                                <div>
-                                    <h6 class="m-0 text-navy" style="font-weight: 600;">{{ emp.prenom }} {{ emp.nom }}
-                                    </h6>
-                                    <small class="text-gray">{{ emp.poste }}</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="py-3 text-gray" style="font-weight: 500;">{{ emp.matricule }}</td>
-                        <td class="py-3 text-gray" style="font-weight: 500;">{{ emp.departement.nom|default:"-" }}</td>
-                        <td class="py-3 text-gray" style="font-weight: 500;"><a href="mailto:{{ emp.email }}"
-                                class="text-gray text-decoration-none">{{ emp.email }}</a></td>
-                        <td class="py-3">
-                            {% if emp.presence_today %}
-                            {% with p=emp.presence_today.0 %}
-                            {% if p.statut == 'present' %}
-                            <span class="badge rounded-pill px-3 py-2"
-                                style="background-color: rgba(31, 122, 99, 0.1); color: var(--emerald-green); font-weight: 600;">Présent</span>
-                            {% elif p.statut == 'retard' %}
-                            <span class="badge rounded-pill px-3 py-2"
-                                style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545; font-weight: 600;">En
-                                retard</span>
-                            {% elif p.statut == 'absent' %}
-                            <span class="badge rounded-pill px-3 py-2"
-                                style="background-color: rgba(108, 117, 125, 0.1); color: #6c757d; font-weight: 600;">Absent</span>
-                            {% elif p.statut == 'conge' %}
-                            <span class="badge rounded-pill px-3 py-2"
-                                style="background-color: rgba(255, 193, 7, 0.1); color: #ffc107; font-weight: 600;">En
-                                congé</span>
-                            {% else %}
-                            <span class="badge bg-soft text-gray rounded-pill px-3 py-2" style="font-weight: 600;">{{
-                                p.get_statut_display }}</span>
-                            {% endif %}
+                            {% with presence=emp.presence_today|first %}
+                                {% if presence %}
+                                    {% if presence.statut == 'present' %}
+                                        <span class="badge bg-success px-3 py-2 rounded-pill"><i class="ph-thin ph-check-circle me-1"></i>À l'heure</span>
+                                    {% elif presence.statut == 'retard' %}
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill"><i class="ph-thin ph-clock me-1"></i>En retard</span>
+                                    {% elif presence.statut == 'absent' %}
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill"><i class="ph-thin ph-x-circle me-1"></i>Absent</span>
+                                    {% elif presence.statut == 'conge' %}
+                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill"><i class="ph-thin ph-umbrella me-1"></i>En congé</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary px-3 py-2 rounded-pill"><i class="ph-thin ph-question me-1"></i>Non pointé</span>
+                                {% endif %}
                             {% endwith %}
-                            {% else %}
-                            <span class="badge bg-soft text-gray rounded-pill px-3 py-2" style="font-weight: 600;">Non
-                                pointé</span>
-                            {% endif %}
                         </td>
-                        <td class="py-3 text-end">
-                            <div class="d-flex justify-content-end gap-2">
+                        <td class="py-3 text-center">
+                            <div class="d-flex justify-content-center gap-2">
                                 <a href="{% url 'employe_detail' emp.pk %}" class="btn btn-sm"
                                     style="background-color: rgba(157, 170, 171, 0.2); color: var(--navy-blue); border-radius: 6px; padding: 6px 10px; transition: all 0.2s;"
                                     title="Voir">
@@ -259,7 +242,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="text-center py-5 text-muted">
+                        <td colspan="9" class="text-center py-5 text-muted">
                             Aucun employé trouvé. <a href="{% url 'employe_create' %}" class="text-emerald">Ajouter un
                                 employé</a>
                         </td>
