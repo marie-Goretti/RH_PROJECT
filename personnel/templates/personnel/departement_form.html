@@ -1,0 +1,221 @@
+{% extends 'personnel/base.html' %}
+
+{% block title %}{% if action == 'create' %}Ajouter un département{% else %}Modifier le département{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    
+    <!-- Breadcrumb -->
+    <nav class="mb-3" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'departements_list' %}" class="text-decoration-none text-emerald">
+                    <i class="fas fa-building me-1"></i> Départements
+                </a>
+            </li>
+            <li class="breadcrumb-item active">
+                {% if action == 'create' %}
+                    Ajouter un département
+                {% else %}
+                    Modifier le département
+                {% endif %}
+            </li>
+        </ol>
+    </nav>
+
+    <!-- En-tête -->
+    <div class="mb-4">
+        <h2 class="text-navy mb-1 fw-bold">
+            {% if action == 'create' %}
+                <i class="fas fa-plus me-2"></i> {{ title }}
+            {% else %}
+                <i class="fas fa-edit me-2"></i> {{ title }}
+            {% endif %}
+        </h2>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="row">
+        <div class="col-lg-8 col-md-10">
+            <div class="card-custom">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="card-body p-4">
+                        <!-- Nom -->
+                        <div class="mb-4">
+                            <label for="{{ form.nom.id_for_label }}" class="form-label-custom">
+                                <i class="fas fa-briefcase me-2"></i> Nom du département
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.nom }}
+                            {% if form.nom.errors %}
+                            <div class="invalid-feedback d-block mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                {{ form.nom.errors.0 }}
+                            </div>
+                            {% endif %}
+                            <small class="text-gray d-block mt-2">
+                                Nom unique du département (ex: Ressources Humaines, IT, Ventes)
+                            </small>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="{{ form.description.id_for_label }}" class="form-label-custom">
+                                <i class="fas fa-align-left me-2"></i> Description
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <div class="invalid-feedback d-block mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                {{ form.description.errors.0 }}
+                            </div>
+                            {% endif %}
+                            <small class="text-gray d-block mt-2">
+                                Décrivez le rôle, la mission ou les responsabilités du département (optionnel)
+                            </small>
+                        </div>
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger mb-4" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <strong>Erreur:</strong>
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="card-footer bg-light p-4 d-flex gap-2" style="border-top: 1px solid #E8ECEF; border-radius: 0 0 12px 12px;">
+                        <a href="{% url 'departements_list' %}" class="btn btn-outline-custom">
+                            <i class="fas fa-times me-1"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary-custom">
+                            <i class="fas fa-save me-1"></i>
+                            {% if action == 'create' %}
+                                Créer le département
+                            {% else %}
+                                Modifier le département
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Informations contextuelle -->
+        <div class="col-lg-4 col-md-10 offset-lg-0 offset-md-1">
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <i class="fas fa-lightbulb me-2"></i> Conseils
+                </div>
+                <div class="card-body p-4">
+                    <h6 class="text-navy mb-3 fw-bold">
+                        <i class="fas fa-check-circle me-2 text-success"></i> À retenir
+                    </h6>
+                    <ul class="list-unstyled text-gray small">
+                        <li class="mb-2">
+                            <i class="fas fa-chevron-right me-2 text-emerald"></i>
+                            <strong>Nom unique:</strong> Chaque département doit avoir un nom unique
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-chevron-right me-2 text-emerald"></i>
+                            <strong>Description:</strong> Aidez les utilisateurs à comprendre le rôle du département
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-chevron-right me-2 text-emerald"></i>
+                            <strong>Organisation:</strong> Structurez votre organisation de manière claire
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-chevron-right me-2 text-emerald"></i>
+                            <strong>Employés:</strong> Vous pourrez assigner des employés à ce département
+                        </li>
+                    </ul>
+
+                    <hr class="my-3">
+
+                    <h6 class="text-navy mb-3 fw-bold">
+                        <i class="fas fa-question-circle me-2 text-info"></i> Besoin d'aide?
+                    </h6>
+                    <p class="text-gray small mb-0">
+                        Vous pouvez modifier ou supprimer le département à tout moment depuis la liste des départements.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-label-custom {
+        font-weight: 600;
+        color: var(--navy-blue);
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control-custom {
+        border: 1px solid #E8ECEF;
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .form-control-custom:focus {
+        border-color: var(--emerald-green);
+        box-shadow: 0 0 0 0.2rem rgba(31, 122, 99, 0.25);
+        outline: none;
+    }
+
+    .text-gray {
+        color: var(--cool-gray);
+    }
+
+    .text-navy {
+        color: var(--navy-blue);
+    }
+
+    .text-emerald {
+        color: var(--emerald-green);
+    }
+
+    .text-success {
+        color: #2E8B75;
+    }
+
+    .text-info {
+        color: #0dcaf0;
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 13px;
+    }
+
+    .alert {
+        border-radius: 8px;
+        border: none;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--navy-blue);
+        font-weight: 500;
+    }
+</style>
+
+{% endblock %}

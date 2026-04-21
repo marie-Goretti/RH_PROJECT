@@ -402,7 +402,7 @@
             {% if user.employe.role == 'admin_rh' %}
             <li class="nav-item">
                 <a class="nav-link {% if 'departement' in request.resolver_match.url_name %}active{% endif %}" 
-                   href="#">
+                   href="{% url 'departements_list' %}">
                     <i class="fas fa-sitemap"></i> Départements
                 </a>
             </li>

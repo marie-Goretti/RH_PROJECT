@@ -279,3 +279,33 @@ class EmployeForm(forms.ModelForm):
         if Employe.objects.filter(matricule=matricule).exclude(pk=pk).exists():
             raise forms.ValidationError("Ce matricule est déjà utilisé.")
         return matricule
+
+
+class DepartementForm(forms.ModelForm):
+    """Formulaire pour créer/modifier un département"""
+    
+    class Meta:
+        model = Departement
+        fields = ['nom', 'description']
+        widgets = {
+            'nom': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Nom du département'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Description du département (optionnel)'
+            })
+        }
+        labels = {
+            'nom': 'Nom du département',
+            'description': 'Description'
+        }
+    
+    def clean_nom(self):
+        nom = self.cleaned_data.get('nom')
+        pk = self.instance.pk
+        if Departement.objects.filter(nom=nom).exclude(pk=pk).exists():
+            raise forms.ValidationError("Ce nom de département est déjà utilisé.")
+        return nom

@@ -24,4 +24,8 @@ urlpatterns = [
     path('employes/<int:pk>/supprimer/', views.employe_delete, name='employe_delete'),
     #path('employes/search/', views.employes_search, name='employes_search'),
     
+    path('departements/', views.departements_list, name='departements_list'),
+    path('departements/ajouter/', views.departement_create, name='departement_create'),
+    path('departements/<int:pk>/employes/', views.employes_departement, name='employes_departement'),
+    
 ]

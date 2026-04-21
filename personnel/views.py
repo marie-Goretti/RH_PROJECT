@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import RegisterForm, LoginForm, CongeForm, EmployeForm
+from .forms import RegisterForm, LoginForm, CongeForm, EmployeForm, DepartementForm
 from .models import Employe, Conge, Presence, Departement
 from datetime import date
 from django.db.models import Count, Q
@@ -685,3 +685,72 @@ def conge_action(request, pk, action):
     # Rester sur l'onglet actif
     statut_qs = request.POST.get('statut_actif', 'en_attente')
     return redirect(f'/conges/gestion/?statut={statut_qs}')
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def departements_list(request):
+    """Liste tous les départements avec les employés"""
+    
+    query = request.GET.get('q', '')
+    
+    departements = Departement.objects.all()
+    
+    # Filtre de recherche
+    if query:
+        departements = departements.filter(nom__icontains=query)
+    
+    # Tri par nom
+    departements = departements.order_by('nom')
+    
+    # Ajouter le compte des employés pour chaque département
+    for dept in departements:
+        dept.employes_count = dept.employes.count()
+    
+    context = {
+        'departements': departements,
+        'query': query,
+        'form': DepartementForm(),
+    }
+    
+    return render(request, 'personnel/departements_list.html', context)
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def departement_create(request):
+    """Créer un nouveau département"""
+    
+    if request.method == 'POST':
+        form = DepartementForm(request.POST)
+        if form.is_valid():
+            departement = form.save()
+            messages.success(request, f'Département {departement.nom} créé avec succès !')
+            return redirect('departements_list')
+        else:
+            messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
+    else:
+        form = DepartementForm()
+    
+    return render(request, 'personnel/departement_form.html', {
+        'form': form,
+        'action': 'create',
+        'title': 'Ajouter un département'
+    })
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def employes_departement(request, pk):
+    """Voir tous les employés d'un département"""
+    
+    departement = get_object_or_404(Departement, pk=pk)
+    
+    employes = departement.employes.select_related('departement').order_by('nom', 'prenom')
+    
+    context = {
+        'departement': departement,
+        'employes': employes,
+    }
+    
+    return render(request, 'personnel/employes_departement.html', context)

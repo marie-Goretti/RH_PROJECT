@@ -1,0 +1,309 @@
+{% extends 'personnel/base.html' %}
+
+{% block title %}Gestion des Départements{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    
+    <!-- En-tête avec bouton ajouter -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-navy mb-1 fw-bold">Gestion des Départements</h2>
+            <p class="text-gray mb-0">{{ departements.count }} département(s)</p>
+        </div>
+        <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addDepartementModal">
+            <i class="fas fa-plus me-2"></i> Ajouter un département
+        </button>
+    </div>
+
+    <!-- Barre de recherche -->
+    <div class="card-custom mb-4">
+        <div class="card-body p-4">
+            <form method="get" class="d-flex gap-2">
+                <div class="flex-grow-1">
+                    <input type="text" name="q" class="form-control form-control-custom" 
+                           placeholder="Rechercher un département..." value="{{ query }}">
+                </div>
+                <button type="submit" class="btn btn-primary-custom">
+                    <i class="fas fa-search"></i>
+                </button>
+                {% if query %}
+                <a href="{% url 'departements_list' %}" class="btn btn-outline-custom" title="Réinitialiser">
+                    <i class="fas fa-times"></i>
+                </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Grille de cartes (3 par ligne) -->
+    <div class="row g-4">
+        {% for departement in departements %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card-custom h-100 d-flex flex-column">
+                <!-- En-tête de la carte -->
+                <div class="card-header-custom">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="mb-1">{{ departement.nom }}</h5>
+                            <small class="text-white-50">
+                                {{ departement.employes_count }} employé{{ departement.employes_count|pluralize }}
+                            </small>
+                        </div>
+                        <span class="badge bg-white text-navy">{{ departement.employes_count }}</span>
+                    </div>
+                </div>
+
+                <!-- Corps de la carte -->
+                <div class="card-body p-4 flex-grow-1">
+                    <!-- Description -->
+                    {% if departement.description %}
+                    <p class="text-gray small mb-3">{{ departement.description }}</p>
+                    {% else %}
+                    <p class="text-gray small mb-3 fst-italic">Pas de description</p>
+                    {% endif %}
+
+                    <!-- Liste des employés (max 5) -->
+                    <div class="mt-3">
+                        <label class="form-label-custom small mb-2">
+                            <i class="fas fa-users me-1"></i> Employés
+                        </label>
+                        
+                        {% if departement.employes.all %}
+                        <ul class="list-unstyled mb-3">
+                            {% for employe in departement.employes.all|slice:":5" %}
+                            <li class="mb-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-emerald rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                         style="width: 32px; height: 32px; color: white; font-weight: 600; font-size: 12px;">
+                                        {{ employe.prenom.0 }}{{ employe.nom.0 }}
+                                    </div>
+                                    <div>
+                                        <small class="d-block text-navy fw-500">{{ employe.nom }} {{ employe.prenom }}</small>
+                                        <small class="text-gray">{{ employe.poste }}</small>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+
+                        <!-- Bouton "Voir plus" si plus de 5 employés -->
+                        {% if departement.employes.all|length > 5 %}
+                        <div class="alert alert-info py-2 px-3 small mb-0">
+                            <i class="fas fa-info-circle me-1"></i> +{{ departement.employes.all|length|add:"-5" }} autre{{ departement.employes.all|length|add:"-5"|pluralize }}
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <div class="alert alert-light py-2 px-3 small mb-0">
+                            <i class="fas fa-inbox me-1"></i> Aucun employé assigné
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Pied de la carte -->
+                <div class="card-footer bg-light p-3 d-flex gap-2" style="border-top: 1px solid #E8ECEF;">
+                    <a href="{% url 'employes_departement' departement.pk %}" class="btn btn-sm btn-primary-custom flex-grow-1">
+                        <i class="fas fa-eye me-1"></i> Voir plus
+                    </a>
+                    <button type="button" class="btn btn-sm btn-outline-custom" 
+                            onclick="editDepartement({{ departement.id }}, '{{ departement.nom|escapejs }}', '{{ departement.description|escapejs }}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card-custom">
+                <div class="card-body p-5 text-center">
+                    <i class="fas fa-building" style="font-size: 3rem; color: var(--cool-gray);"></i>
+                    <h5 class="mt-3 text-navy">Aucun département trouvé</h5>
+                    <p class="text-gray">
+                        {% if query %}
+                        La recherche n'a retourné aucun résultat. Essayez une autre recherche.
+                        {% else %}
+                        Commencez par ajouter un département.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal pour ajouter un département -->
+<div class="modal fade" id="addDepartementModal" tabindex="-1" aria-labelledby="addDepartementLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="addDepartementLabel">
+                    <i class="fas fa-plus me-2"></i> Ajouter un département
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form method="post" action="{% url 'departement_create' %}">
+                {% csrf_token %}
+                <div class="modal-body p-4">
+                    <!-- Nom du département -->
+                    <div class="mb-3">
+                        <label for="{{ form.nom.id_for_label }}" class="form-label-custom">
+                            Nom du département <span class="text-danger">*</span>
+                        </label>
+                        {{ form.nom }}
+                        {% if form.nom.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.nom.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label-custom">
+                            Description
+                        </label>
+                        {{ form.description }}
+                        <small class="text-gray">Optionnel - Décrivez le rôle ou la mission du département</small>
+                        {% if form.description.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.description.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="modal-footer p-3">
+                    <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="fas fa-save me-1"></i> Ajouter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour éditer un département -->
+<div class="modal fade" id="editDepartementModal" tabindex="-1" aria-labelledby="editDepartementLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-navy text-white">
+                <h5 class="modal-title" id="editDepartementLabel">
+                    <i class="fas fa-edit me-2"></i> Modifier le département
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form method="post" id="editForm">
+                {% csrf_token %}
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label for="editNom" class="form-label-custom">
+                            Nom du département <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" id="editNom" name="nom" class="form-control form-control-custom" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editDescription" class="form-label-custom">
+                            Description
+                        </label>
+                        <textarea id="editDescription" name="description" class="form-control form-control-custom" rows="3"></textarea>
+                        <small class="text-gray">Optionnel</small>
+                    </div>
+                </div>
+
+                <div class="modal-footer p-3">
+                    <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="fas fa-save me-1"></i> Modifier
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Personnalisation des couleurs de formulaire dans le modal */
+    .form-control-custom {
+        border: 1px solid #E8ECEF;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control-custom:focus {
+        border-color: var(--emerald-green);
+        box-shadow: 0 0 0 0.2rem rgba(31, 122, 99, 0.25);
+    }
+
+    .form-label-custom {
+        font-weight: 600;
+        color: var(--navy-blue);
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .text-gray {
+        color: var(--cool-gray);
+    }
+
+    .text-navy {
+        color: var(--navy-blue);
+    }
+
+    .bg-emerald {
+        background-color: var(--emerald-green);
+    }
+
+    .card-footer {
+        border-radius: 0 0 12px 12px;
+    }
+
+    .fw-500 {
+        font-weight: 500;
+    }
+
+    /* Hover effect pour les cartes */
+    .card-custom {
+        transition: all 0.3s ease;
+    }
+
+    .card-custom:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(11, 28, 45, 0.12);
+    }
+
+    /* Animation pour le modal */
+    .modal-content {
+        border-radius: 12px;
+        border: none;
+    }
+
+    .modal-header {
+        border-radius: 12px 12px 0 0;
+        border-bottom: none;
+    }
+</style>
+
+<script>
+    // Fonction pour éditer un département
+    function editDepartement(id, nom, description) {
+        document.getElementById('editNom').value = nom;
+        document.getElementById('editDescription').value = description;
+        // Pour la démo, on affiche juste le modal
+        // En production, il faudrait configurer l'action du formulaire
+        new bootstrap.Modal(document.getElementById('editDepartementModal')).show();
+    }
+</script>
+
+{% endblock %}
