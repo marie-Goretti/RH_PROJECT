@@ -276,14 +276,18 @@
         }
     });
     
-    // 🔹 Graphique par département
+    // 🔹 Données pour le graphique (injectées via JSON pour éviter les erreurs du linter IDE)
+    const deptLabelsText = `[{% for dept in departements %}"{{ dept.nom|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}]`;
+    const deptCountsText = `[{% for dept in departements %}{{ dept.employes.count|default:0 }}{% if not forloop.last %},{% endif %}{% endfor %}]`;
+    
+    // Graphique par département
     const ctx2 = document.getElementById('departmentChart').getContext('2d');
     new Chart(ctx2, {
         type: 'doughnut',
         data: {
-            labels: [{% for dept in departements %}'{{ dept.nom }}',{% endfor %}],
+            labels: JSON.parse(deptLabelsText),
             datasets: [{
-                data: [{% for dept in departements %}{{ dept.employe_set.count|default:0 }},{% endfor %}],
+                data: JSON.parse(deptCountsText),
                 backgroundColor: ['#0B1C2D', '#1F7A63', '#9DAAAB', '#2E8B75', '#061018', '#6B7A7D'],
                 borderWidth: 0,
                 hoverOffset: 4

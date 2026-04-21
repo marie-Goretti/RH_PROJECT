@@ -267,6 +267,9 @@ def dashboard(request):
     # Congés en attente
     conges_en_attente = Conge.objects.filter(statut='en_attente').count()
     
+    # Départements (pour le graphique et les filtres)
+    departements = Departement.objects.all()
+    
     context = {
         'employe': request.user.employe,
         'employes': employes,
@@ -274,6 +277,7 @@ def dashboard(request):
         'presences_aujourdhui': presences_aujourdhui,
         'retards_aujourdhui': retards_aujourdhui,
         'conges_en_attente': conges_en_attente,
+        'departements': departements,
     }
     
     return render(request, 'personnel/dashboard.html', context)
