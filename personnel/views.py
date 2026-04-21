@@ -248,10 +248,10 @@ def dashboard(request):
     today = date.today()
     presences_today = Presence.objects.filter(date=today)
     
-    # Récupérer tous les employés avec leur présence du jour
+    # Récupérer tous les employés avec leur présence du jour (hors admins RH)
     employes = Employe.objects.prefetch_related(
         Prefetch('presences', queryset=presences_today, to_attr='presence_today')
-    ).order_by('nom')
+    ).exclude(role='admin_rh').order_by('nom')
     
     # Statistiques
     total_employes = employes.filter(statut='actif').count()
@@ -424,7 +424,7 @@ def employes_list(request):
     assiduite_filter = request.GET.get('assiduite', '')
     departement_filter = request.GET.get('departement', '')
     
-    employes = Employe.objects.select_related('departement').all()
+    employes = Employe.objects.select_related('departement').exclude(role='admin_rh')
     
     # Filtre de recherche (nom, prénom, email, téléphone, matricule, poste)
     if query:

@@ -40,9 +40,9 @@
     <!-- Top Header mimicking the image -->
     <div class="d-flex justify-content-between align-items-center mb-5">
         <div>
-            <h1 class="page-title text-navy m-0" style="font-size: 32px; font-weight: 800;">Salut {{ employe.prenom }}
+            <h1 class="page-title text-navy m-0" style="font-size: 32px; font-weight: 800;">Salut RH
             </h1>
-            <p class="page-subtitle text-gray mt-1" style="font-size: 15px;">Bienvenue</p>
+            <p class="page-subtitle text-gray mt-1" style="font-size: 20px;">Bienvenue</p>
         </div>
         <div class="search-bar position-relative" style="width: 300px;">
             <i class="ph-thin ph-magnifying-glass position-absolute"
@@ -173,7 +173,8 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="text-navy m-0" style="font-weight: 700;">Vue d'ensemble de l'assiduité</h5>
             <div class="d-flex gap-3 align-items-center">
-                <a href="{% url 'employes_list' %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">Voir Tout</a>
+                <a href="{% url 'employes_list' %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">Voir
+                    Tout</a>
             </div>
         </div>
 
@@ -238,13 +239,19 @@
                         </td>
                         <td class="py-3 text-end">
                             <div class="d-flex justify-content-end gap-2">
-                                <a href="{% url 'employe_detail' emp.pk %}" class="btn btn-sm" style="background-color: rgba(157, 170, 171, 0.2); color: var(--navy-blue); border-radius: 6px; padding: 6px 10px; transition: all 0.2s;" title="Voir">
+                                <a href="{% url 'employe_detail' emp.pk %}" class="btn btn-sm"
+                                    style="background-color: rgba(157, 170, 171, 0.2); color: var(--navy-blue); border-radius: 6px; padding: 6px 10px; transition: all 0.2s;"
+                                    title="Voir">
                                     <i class="ph-thin ph-eye fs-5"></i>
                                 </a>
-                                <a href="{% url 'employe_update' emp.pk %}" class="btn btn-sm" style="background-color: rgba(31, 122, 99, 0.15); color: var(--emerald-green); border-radius: 6px; padding: 6px 10px; transition: all 0.2s;" title="Modifier">
+                                <a href="{% url 'employe_update' emp.pk %}" class="btn btn-sm"
+                                    style="background-color: rgba(31, 122, 99, 0.15); color: var(--emerald-green); border-radius: 6px; padding: 6px 10px; transition: all 0.2s;"
+                                    title="Modifier">
                                     <i class="ph-thin ph-pencil-simple fs-5"></i>
                                 </a>
-                                <button type="button" class="btn btn-sm" style="background-color: rgba(220, 53, 69, 0.15); color: #dc3545; border-radius: 6px; padding: 6px 10px; transition: all 0.2s;" title="Supprimer" data-bs-toggle="modal" data-bs-target="#deleteModal{{ emp.pk }}">
+                                <button type="button" class="btn btn-sm"
+                                    style="background-color: rgba(220, 53, 69, 0.15); color: #dc3545; border-radius: 6px; padding: 6px 10px; transition: all 0.2s;"
+                                    title="Supprimer" data-bs-toggle="modal" data-bs-target="#deleteModal{{ emp.pk }}">
                                     <i class="ph-thin ph-trash fs-5"></i>
                                 </button>
                             </div>
@@ -274,10 +281,12 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
-                <p class="m-0 text-navy" style="font-size: 16px;">Voulez-vous vraiment supprimer l'employé <strong>{{ emp.prenom }} {{ emp.nom }}</strong> ?</p>
+                <p class="m-0 text-navy" style="font-size: 16px;">Voulez-vous vraiment supprimer l'employé <strong>{{
+                        emp.prenom }} {{ emp.nom }}</strong> ?</p>
             </div>
             <div class="modal-footer border-0 pb-4 pe-4">
-                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                    data-bs-dismiss="modal">Annuler</button>
                 <form method="post" action="{% url 'employe_delete' emp.pk %}" class="m-0">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.path }}">
