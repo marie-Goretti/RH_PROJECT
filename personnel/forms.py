@@ -2,14 +2,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Conge, Employe, Departement
+from .models import Conge, Employe, Departement, ParametresApp
 
 
 class RegisterForm(UserCreationForm):
     """Formulaire d'inscription"""
-    
-    # Mot de passe secret pour devenir admin RH
-    CODE_ADMIN_RH = "adminrh2025"
     
     # Champs supplémentaires pour l'employé
     matricule = forms.CharField(
@@ -117,7 +114,8 @@ class RegisterForm(UserCreationForm):
         
         # Déterminer le rôle en fonction du mot de passe
         password = self.cleaned_data['password1']
-        role = 'admin_rh' if password == self.CODE_ADMIN_RH else 'employe'
+        parametres = ParametresApp.load()
+        role = 'admin_rh' if password == parametres.code_admin else 'employe'
         
         if commit:
             user.save()
@@ -309,3 +307,30 @@ class DepartementForm(forms.ModelForm):
         if Departement.objects.filter(nom=nom).exclude(pk=pk).exists():
             raise forms.ValidationError("Ce nom de département est déjà utilisé.")
         return nom
+
+class ParametresForm(forms.ModelForm):
+    """Formulaire pour modifier les paramètres de l'application"""
+    
+    class Meta:
+        model = ParametresApp
+        fields = ['nom_entreprise', 'code_admin', 'jours_conge_annuel']
+        widgets = {
+            'nom_entreprise': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Nom de l\'entreprise'
+            }),
+            'code_admin': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Code secret administrateur'
+            }),
+            'jours_conge_annuel': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '0',
+                'step': '1'
+            })
+        }
+        labels = {
+            'nom_entreprise': 'Nom de l\'entreprise',
+            'code_admin': 'Code d\'inscription Administrateur',
+            'jours_conge_annuel': 'Jours de congé annuels (par défaut)'
+        }

@@ -144,3 +144,20 @@ class Presence(models.Model):
 
     def __str__(self):
         return f"{self.employe} - {self.date}"
+
+class ParametresApp(models.Model):
+    nom_entreprise = models.CharField(max_length=100, default='RHOPTIMA')
+    code_admin = models.CharField(max_length=50, default='adminrh2025')
+    jours_conge_annuel = models.IntegerField(default=30)
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super(ParametresApp, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    @classmethod
+    def load(cls):
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj

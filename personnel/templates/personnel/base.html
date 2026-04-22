@@ -373,7 +373,7 @@
     <!-- 🔹 Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <h5><i class="ph-thin ph-buildings"></i> <span style="font-family: 'Roboto Slab', serif; letter-spacing: 1px;">RHOPTIMA</span></h5>
+            <h5><i class="ph-thin ph-buildings"></i> <span style="font-family: 'Roboto Slab', serif; letter-spacing: 1px;">{{ app_parametres.nom_entreprise|upper }}</span></h5>
         </div>
 
         <ul class="nav flex-column px-2">
@@ -428,11 +428,13 @@
             </li>
             {% endif %}
 
+            {% if user.employe.role == 'admin_rh' %}
             <li class="nav-item mt-4">
-                <a class="nav-link" href="#">
+                <a class="nav-link {% if 'parametres' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'parametres' %}">
                     <i class="ph-thin ph-gear"></i> Paramètres
                 </a>
             </li>
+            {% endif %}
         </ul>
 
         <!-- Profil utilisateur -->

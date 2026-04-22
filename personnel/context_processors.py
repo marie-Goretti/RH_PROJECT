@@ -1,8 +1,8 @@
-from .models import Conge
+from .models import Conge, ParametresApp
  
 def conges_count(request):
-    """Injecte le nombre de congés en attente dans tous les templates pour RH, et les nouveaux traités pour employé."""
-    context = {'conges_en_attente_count': 0, 'conges_nouvelles_count': 0}
+    """Injecte le nombre de congés en attente et les paramètres dans tous les templates."""
+    context = {'conges_en_attente_count': 0, 'conges_nouvelles_count': 0, 'app_parametres': ParametresApp.load()}
     if request.user.is_authenticated and hasattr(request.user, 'employe'):
         if request.user.employe.role == 'admin_rh':
             context['conges_en_attente_count'] = Conge.objects.filter(statut='en_attente').count()

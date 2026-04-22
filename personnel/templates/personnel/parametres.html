@@ -1,0 +1,89 @@
+{% extends 'personnel/base.html' %}
+{% load static %}
+
+{% block title %}Paramètres - Gestion RH{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    
+    <!-- En-tête -->
+    <div class="mb-4">
+        <h2 class="text-navy mb-1 fw-bold">Paramètres de l'application</h2>
+        <p class="text-gray mb-0">Gérez les configurations globales de l'application RH.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-8">
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <i class="ph-thin ph-gear me-2"></i> Configuration Globale
+                </div>
+                <div class="card-body p-4">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} py-2 px-3 small rounded-3">
+                                <i class="ph-thin {% if message.tags == 'success' %}ph-check-circle{% else %}ph-warning-circle{% endif %} me-2"></i>{{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Nom de l'entreprise -->
+                        <div class="mb-4">
+                            <label for="{{ form.nom_entreprise.id_for_label }}" class="form-label-custom">
+                                <i class="ph-thin ph-buildings me-2"></i> {{ form.nom_entreprise.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.nom_entreprise }}
+                            <div class="form-text mt-2"><small>Ce nom sera affiché en haut du menu latéral.</small></div>
+                            {% if form.nom_entreprise.errors %}
+                                <div class="invalid-feedback d-block mt-2">
+                                    <i class="ph-thin ph-warning-circle me-1"></i>{{ form.nom_entreprise.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Code Administrateur -->
+                        <div class="mb-4">
+                            <label for="{{ form.code_admin.id_for_label }}" class="form-label-custom">
+                                <i class="ph-thin ph-lock-key me-2"></i> {{ form.code_admin.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.code_admin }}
+                            <div class="form-text mt-2"><small>Ce code secret permet de créer un compte avec le rôle d'Administrateur RH.</small></div>
+                            {% if form.code_admin.errors %}
+                                <div class="invalid-feedback d-block mt-2">
+                                    <i class="ph-thin ph-warning-circle me-1"></i>{{ form.code_admin.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Jours de Congé Annuels -->
+                        <div class="mb-5">
+                            <label for="{{ form.jours_conge_annuel.id_for_label }}" class="form-label-custom">
+                                <i class="ph-thin ph-calendar-plus me-2"></i> {{ form.jours_conge_annuel.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.jours_conge_annuel }}
+                            <div class="form-text mt-2"><small>Le nombre de jours de congé alloués par défaut (cette limite est indicative pour l'instant).</small></div>
+                            {% if form.jours_conge_annuel.errors %}
+                                <div class="invalid-feedback d-block mt-2">
+                                    <i class="ph-thin ph-warning-circle me-1"></i>{{ form.jours_conge_annuel.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-end pt-3" style="border-top: 1px dashed rgba(157, 170, 171, 0.4);">
+                            <button type="submit" class="btn btn-primary-custom px-4">
+                                <i class="ph-thin ph-floppy-disk me-2"></i> Enregistrer les modifications
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

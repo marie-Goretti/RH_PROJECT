@@ -4,10 +4,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import RegisterForm, LoginForm, CongeForm, EmployeForm, DepartementForm
-from .models import Employe, Conge, Presence, Departement
+from .forms import RegisterForm, LoginForm, CongeForm, EmployeForm, DepartementForm, ParametresForm
+from .models import Employe, Conge, Presence, Departement, ParametresApp
 from datetime import date
 from django.db.models import Count, Q
+from datetime import timedelta
+import json
 
 
 def register_view(request):
@@ -240,10 +242,7 @@ def dashboard(request):
     if not hasattr(request.user, 'employe') or request.user.employe.role != 'admin_rh':
         messages.error(request, 'Accès refusé. Vous n\'êtes pas administrateur RH.')
         return redirect('dashboard')
-    
-    from datetime import date
-    from django.db.models import Count, Q, Prefetch
-    from personnel.models import Presence
+   
     
     today = date.today()
     presences_today = Presence.objects.filter(date=today)
@@ -279,8 +278,7 @@ def dashboard(request):
     # ------------------
     # Historique des présences (30 derniers jours) pour le graphique
     # ------------------
-    from datetime import timedelta
-    import json
+    
     
     date_30_jours = today - timedelta(days=29)
     presences_historique = Presence.objects.filter(
@@ -422,8 +420,7 @@ def is_admin_rh(user):
 @user_passes_test(is_admin_rh)
 def employes_list(request):
     """Liste tous les employés avec recherche et filtres"""
-    from datetime import date
-    from django.db.models import Prefetch
+    
     
     query = request.GET.get('q', '')
     assiduite_filter = request.GET.get('assiduite', '')
@@ -581,7 +578,8 @@ def employe_update(request, pk):
                 
                 if password1 and password1 != '********':
                     employe.user.set_password(password1)
-                    if password1 == RegisterForm.CODE_ADMIN_RH:
+                    parametres = ParametresApp.load()
+                    if password1 == parametres.code_admin:
                         employe.role = 'admin_rh'
                         employe.save()
                         
@@ -806,3 +804,23 @@ def employes_departement(request, pk):
     }
     
     return render(request, 'personnel/employes_departement.html', context)
+
+
+@login_required
+@user_passes_test(is_admin_rh)
+def parametres_view(request):
+    """Vue pour la page des paramètres de l'application (Admin RH uniquement)"""
+    parametres = ParametresApp.load()
+    
+    if request.method == 'POST':
+        form = ParametresForm(request.POST, instance=parametres)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Les paramètres ont été mis à jour avec succès.')
+            return redirect('parametres')
+    else:
+        form = ParametresForm(instance=parametres)
+        
+    return render(request, 'personnel/parametres.html', {
+        'form': form
+    })
