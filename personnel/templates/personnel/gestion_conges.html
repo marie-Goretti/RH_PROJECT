@@ -178,11 +178,23 @@
             <h4><i class="ph-thin ph-calendar-check me-2" style="color:var(--emerald-green);"></i>Gestion des Congés</h4>
             <p>Validez ou refusez les demandes de congé de vos employés.</p>
         </div>
-        {% if nb_en_attente > 0 %}
-        <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill align-self-center">
-            <i class="ph-thin ph-bell me-1"></i>{{ nb_en_attente }} demande{{ nb_en_attente|pluralize }} en attente
-        </span>
-        {% endif %}
+        <div class="d-flex gap-3 align-items-center">
+            <!-- Export Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle fw-bold" style="border-radius: 20px; font-size: 0.85rem;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="ph-thin ph-download-simple me-2"></i> Exporter Approuvés
+                </button>
+                <ul class="dropdown-menu shadow-sm border-0">
+                    <li><a class="dropdown-item" href="#" onclick="exportExcel(event)"><i class="ph-thin ph-file-xls text-success me-2"></i>Excel</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="exportPDF(event)"><i class="ph-thin ph-file-pdf text-danger me-2"></i>PDF</a></li>
+                </ul>
+            </div>
+            {% if nb_en_attente > 0 %}
+            <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill align-self-center">
+                <i class="ph-thin ph-bell me-1"></i>{{ nb_en_attente }} demande{{ nb_en_attente|pluralize }} en attente
+            </span>
+            {% endif %}
+        </div>
     </div>
 </div>
 
@@ -451,4 +463,64 @@
     {% endif %}
 
 </div>
+
+<!-- Table cachée pour l'exportation des congés approuvés -->
+<table id="approvedLeavesTable" style="display: none;">
+    <thead>
+        <tr>
+            <th>Matricule</th>
+            <th>Employé</th>
+            <th>Département</th>
+            <th>Type de congé</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Durée (jours)</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for conge in conges_approuves_export %}
+        <tr>
+            <td>{{ conge.employe.matricule }}</td>
+            <td>{{ conge.employe.prenom }} {{ conge.employe.nom }}</td>
+            <td>{{ conge.employe.departement.nom|default:"-" }}</td>
+            <td>{{ conge.get_type_conge_display }}</td>
+            <td>{{ conge.date_debut|date:"d/m/Y" }}</td>
+            <td>{{ conge.date_fin|date:"d/m/Y" }}</td>
+            <td>{{ conge.nb_jours }}</td>
+            <td>Approuvé</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function exportExcel(e) {
+        e.preventDefault();
+        const table = document.getElementById('approvedLeavesTable');
+        const cloneTable = table.cloneNode(true);
+        const wb = XLSX.utils.table_to_book(cloneTable, {sheet: "Conges_Approuves"});
+        XLSX.writeFile(wb, "Liste_Conges_Approuves.xlsx");
+    }
+
+    function exportPDF(e) {
+        e.preventDefault();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.text("Liste des Congés Approuvés", 14, 15);
+        
+        doc.autoTable({
+            html: '#approvedLeavesTable',
+            startY: 20,
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [11, 28, 45] }
+        });
+        doc.save('Liste_Conges_Approuves.pdf');
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
 {% endblock %}

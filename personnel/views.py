@@ -659,8 +659,13 @@ def gestion_conges(request):
     for conge in conges_qs:
         conge.nb_jours = (conge.date_fin - conge.date_debut).days + 1
 
+    conges_approuves_export = Conge.objects.select_related('employe', 'employe__departement').filter(statut='approuve').order_by('-date_debut')
+    for conge in conges_approuves_export:
+        conge.nb_jours = (conge.date_fin - conge.date_debut).days + 1
+
     context = {
         'conges':        conges_qs,
+        'conges_approuves_export': conges_approuves_export,
         'statut_actif':  statut_actif,
         'nb_en_attente': nb_en_attente,
         'nb_approuve':   nb_approuve,
