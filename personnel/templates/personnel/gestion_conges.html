@@ -6,12 +6,9 @@
 {% block extra_css %}
 <style>
     .page-header {
-        background: linear-gradient(135deg, var(--navy-blue) 0%, #132d47 100%);
-        padding: 30px 35px;
-        color: white;
+        padding: 24px 35px 15px 35px;
+        background: transparent;
     }
-    .page-header h4 { font-weight: 700; margin: 0; font-size: 1.4rem; }
-    .page-header p  { color: var(--cool-gray); margin: 5px 0 0; font-size: 0.9rem; }
 
     /* ── Onglets filtres ── */
     .filter-tabs {
@@ -173,15 +170,15 @@
 
 <!-- En-tête -->
 <div class="page-header">
-    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div>
-            <h4><i class="ph-thin ph-calendar-check me-2" style="color:var(--emerald-green);"></i>Gestion des Congés</h4>
-            <p>Validez ou refusez les demandes de congé de vos employés.</p>
+            <h2 class="text-navy mb-1 fw-bold">Gestion des Congés</h2>
+            <p class="text-gray mb-0">Validez ou refusez les demandes de congé de vos employés.</p>
         </div>
         <div class="d-flex gap-3 align-items-center">
             <!-- Export Dropdown -->
             <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle fw-bold" style="border-radius: 20px; font-size: 0.85rem;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="ph-thin ph-download-simple me-2"></i> Exporter Approuvés
                 </button>
                 <ul class="dropdown-menu shadow-sm border-0">
