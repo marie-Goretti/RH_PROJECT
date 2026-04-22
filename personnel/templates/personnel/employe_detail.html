@@ -122,7 +122,14 @@
                                         {{ conge.get_statut_display }}
                                     </span>
                                 </div>
-                                <span class="text-gray" style="font-size: 13px; font-weight: 500;">{{ conge.date_debut|date:"d M" }} - {{ conge.date_fin|date:"d M Y" }}</span>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-gray" style="font-size: 13px; font-weight: 500;">{{ conge.date_debut|date:"d M" }} - {{ conge.date_fin|date:"d M Y" }}</span>
+                                </div>
+                                {% if conge.commentaire %}
+                                <div class="mt-2 p-2 rounded" style="background: rgba(31, 122, 99, 0.05); border-left: 2px solid var(--emerald-green); font-size: 12px; color: var(--navy-blue);">
+                                    <strong><i class="ph-thin ph-chat-circle me-1"></i>Motif/Message RH :</strong> {{ conge.commentaire }}
+                                </div>
+                                {% endif %}
                             </div>
                             {% endfor %}
                         {% else %}

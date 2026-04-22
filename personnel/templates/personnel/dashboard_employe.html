@@ -363,6 +363,11 @@
                     <div class="conge-dates">
                         Du {{ c.date_debut|date:"d/m/Y" }} au {{ c.date_fin|date:"d/m/Y" }}
                     </div>
+                    {% if c.commentaire %}
+                    <div class="mt-1" style="font-size: 12px; color: var(--emerald-green); background: rgba(31, 122, 99, 0.05); padding: 4px 8px; border-radius: 4px; display: inline-block;">
+                        <i class="ph-thin ph-chat-circle me-1"></i>{{ c.commentaire }}
+                    </div>
+                    {% endif %}
                 </div>
                 <span class="badge-present">Approuvé</span>
             </div>

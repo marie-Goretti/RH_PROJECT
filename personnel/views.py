@@ -378,6 +378,11 @@ def demande_conge(request):
     # Récupérer l'historique des congés de l'employé
     conges = Conge.objects.filter(employe=employe).order_by('-date_debut')
     
+    # Marquer les congés traités comme vus
+    conges_non_vus = conges.filter(statut__in=['approuve', 'refuse'], vu_par_employe=False)
+    if conges_non_vus.exists():
+        conges_non_vus.update(vu_par_employe=True)
+    
     context = {
         'form': form,
         'employe': employe,
@@ -661,8 +666,10 @@ def conge_action(request, pk, action):
         return redirect('gestion_conges')
 
     if action == 'approuver':
+        commentaire = request.POST.get('commentaire', '').strip()
         conge.statut = 'approuve'
-        conge.commentaire = ''
+        conge.commentaire = commentaire
+        conge.vu_par_employe = False
         conge.save()
         messages.success(
             request,
@@ -676,6 +683,7 @@ def conge_action(request, pk, action):
             return redirect(f'{request.META.get("HTTP_REFERER", "/conges/gestion/")}')
         conge.statut     = 'refuse'
         conge.commentaire = commentaire
+        conge.vu_par_employe = False
         conge.save()
         messages.success(
             request,

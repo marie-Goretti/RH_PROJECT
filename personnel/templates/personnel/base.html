@@ -416,6 +416,12 @@
                 <a class="nav-link {% if 'conge' in request.resolver_match.url_name %}active{% endif %}"
                     href="{% url 'demande_conge' %}">
                     <i class="ph-thin ph-calendar-check"></i> Congés
+                    {% if conges_nouvelles_count > 0 %}
+                    <span class="ms-auto badge"
+                        style="background:rgba(31,122,99,0.25);color:#1F7A63;font-size:0.7rem;padding:3px 7px;border-radius:12px;">
+                        {{ conges_nouvelles_count }}
+                    </span>
+                    {% endif %}
                 </a>
                 {% endif %}
             </li>

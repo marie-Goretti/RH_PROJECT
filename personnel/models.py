@@ -95,6 +95,17 @@ class Conge(models.Model):
         blank=True
     )
 
+    vu_par_employe = models.BooleanField(
+        default=False,
+        help_text="Indique si l'employé a vu la réponse (accepté/refusé) des RH"
+    )
+
+    @property
+    def duree_jours(self):
+        if self.date_fin and self.date_debut:
+            return (self.date_fin - self.date_debut).days + 1
+        return 0
+
     def __str__(self):
         return f"Congé {self.type_conge} - {self.employe}"
 
