@@ -199,7 +199,8 @@
                             {% if action == 'create' %}Mot de passe <span class="required-star">*</span>{% else %}Nouveau mot de passe{% endif %}
                         </label>
                         <input type="password" name="password1" id="id_password1"
-                               class="form-control" placeholder="Mot de passe">
+                               class="form-control" placeholder="Mot de passe"
+                               {% if action == 'update' %}value="********"{% endif %}>
                         {% if password_errors %}
                         <ul class="error-list">
                             {% for error in password_errors %}
@@ -217,7 +218,8 @@
                             {% if action == 'create' %}Confirmer le mot de passe <span class="required-star">*</span>{% else %}Confirmer le nouveau mot de passe{% endif %}
                         </label>
                         <input type="password" name="password2" id="id_password2"
-                               class="form-control" placeholder="Confirmer le mot de passe">
+                               class="form-control" placeholder="Confirmer le mot de passe"
+                               {% if action == 'update' %}value="********"{% endif %}>
                     </div>
                 </div>
             </div>

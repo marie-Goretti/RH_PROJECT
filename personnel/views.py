@@ -560,25 +560,47 @@ def employe_update(request, pk):
     
     if request.method == 'POST':
         form = EmployeForm(request.POST, instance=employe)
-        if form.is_valid():
+        
+        # Validation du mot de passe
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        password_errors = []
+        
+        if password1 != '********' and (password1 or password2):
+            if password1 != password2:
+                password_errors.append("Les mots de passe ne correspondent pas.")
+            elif len(password1) < 8:
+                password_errors.append("Le mot de passe doit contenir au moins 8 caractères.")
+                
+        if form.is_valid() and not password_errors:
             form.save()
             # Mettre à jour l'email dans le User lié si nécessaire
             if employe.user:
                 employe.user.email = employe.email
                 employe.user.username = employe.email
+                
+                if password1 and password1 != '********':
+                    employe.user.set_password(password1)
+                    if password1 == RegisterForm.CODE_ADMIN_RH:
+                        employe.role = 'admin_rh'
+                        employe.save()
+                        
                 employe.user.save()
             messages.success(request, f'Employé {employe.prenom} {employe.nom} modifié avec succès !')
             return redirect('employes_list')
         else:
-            messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
+            if not password_errors:
+                messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
     else:
         form = EmployeForm(instance=employe)
+        password_errors = []
     
     return render(request, 'personnel/employe_form.html', {
         'form': form,
         'action': 'update',
         'title': f'Modifier {employe.prenom} {employe.nom}',
-        'employe': employe
+        'employe': employe,
+        'password_errors': password_errors
     })
 
 
